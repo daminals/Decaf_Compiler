@@ -28,6 +28,16 @@ t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_LCURLY  = r'\{'
 t_RCURLY  = r'\}'
+t_EQUAL = r'\='
+t_NOTEQUAL = r'\!\='
+t_GREATER = r'\>'
+t_LESS = r'\<'
+t_GREATEREQ = r'\>\='
+t_LESSEQ = r'\<\='
+t_OR = r'\|\|'
+t_AND = r'\&\&'
+t_NOT = r'\!'
+
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
