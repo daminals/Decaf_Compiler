@@ -1,4 +1,6 @@
-
+# decaf_checker.py
+# Daniel Kogan 114439349
+# 02.21.2023
 
 import sys
 import ply.lex as lex
