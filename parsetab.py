@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'DIVIDE LCURLY LPAREN MINUS NUMBER PLUS RCURLY RPAREN TIMESexpression : expression PLUS term\n                | expression MINUS term\n    term       : term TIMES factor\n                | term DIVIDE factorexpression : termterm : factorfactor : NUMBERfactor : LPAREN expression RPAREN'
+_lr_signature = 'leftORleftANDnonassocEQUALNOTEQUALnonassocGREATERLESSGREATEREQLESSEQleftPLUSMINUSleftTIMESDIVIDEnonassocLPARENRPARENrightNOTAND DIVIDE EQUAL GREATER GREATEREQ LCURLY LESS LESSEQ LPAREN MINUS NOT NOTEQUAL NUMBER OR PLUS RCURLY RPAREN TIMESexpression : expression PLUS term\n                  | expression MINUS term\n                  | expression TIMES factor\n                  | expression DIVIDE factor\n                  | expression GREATER expression\n                  | expression LESS expression\n                  | expression GREATEREQ expression\n                  | expression LESSEQ expression\n                  | expression EQUAL expression\n                  | expression NOTEQUAL expression\n                  | expression AND expression\n                  | expression OR expression\n                  | LPAREN expression RPARENexpression : termterm : factorfactor : NUMBERfactor : LPAREN expression RPAREN'
     
-_lr_action_items = {'NUMBER':([0,5,6,7,8,9,],[4,4,4,4,4,4,]),'LPAREN':([0,5,6,7,8,9,],[5,5,5,5,5,5,]),'$end':([1,2,3,4,11,12,13,14,15,],[0,-5,-6,-7,-1,-2,-3,-4,-8,]),'PLUS':([1,2,3,4,10,11,12,13,14,15,],[6,-5,-6,-7,6,-1,-2,-3,-4,-8,]),'MINUS':([1,2,3,4,10,11,12,13,14,15,],[7,-5,-6,-7,7,-1,-2,-3,-4,-8,]),'RPAREN':([2,3,4,10,11,12,13,14,15,],[-5,-6,-7,15,-1,-2,-3,-4,-8,]),'TIMES':([2,3,4,11,12,13,14,15,],[8,-6,-7,8,8,-3,-4,-8,]),'DIVIDE':([2,3,4,11,12,13,14,15,],[9,-6,-7,9,9,-3,-4,-8,]),}
+_lr_action_items = {'LPAREN':([0,4,6,7,8,9,10,11,12,13,14,15,16,17,20,],[4,4,20,20,20,20,4,4,4,4,4,4,4,4,4,]),'NUMBER':([0,4,6,7,8,9,10,11,12,13,14,15,16,17,20,],[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,]),'$end':([1,2,3,5,19,21,22,23,24,25,26,27,28,29,30,31,32,34,],[0,-14,-15,-16,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-17,]),'PLUS':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[6,-14,-15,-16,6,-1,-2,-3,-4,6,6,6,6,6,6,6,6,-13,6,-17,]),'MINUS':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[7,-14,-15,-16,7,-1,-2,-3,-4,7,7,7,7,7,7,7,7,-13,7,-17,]),'TIMES':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[8,-14,-15,-16,8,-1,-2,-3,-4,8,8,8,8,8,8,8,8,-13,8,-17,]),'DIVIDE':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[9,-14,-15,-16,9,-1,-2,-3,-4,9,9,9,9,9,9,9,9,-13,9,-17,]),'GREATER':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[10,-14,-15,-16,10,-1,-2,-3,-4,None,None,None,None,10,10,10,10,-13,10,-17,]),'LESS':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[11,-14,-15,-16,11,-1,-2,-3,-4,None,None,None,None,11,11,11,11,-13,11,-17,]),'GREATEREQ':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[12,-14,-15,-16,12,-1,-2,-3,-4,None,None,None,None,12,12,12,12,-13,12,-17,]),'LESSEQ':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[13,-14,-15,-16,13,-1,-2,-3,-4,None,None,None,None,13,13,13,13,-13,13,-17,]),'EQUAL':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[14,-14,-15,-16,14,-1,-2,-3,-4,-5,-6,-7,-8,None,None,14,14,-13,14,-17,]),'NOTEQUAL':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[15,-14,-15,-16,15,-1,-2,-3,-4,-5,-6,-7,-8,None,None,15,15,-13,15,-17,]),'AND':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[16,-14,-15,-16,16,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,16,-13,16,-17,]),'OR':([1,2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[17,-14,-15,-16,17,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,17,-17,]),'RPAREN':([2,3,5,18,19,21,22,23,24,25,26,27,28,29,30,31,32,33,34,],[-14,-15,-16,32,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,34,-17,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,5,],[1,10,]),'term':([0,5,6,7,],[2,2,11,12,]),'factor':([0,5,6,7,8,9,],[3,3,3,3,13,14,]),}
+_lr_goto_items = {'expression':([0,4,10,11,12,13,14,15,16,17,20,],[1,18,24,25,26,27,28,29,30,31,33,]),'term':([0,4,6,7,10,11,12,13,14,15,16,17,20,],[2,2,19,21,2,2,2,2,2,2,2,2,2,]),'factor':([0,4,6,7,8,9,10,11,12,13,14,15,16,17,20,],[3,3,3,3,22,23,3,3,3,3,3,3,3,3,3,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,12 +27,21 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression PLUS term','expression',3,'p_binary_operators','decaf_parser.py',10),
-  ('expression -> expression MINUS term','expression',3,'p_binary_operators','decaf_parser.py',11),
-  ('term -> term TIMES factor','term',3,'p_binary_operators','decaf_parser.py',12),
-  ('term -> term DIVIDE factor','term',3,'p_binary_operators','decaf_parser.py',13),
-  ('expression -> term','expression',1,'p_expression_term','decaf_parser.py',25),
-  ('term -> factor','term',1,'p_term_factor','decaf_parser.py',29),
-  ('factor -> NUMBER','factor',1,'p_factor_num','decaf_parser.py',33),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','decaf_parser.py',37),
+  ('expression -> expression PLUS term','expression',3,'p_binary_operators','decaf_parser.py',23),
+  ('expression -> expression MINUS term','expression',3,'p_binary_operators','decaf_parser.py',24),
+  ('expression -> expression TIMES factor','expression',3,'p_binary_operators','decaf_parser.py',25),
+  ('expression -> expression DIVIDE factor','expression',3,'p_binary_operators','decaf_parser.py',26),
+  ('expression -> expression GREATER expression','expression',3,'p_binary_operators','decaf_parser.py',27),
+  ('expression -> expression LESS expression','expression',3,'p_binary_operators','decaf_parser.py',28),
+  ('expression -> expression GREATEREQ expression','expression',3,'p_binary_operators','decaf_parser.py',29),
+  ('expression -> expression LESSEQ expression','expression',3,'p_binary_operators','decaf_parser.py',30),
+  ('expression -> expression EQUAL expression','expression',3,'p_binary_operators','decaf_parser.py',31),
+  ('expression -> expression NOTEQUAL expression','expression',3,'p_binary_operators','decaf_parser.py',32),
+  ('expression -> expression AND expression','expression',3,'p_binary_operators','decaf_parser.py',33),
+  ('expression -> expression OR expression','expression',3,'p_binary_operators','decaf_parser.py',34),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_binary_operators','decaf_parser.py',35),
+  ('expression -> term','expression',1,'p_expression_term','decaf_parser.py',63),
+  ('term -> factor','term',1,'p_term_factor','decaf_parser.py',67),
+  ('factor -> NUMBER','factor',1,'p_factor_num','decaf_parser.py',71),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor_expr','decaf_parser.py',75),
 ]

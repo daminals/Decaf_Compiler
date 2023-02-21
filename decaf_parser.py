@@ -6,7 +6,7 @@ import ply.yacc as yacc
 
 # Get the token map from the lexer.  This is required.
 from decaf_lexer import tokens
-# arithmetic expressions
+# precedence for the expressions
 precedence = (
     ('left', 'OR'),
     ('left', 'AND'),
@@ -15,7 +15,10 @@ precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
     ('nonassoc', 'LPAREN', 'RPAREN'),
+    ('right', 'NOT'),
 )
+# arithmetic expression and comparsion
+# not sure if we gotta check both left hand right hand side check it type for some of these, but prob do as comparsion return boolean instead of numbers
 def p_binary_operators(p):
     '''expression : expression PLUS term
                   | expression MINUS term
@@ -25,6 +28,10 @@ def p_binary_operators(p):
                   | expression LESS expression
                   | expression GREATEREQ expression
                   | expression LESSEQ expression
+                  | expression EQUAL expression
+                  | expression NOTEQUAL expression
+                  | expression AND expression
+                  | expression OR expression
                   | LPAREN expression RPAREN'''
     if p[2] == '+':
         p[0] = p[1] + p[3]
@@ -42,6 +49,14 @@ def p_binary_operators(p):
         p[0] = p[1] >= p[3]
     elif p[2] == '<=':
         p[0] = p[1] <= p[3]
+    elif p[2] == '==':
+        p[0] = p[1] == p[3]
+    elif p[2] == '!=':
+        p[0] = not p[1] == p[3]
+    elif p[2] == '&&':
+        p[0] = p[1] and p[3]
+    elif p[2] == '||':
+        p[0] = p[1] or p[3]
 
 
 def p_expression_term(p):
