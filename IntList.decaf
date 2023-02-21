@@ -1,0 +1,46 @@
+class IntList{
+    int value;
+    IntList next;
+
+    public IntList() {
+    }
+
+    public static IntList create_list(int v) {
+        IntList new_element;
+
+        new_element = new IntList();
+        new_element.value = v;
+        new_element.next = null;
+        return new_element;
+    }
+
+    public IntList insert(int v) {
+        IntList new_element;
+
+        new_element = IntList.create_list(v);
+        new_element.next = this;
+
+        return new_element;
+    }
+
+    public boolean search(int v) {
+        if (this.value == v)
+            { /* head of list matches */
+                return true;
+            }
+        else
+            /* not at head, so search rest of list */
+            if (this.next == null)
+                { /* end of list, so search fails */
+                    return false;
+                }
+            else
+                /* search rest of the list */
+                return this.next.search(v);
+    }
+
+    public int length() {
+        if (this.next == null) return 1;
+        else return 1 + this.next.length();
+    }
+}
