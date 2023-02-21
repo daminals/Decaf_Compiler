@@ -16,6 +16,15 @@ tokens = (
    'RPAREN',
     'LCURLY',
    'RCURLY',
+    'EQUAL',
+    'NOTEQUAL',
+    'GREATER',
+    'LESS',
+    'GREATEREQ',
+    'LESSEQ',
+    'OR',
+    'AND',
+    'NOT',
 
 )
 
@@ -37,7 +46,6 @@ t_LESSEQ = r'\<\='
 t_OR = r'\|\|'
 t_AND = r'\&\&'
 t_NOT = r'\!'
-
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
