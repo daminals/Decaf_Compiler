@@ -49,9 +49,16 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
-data = '''
-3 + 4 * 10
+data = ''' 3
+ + 4 * 10
   + -20 *2
 '''
 
 lexer.input(data)
+
+# Tokenize
+while True:
+    tok = lexer.token()
+    if not tok:
+        break      # No more input
+    print(tok)
