@@ -39,5 +39,4 @@ The Decaf compiler is implemented in Python using the PLY tool. PLY provides a l
 
 ## Credits
 
-This project was created by Daniel Kogan and Jason Zheng as a part of CSE 304 - Compiler Design at Stony Brook University. The Decaf language was originally created by David J. Pearce.
-
+This project was created by Daniel Kogan and Jason Zheng as a part of CSE 304 - Compiler Design at Stony Brook University.
