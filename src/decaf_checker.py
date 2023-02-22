@@ -6,13 +6,15 @@ import sys
 import ply.lex as lex
 import ply.yacc as yacc
 
-def just_scan():
-    fn = sys.argv[1] if len(sys.argv) > 1 else ""
+import decaf_lexer
+import decaf_parser
+
+
+def just_scan(fn=""):
     if fn == "":
         print("Missing file name for source program.")
         print("USAGE: python3 decaf_checker.py <decaf_source_file_name>")
         sys.exit()
-    import decaf_lexer
     lexer = lex.lex(module = decaf_lexer, debug = 1)
 
     fh = open(fn, 'r')
@@ -25,14 +27,11 @@ def just_scan():
 # end def just_scan()
 
 
-def main():
-    fn = sys.argv[1] if len(sys.argv) > 1 else ""
+def just_parse(fn=""):
     if fn == "":
         print("Missing file name for source program.")
         print("USAGE: python3 decaf_checker.py <decaf_source_file_name>")
         sys.exit()
-    import decaf_lexer
-    import decaf_parser
     lexer = lex.lex(module = decaf_lexer, debug = 1)
     parser = yacc.yacc(module = decaf_parser, debug = 1)
 
@@ -46,6 +45,15 @@ def main():
     print("YES")
     #print()
 
+def main():
+    fn = sys.argv[1] if len(sys.argv) > 1 else ""
+    just_scan(fh) # lexer
+    fn = sys.argv[1] if len(sys.argv) > 1 else ""
+    just_parse(fn) # parser
+
+def compile(fn=""):
+    just_scan(fn) # lexer
+    just_parse(fn) # parser
+
 if __name__ == "__main__":
-    just_scan()
-    main()
+  main()
