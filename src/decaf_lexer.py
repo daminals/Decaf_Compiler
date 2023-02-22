@@ -56,8 +56,6 @@ tokens = [
     'OR',
     'AND',
     'NOT',
-    'TRUE',
-    'FALSE',
     'SETEQUAL',
     'SEMICOLON',
     'ERROR', # error type, no rule associated with type except throw err
