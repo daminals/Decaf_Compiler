@@ -21,11 +21,19 @@ precedence = (
 # not sure if we gotta check both left hand right hand side check it type for some of these, but prob do as comparsion return boolean instead of numbers
 # need define boolean keyword for this work currently 
 def p_binary_operators(p):
-    '''stmt_expression : assignment
+    '''expression : assignment
                   | expression PLUS term
                   | expression MINUS term
                   | expression TIMES factor
-                  | expression DIVIDE factor'''
+                  | expression DIVIDE factor
+                  | expression GREATER expression
+                  | expression LESS expression
+                  | expression GREATEREQ expression
+                  | expression LESSEQ expression
+                  | expression EQUAL expression
+                  | expression NOTEQUAL expression
+                  | expression AND expression
+                  | expression OR expression'''
 
     if p[2] == '+':
         p[0] = p[1] + p[3]
@@ -35,17 +43,7 @@ def p_binary_operators(p):
         p[0] = p[1] * p[3]
     elif p[2] == '/':
         p[0] = p[1] / p[3]
-def p_conditional(p):
-    '''expression : stmt_expression GREATER stmt_expression
-                  | stmt_expression LESS stmt_expression
-                  | stmt_expression GREATEREQ stmt_expression
-                  | stmt_expression LESSEQ stmt_expression
-                  | expression EQUAL expression
-                  | expression NOTEQUAL expression
-                  | expression AND expression
-                  | expression OR expression
-                  | stmt_expression'''
-    if p[2] == '>':
+    elif p[2] == '>':
         p[0] = p[1] > p[3]
     elif p[2] == '<':
         p[0] = p[1] < p[3]
@@ -104,10 +102,10 @@ def p_stmt(p):
         statement : IF LPAREN expression RPAREN statement
                  | IF LPAREN expression RPAREN statement ELSE statement
                  | WHILE LPAREN expression RPAREN statement
-                 | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN statement
+                 | FOR LPAREN expression SEMICOLON expression SEMICOLON expression RPAREN statement
                  | RETURN expression SEMICOLON
                  | RETURN SEMICOLON
-                 | stmt_expression SEMICOLON
+                 | expression SEMICOLON
                  | BREAK SEMICOLON
                  | CONTINUE SEMICOLON
                  | block'''
