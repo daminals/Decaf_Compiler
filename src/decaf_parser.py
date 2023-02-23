@@ -97,14 +97,16 @@ def p_factor_expr(p):
     p[0] = p[2]
 
 
-#general rule
+#general rule (for loop apperently the expression seperated by ; is optional need add rule for each)
 def p_stmt(p):
     '''
         block : LCURLY statement RCURLY
         statement : IF LPAREN expression RPAREN statement
                  | IF LPAREN expression RPAREN statement ELSE statement
                  | WHILE LPAREN expression RPAREN statement
+                 | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN statement
                  | RETURN expression SEMICOLON
+                 | RETURN SEMICOLON
                  | stmt_expression SEMICOLON
                  | BREAK SEMICOLON
                  | CONTINUE SEMICOLON
