@@ -84,6 +84,27 @@ t_AND = r'\&\&'
 t_NOT = r'\!'
 t_SETEQUAL = r'\='
 t_SEMICOLON = r'\;'
+t_IF = r'if'
+t_ELSE = r'else'
+t_WHILE = r'while'
+t_DO = r'do'
+t_FOR = r'for'
+t_RETURN = r'return'
+t_BOOLEAN = r'boolean'
+t_BREAK = r'break'
+t_EXTENDS = r'extends'
+t_NEW = r'new'
+t_NULL = r'null'
+t_SUPER = r'super'
+t_THIS = r'this'
+t_CONTINUE = r'continue'
+t_CLASS = r'class'
+t_FLOAT = r'float'
+t_PRIVATE = r'private'
+t_PUBLIC = r'public'
+t_VOID = r'void'
+
+
 
 # A regular expression rule with some action code
 def t_NUMBER(t):
@@ -100,6 +121,26 @@ def t_FALSE(t):
     r'false'
     t.value = False
     return t
+
+# def t_if(t):
+#     r'if'
+#     return t
+
+# def t_for(t):
+#     r'for'
+#     return t
+
+# def t_else(t):
+#     r'else'
+#     return t
+
+# def t_while(t):
+#     r'while'
+#     return t
+
+# def t_do(t):
+#     r'do'
+#     return t
 
 # Define a rule so we can track line numbers
 def t_newline(t):
