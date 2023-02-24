@@ -56,6 +56,7 @@ tokens = [
     'OR',
     'AND',
     'NOT',
+    'BOOL',
     'SETEQUAL',
     'SEMICOLON',
     'ERROR', # error type, no rule associated with type except throw err
@@ -112,14 +113,9 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
-def t_TRUE(t):
-    r'true'
-    t.value = True
-    return t
-
-def t_FALSE(t):
-    r'false'
-    t.value = False
+def t_BOOL(t):
+    r'(true|false)'
+    t.value = True if t.value == 'true' else False
     return t
 
 # def t_if(t):
@@ -155,13 +151,13 @@ def find_column(input, token):
     return (token.lexpos - line_start) + 1
 
 # EOF handling rule
-def t_eof(t):
+'''def t_eof(t):
     # Get more input (Example)
     more = input('... ')
     if more:
         self.lexer.input(more)
         return self.lexer.token()
-    return None
+    return None '''
 
 
 # A string containing ignored characters (spaces and tabs)
@@ -185,20 +181,3 @@ def t_error(t):
 
 # Build the lexer
 lexer = lex.lex()
-data = ''' 3
- + 4 * 10
-  + -20 *2
-invalid
-  IFFYf (true) {
-    5+2
-  };
-'''
-
-lexer.input(data)
-
-# Tokenize
-while True:
-    tok = lexer.token()
-    if not tok:
-        break      # No more input
-    print(tok)

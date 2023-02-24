@@ -7,6 +7,7 @@ import ply.yacc as yacc
 from decaf_lexer import tokens
 # precedence for the expressions
 precedence = (
+    ('right', 'SETEQUAL'),
     ('left', 'OR'),
     ('left', 'AND'),
     ('nonassoc', 'EQUAL', 'NOTEQUAL'),
@@ -20,7 +21,8 @@ precedence = (
 # not sure if we gotta check both left hand right hand side check it type for some of these, but prob do as comparsion return boolean instead of numbers
 # need define boolean keyword for this work currently 
 def p_binary_operators(p):
-    '''expression : expression PLUS term
+    '''expression : assignment
+                  | expression PLUS term
                   | expression MINUS term
                   | expression TIMES factor
                   | expression DIVIDE factor
@@ -31,8 +33,8 @@ def p_binary_operators(p):
                   | expression EQUAL expression
                   | expression NOTEQUAL expression
                   | expression AND expression
-                  | expression OR expression
-                  | LPAREN expression RPAREN'''
+                  | expression OR expression'''
+
     if p[2] == '+':
         p[0] = p[1] + p[3]
     elif p[2] == '-':
@@ -42,23 +44,36 @@ def p_binary_operators(p):
     elif p[2] == '/':
         p[0] = p[1] / p[3]
     elif p[2] == '>':
-        p[0] = p.lexer.token(p[1] > p[3] and 'true' or 'false')
+        p[0] = p[1] > p[3]
     elif p[2] == '<':
-        p[0] = p.lexer.token(p[1] < p[3] and 'true' or 'false')
+        p[0] = p[1] < p[3]
     elif p[2] == '>=':
-        p[0] = p.lexer.token(p[1] >= p[3] and 'true' or 'false')
+        p[0] = p[1] >= p[3]
     elif p[2] == '<=':
-        p[0] = p.lexer.token(p[1] <= p[3] and 'true' or 'false')
+        p[0] = p[1] <= p[3]
     elif p[2] == '==':
-        p[0] = p.lexer.token(p[1] == p[3] and 'true' or 'false')
+        p[0] = p[1] == p[3]
     elif p[2] == '!=':
-        p[0] = p.lexer.token(p[1] != p[3] and 'true' or 'false')
+        p[0] = p[1] != p[3]
     elif p[2] == '&&':
-        p[0] = p.lexer.token(p[1] and p[3] and 'true' or 'false')
+        p[0] = p[1] and p[3] 
     elif p[2] == '||':
-        p[0] = p.lexer.token(p[1] or p[3] and 'true' or 'false')
-
-
+        p[0] = p[1] or p[3]
+#dosent work?
+def p_assignment(p):
+    '''assignment : ID SETEQUAL factor
+                  | ID SETEQUAL expression
+                  | ID SETEQUAL ID
+                  | ID SETEQUAL assignment'''
+    print(p)
+    if p[2] == '=':
+        p[0] = ('=', p[1], p[3])
+    else:
+        p[0] = ('=', p[1], p[3])
+ #working       
+def p_expression_not(p):
+    'expression : NOT expression'
+    p[0] = not p[2]
 def p_expression_term(p):
     'expression : term'
     p[0] = p[1]
@@ -70,17 +85,37 @@ def p_term_factor(p):
 def p_factor_num(p):
     'factor : NUMBER'
     p[0] = p[1]
+    
 def p_factor_bool(p):
-    'factor : BOOLEAN'
+    'factor : BOOL'
     p[0] = p[1]
 
 def p_factor_expr(p):
     'factor : LPAREN expression RPAREN'
     p[0] = p[2]
 
-# Error rule for syntax errors
-def p_error(p):
-    print("Syntax error in input!")
+
+#general rule (for loop apperently the expression seperated by ; is optional need add rule for each)
+def p_stmt(p):
+    '''
+        block : LCURLY statement RCURLY
+        statement : IF LPAREN expression RPAREN statement
+                 | IF LPAREN expression RPAREN statement ELSE statement
+                 | WHILE LPAREN expression RPAREN statement
+                 | FOR LPAREN expression SEMICOLON expression SEMICOLON expression RPAREN statement
+                 | RETURN expression SEMICOLON
+                 | RETURN SEMICOLON
+                 | expression SEMICOLON
+                 | BREAK SEMICOLON
+                 | CONTINUE SEMICOLON
+                 | block'''
+    
+    
+#def p_while(p):
+    '''statement : WHILE LPAREN expression RPAREN statement'''
+
+#def p_for(p):
+    '''statement : FOR LPAREN expression RPAREN statement'''
 
 # Build the parser
 parser = yacc.yacc()
