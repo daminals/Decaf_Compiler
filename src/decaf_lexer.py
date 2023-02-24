@@ -104,7 +104,7 @@ t_FLOAT = r'float'
 t_PRIVATE = r'private'
 t_PUBLIC = r'public'
 t_VOID = r'void'
-
+t_INT = r'int'
 
 
 # A regular expression rule with some action code
