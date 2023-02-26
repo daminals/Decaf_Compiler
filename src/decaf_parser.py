@@ -83,7 +83,7 @@ def p_term_factor(p):
     p[0] = p[1]
 #Literal
 def p_factor_num(p):
-    'factor : NUMBER'
+    'factor : INTEGER'
     p[0] = p[1]
     
 def p_factor_bool(p):

@@ -78,9 +78,9 @@ def p_stmt(p):
             | SEMICOLON'''
     
 def p_literal(p):
-    '''literal : int_const
-               | float_const
-               | string_const
+    '''literal : INTEGER
+               | FLOAT
+               | STRING
                | NULL
                | FALSE
                | TRUE'''
