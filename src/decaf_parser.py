@@ -6,6 +6,7 @@ import ply.yacc as yacc
 # Get the token map from the lexer.  This is required.
 from decaf_lexer import tokens
 # precedence for the expressions
+
 precedence = (
     ('right', 'SETEQUAL'),
     ('left', 'OR'),
@@ -21,8 +22,7 @@ precedence = (
 # not sure if we gotta check both left hand right hand side check it type for some of these, but prob do as comparsion return boolean instead of numbers
 # need define boolean keyword for this work currently 
 def p_binary_operators(p):
-    '''expression : assignment
-                  | expression PLUS term
+    '''expression : expression PLUS term
                   | expression MINUS term
                   | expression TIMES factor
                   | expression DIVIDE factor
@@ -99,7 +99,7 @@ def p_factor_expr(p):
 def p_stmt(p):
     '''
         block : LCURLY statement RCURLY
-        statement : IF LPAREN expression RPAREN statement
+        statement : LPAREN expression RPAREN statement
                  | IF LPAREN expression RPAREN statement ELSE statement
                  | WHILE LPAREN expression RPAREN statement
                  | FOR LPAREN expression SEMICOLON expression SEMICOLON expression RPAREN statement
@@ -111,18 +111,13 @@ def p_stmt(p):
                  | block'''
     
     
-#def p_while(p):
-    '''statement : WHILE LPAREN expression RPAREN statement'''
-
-#def p_for(p):
-    '''statement : FOR LPAREN expression RPAREN statement'''
 
 # Build the parser
 parser = yacc.yacc()
 
 while True:
    try:
-       s = input('calc > ')
+       s = input('> ')
    except EOFError:
        break
    if not s: continue

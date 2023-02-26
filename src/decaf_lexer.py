@@ -36,13 +36,15 @@ reserved = {
 
 # List of token names.   This is always required
 tokens = [
-    'NUMBER',
-    'PLUS',
-    'MINUS',
-    'TIMES',
-    'DIVIDE',
-    'LPAREN',
-    'RPAREN',
+    'DOT',
+    'COMMA',
+   'NUMBER',
+   'PLUS',
+   'MINUS',
+   'TIMES',
+   'DIVIDE',
+   'LPAREN',
+   'RPAREN',
     'LCURLY',
     'RBRACKET',
     'LBRACKET',
@@ -64,14 +66,14 @@ tokens = [
 ] + list(reserved.values())
 
 # Regular expression rules for simple tokens
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_TIMES = r'\*'
-t_DIVIDE = r'/'
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
-t_LCURLY = r'\{'
-t_RCURLY = r'\}'
+t_PLUS    = r'\+'
+t_MINUS   = r'-'
+t_TIMES   = r'\*'
+t_DIVIDE  = r'/'
+t_LPAREN  = r'\('
+t_RPAREN  = r'\)'
+t_LCURLY  = r'\{'
+t_RCURLY  = r'\}'
 t_LBRACKET = r'\['
 t_RBRACKET = r'\]'
 t_EQUAL = r'\=\='
@@ -113,31 +115,34 @@ def t_NUMBER(t):
     t.value = int(t.value)
     return t
 
-
 def t_BOOL(t):
     r'(true|false)'
     t.value = True if t.value == 'true' else False
     return t
 
-# def t_if(t):
-#     r'if'
-#     return t
+def t_if(t):
+    r'if'
+    t.type = reserved.get(t.value, 'IF')
+    return t
 
-# def t_for(t):
-#     r'for'
-#     return t
+def t_for(t):
+     r'for'
+     t.type = reserved.get(t.value, 'FOR')
+     return t
 
-# def t_else(t):
-#     r'else'
-#     return t
+def t_else(t):
+     r'else'
+     t.type = reserved.get(t.value, 'ELSE')
+     return t
 
-# def t_while(t):
-#     r'while'
-#     return t
+def t_while(t):
+     r'while'
+     t.type = reserved.get(t.value, 'WHILE')
+     return t
 
-# def t_do(t):
-#     r'do'
-#     return t
+def t_do(t):
+     r'do'
+     return t
 
 # Define a rule so we can track line numbers
 
