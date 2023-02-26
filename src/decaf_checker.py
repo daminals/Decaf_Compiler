@@ -47,7 +47,7 @@ def just_parse(fn=""):
 
 def main():
     fn = sys.argv[1] if len(sys.argv) > 1 else ""
-    just_scan(fh) # lexer
+    just_scan(fn) # lexer
     fn = sys.argv[1] if len(sys.argv) > 1 else ""
     just_parse(fn) # parser
 

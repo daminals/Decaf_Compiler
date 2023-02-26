@@ -1,4 +1,4 @@
-# decaf_parser.py
+# decaf_lexer.py
 # Daniel Kogan 114439349
 # Jason Zhang 112710259
 # 02.21.2023
@@ -39,7 +39,7 @@ reserved = {
 tokens = [
     'DOT',
     'COMMA',
-    'NUMBER',
+    'INTEGER',
     'PLUS',
     'MINUS',
     'TIMES',
@@ -63,6 +63,9 @@ tokens = [
     'SETEQUAL',
     'SEMICOLON',
     'STRING',
+    'string_const',
+    'int_const',
+    'float_const',
     'ERROR',  # error type, no rule associated with type except throw err
     'ID'
 ] + list(reserved.values())
@@ -79,7 +82,6 @@ t_DOUBLE = r'double'
 t_ELSE = r'else'
 t_EQUAL = r'\=\='
 t_EXTENDS = r'extends'
-t_FLOAT = r'float'
 t_FOR = r'for'
 t_GREATER = r'\>'
 t_GREATEREQ = r'\>\='
@@ -114,11 +116,21 @@ t_WHILE = r'while'
 
 
 # A regular expression rule with some action code
-def t_NUMBER(t):
+def t_INTEGER(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
+def t_FLOAT(t):
+    r'\d+\.\d+'
+    t.value = float(t.value)
+    return t
+
+# Regular expression rule for string literals
+def t_STRING(t):
+    r'"([^"\\]|\\.)*"'
+    t.value = t.value[1:-1] # remove the quotes from the value
+    return t
 
 def t_BOOL(t):
     r'(true|false)'
@@ -184,12 +196,6 @@ def find_column(input, token):
 # A string containing ignored characters (spaces and tabs)
 t_ignore = ' \t'
 
-# Regular expression rule for string literals
-def t_STRING(t):
-    r'"([^"\\]|\\.)*"'
-    t.value = t.value[1:-1] # remove the quotes from the value
-    return t
-
 # rules for reserved words
 # needs to be last in the file since regex is greedy
 def t_ID(t):
@@ -208,6 +214,6 @@ def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
 
-
-# Build the lexer
-lexer = lex.lex()
+def t_COMMENT(t):
+    r'(/\*(.|\n)*?\*/)|(//.*)'
+    t.lexer.lineno += t.value.count('\n')

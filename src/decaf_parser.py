@@ -1,125 +1,152 @@
-# decaf_parser.py
+# decaf_lexer.py
 # Daniel Kogan 114439349
 # Jason Zhang 112710259
 # 02.21.2023
 import ply.yacc as yacc
-# Get the token map from the lexer.  This is required.
 from decaf_lexer import tokens
-# precedence for the expressions
+def p_start(p):
+    '''start : class_decl'''
 
-precedence = (
-    ('right', 'SETEQUAL'),
-    ('left', 'OR'),
-    ('left', 'AND'),
-    ('nonassoc', 'EQUAL', 'NOTEQUAL'),
-    ('nonassoc', 'GREATER', 'LESS', 'GREATEREQ', 'LESSEQ'),
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
-    ('nonassoc', 'LPAREN', 'RPAREN'),
-    ('right', 'NOT'),
-)
-# arithmetic expression and comparsion
-# not sure if we gotta check both left hand right hand side check it type for some of these, but prob do as comparsion return boolean instead of numbers
-# need define boolean keyword for this work currently 
-def p_binary_operators(p):
-    '''expression : expression PLUS term
-                  | expression MINUS term
-                  | expression TIMES factor
-                  | expression DIVIDE factor
-                  | expression GREATER expression
-                  | expression LESS expression
-                  | expression GREATEREQ expression
-                  | expression LESSEQ expression
-                  | expression EQUAL expression
-                  | expression NOTEQUAL expression
-                  | expression AND expression
-                  | expression OR expression'''
-
-    if p[2] == '+':
-        p[0] = p[1] + p[3]
-    elif p[2] == '-':
-        p[0] = p[1] - p[3]
-    elif p[2] == '*':
-        p[0] = p[1] * p[3]
-    elif p[2] == '/':
-        p[0] = p[1] / p[3]
-    elif p[2] == '>':
-        p[0] = p[1] > p[3]
-    elif p[2] == '<':
-        p[0] = p[1] < p[3]
-    elif p[2] == '>=':
-        p[0] = p[1] >= p[3]
-    elif p[2] == '<=':
-        p[0] = p[1] <= p[3]
-    elif p[2] == '==':
-        p[0] = p[1] == p[3]
-    elif p[2] == '!=':
-        p[0] = p[1] != p[3]
-    elif p[2] == '&&':
-        p[0] = p[1] and p[3] 
-    elif p[2] == '||':
-        p[0] = p[1] or p[3]
-#dosent work?
-def p_assignment(p):
-    '''assignment : ID SETEQUAL factor
-                  | ID SETEQUAL expression
-                  | ID SETEQUAL ID
-                  | ID SETEQUAL assignment'''
-    print(p)
-    if p[2] == '=':
-        p[0] = ('=', p[1], p[3])
-    else:
-        p[0] = ('=', p[1], p[3])
- #working       
-def p_expression_not(p):
-    'expression : NOT expression'
-    p[0] = not p[2]
-def p_expression_term(p):
-    'expression : term'
-    p[0] = p[1]
-
-def p_term_factor(p):
-    'term : factor'
-    p[0] = p[1]
-#Literal
-def p_factor_num(p):
-    'factor : NUMBER'
-    p[0] = p[1]
+def p_class(p):
+    '''class_decl : CLASS ID LCURLY class_body RCURLY
+                  | CLASS ID EXTENDS ID LCURLY class_body RCURLY'''
     
-def p_factor_bool(p):
-    'factor : BOOL'
-    p[0] = p[1]
+def p_class_body(p):
+    '''class_body : field_decl
+                  | method_decl
+                  | constructor_decl
+                  | class_body field_decl
+                  | class_body method_decl
+                  | class_body constructor_decl'''
+    
+def p_field_decl(p):
+    '''field_decl : modifier var_decl'''
 
-def p_factor_expr(p):
-    'factor : LPAREN expression RPAREN'
-    p[0] = p[2]
+def p_modifier(p):
+    '''modifier : PUBLIC
+                | PRIVATE
+                | PUBLIC STATIC
+                | PRIVATE STATIC
+                | empty'''
 
 
-#general rule (for loop apperently the expression seperated by ; is optional need add rule for each)
+def p_var_decl(p):
+    'var_decl : type variables SEMICOLON'
+#put new types here
+def p_type(p):
+    '''type : INT
+            | FLOAT
+            | BOOLEAN
+            | ID'''
+
+def p_variables(p):
+    '''variables : variable
+                 | variable COMMA variables'''
+
+def p_variable(p):
+    '''variable : ID'''
+
+def p_method_decl(p):
+    '''method_decl : modifier type ID LPAREN RPAREN block
+                   | modifier type ID LPAREN formals RPAREN block
+                   | modifier VOID ID LPAREN RPAREN block
+                   | modifier VOID ID LPAREN formals RPAREN block'''
+
+def p_constructor(p):
+    '''constructor_decl : modifier ID block
+                        | modifier ID formals block'''
+
+def p_formals(p):
+    '''formals : formal_param
+               | formal_param COMMA formals '''
+
+def p_formals_param(p):
+    '''formal_param : type variable'''
+
+def p_block(p):
+    'block : LCURLY stmt RCURLY'
+
 def p_stmt(p):
-    '''
-        block : LCURLY statement RCURLY
-        statement : LPAREN expression RPAREN statement
-                 | IF LPAREN expression RPAREN statement ELSE statement
-                 | WHILE LPAREN expression RPAREN statement
-                 | FOR LPAREN expression SEMICOLON expression SEMICOLON expression RPAREN statement
-                 | RETURN expression SEMICOLON
-                 | RETURN SEMICOLON
-                 | expression SEMICOLON
-                 | BREAK SEMICOLON
-                 | CONTINUE SEMICOLON
-                 | block'''
+    '''stmt : IF LPAREN expression RPAREN stmt
+            | IF LPAREN expression RPAREN stmt ELSE stmt
+            | WHILE LPAREN expression RPAREN stmt
+            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
+            | RETURN expression SEMICOLON
+            | RETURN SEMICOLON
+            | stmt_expression SEMICOLON
+            | BREAK SEMICOLON
+            | CONTINUE SEMICOLON
+            | block
+            | var_decl
+            | SEMICOLON'''
     
+def p_literal(p):
+    '''literal : INTEGER
+               | FLOAT
+               | STRING
+               | NULL
+               | FALSE
+               | TRUE'''
     
+def p_primary(p):
+    '''primary : literal
+               | THIS
+               | SUPER
+               | LPAREN expression RPAREN
+               | NEW ID
+               | NEW ID LPAREN arguments RPAREN
+               | method_invocation
+               | lhs'''
 
-# Build the parser
-parser = yacc.yacc()
+def p_arg(p):
+    '''arguments : expression
+                 | expression COMMA arguments'''
 
-while True:
-   try:
-       s = input('> ')
-   except EOFError:
-       break
-   if not s: continue
-   result = parser.parse(s)
-   print(result)
+def p_lhs(p):
+    '''lhs : field_access'''
+
+def p_field(p):
+    '''field_access : primary DOT ID
+                    | ID'''
+
+def p_method_invo(p):
+    '''method_invocation : field_access LPAREN arguments RPAREN
+                         | field_access LPAREN RPAREN'''
+
+def p_expr(p):
+    '''expression : primary
+                  | assign
+                  | expression arith_op expression
+                  | expression bool_op expression
+                  | unary_op expression'''
+
+def p_assign(p):
+    'assign : lhs SETEQUAL expression'
+
+def p_arith_op(p):
+    '''arith_op : PLUS
+                | MINUS
+                | TIMES 
+                | DIVIDE'''
+
+def p_bool_op(p):
+    '''bool_op : GREATER
+               | LESS
+               | GREATEREQ
+               | LESSEQ
+               | EQUAL
+               | NOTEQUAL
+               | AND
+               | OR'''
+
+def p_unary_op(p):
+    '''unary_op : PLUS
+                | MINUS
+                | NOT'''
+
+def p_stmt_expr(p):
+    '''stmt_expression : assign
+                       | method_invocation'''
+def p_empty(p):
+    'empty :'
+    pass             
