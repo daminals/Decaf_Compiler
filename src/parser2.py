@@ -118,7 +118,7 @@ def p_expr(p):
                   | unary_op expression'''
 
 def p_assign(p):
-    'assign : lhs EQUAL expression'
+    'assign : lhs SETEQUAL expression'
 
 def p_arith_op(p):
     '''arith_op : PLUS
