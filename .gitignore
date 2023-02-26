@@ -1,3 +1,4 @@
 parsetab.py
 __pycache__
 .coverage
+src/parser.out

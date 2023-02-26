@@ -20,6 +20,7 @@ reserved = {
     'continue': 'CONTINUE',
     'class': 'CLASS',
     'float': 'FLOAT',
+    'double': 'DOUBLE',
     'for': 'FOR',
     'private': 'PRIVATE',
     'public': 'PUBLIC',
@@ -61,52 +62,55 @@ tokens = [
     'BOOL',
     'SETEQUAL',
     'SEMICOLON',
+    'STRING',
     'ERROR',  # error type, no rule associated with type except throw err
     'ID'
 ] + list(reserved.values())
 
 # Regular expression rules for simple tokens
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_TIMES = r'\*'
-t_DIVIDE = r'/'
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
-t_LCURLY = r'\{'
-t_RCURLY = r'\}'
-t_LBRACKET = r'\['
-t_RBRACKET = r'\]'
-t_EQUAL = r'\=\='
-t_NOTEQUAL = r'\!\='
-t_GREATER = r'\>'
-t_LESS = r'\<'
-t_GREATEREQ = r'\>\='
-t_LESSEQ = r'\<\='
-t_OR = r'\|\|'
 t_AND = r'\&\&'
-t_NOT = r'\!'
-t_SETEQUAL = r'\='
-t_SEMICOLON = r'\;'
-t_IF = r'if'
-t_ELSE = r'else'
-t_WHILE = r'while'
-t_DO = r'do'
-t_FOR = r'for'
-t_RETURN = r'return'
 t_BOOLEAN = r'boolean'
 t_BREAK = r'break'
-t_EXTENDS = r'extends'
-t_NEW = r'new'
-t_NULL = r'null'
-t_SUPER = r'super'
-t_THIS = r'this'
-t_CONTINUE = r'continue'
 t_CLASS = r'class'
+t_CONTINUE = r'continue'
+t_DIVIDE = r'/'
+t_DO = r'do'
+t_DOUBLE = r'double'
+t_ELSE = r'else'
+t_EQUAL = r'\=\='
+t_EXTENDS = r'extends'
 t_FLOAT = r'float'
+t_FOR = r'for'
+t_GREATER = r'\>'
+t_GREATEREQ = r'\>\='
+t_IF = r'if'
+t_INT = r'int'
+t_LBRACKET = r'\['
+t_LCURLY = r'\{'
+t_LESS = r'\<'
+t_LESSEQ = r'\<\='
+t_LPAREN = r'\('
+t_MINUS = r'-'
+t_NEW = r'new'
+t_NOT = r'\!'
+t_NOTEQUAL = r'\!\='
+t_NULL = r'null'
+t_OR = r'\|\|'
+t_PLUS = r'\+'
 t_PRIVATE = r'private'
 t_PUBLIC = r'public'
+t_RBRACKET = r'\]'
+t_RCURLY = r'\}'
+t_RETURN = r'return'
+t_RPAREN = r'\)'
+t_SEMICOLON = r'\;'
+t_SETEQUAL = r'\='
+t_STATIC = r'static'
+t_SUPER = r'super'
+t_THIS = r'this'
+t_TIMES = r'\*'
 t_VOID = r'void'
-t_INT = r'int'
+t_WHILE = r'while'
 
 
 # A regular expression rule with some action code
@@ -180,10 +184,14 @@ def find_column(input, token):
 # A string containing ignored characters (spaces and tabs)
 t_ignore = ' \t'
 
+# Regular expression rule for string literals
+def t_STRING(t):
+    r'"([^"\\]|\\.)*"'
+    t.value = t.value[1:-1] # remove the quotes from the value
+    return t
+
 # rules for reserved words
 # needs to be last in the file since regex is greedy
-
-
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     if t.value in reserved:             # Check for reserved words
