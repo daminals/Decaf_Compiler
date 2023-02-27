@@ -63,7 +63,9 @@ tokens = [
     'SETEQUAL',
     'SEMICOLON',
     'STRING',
-    'COMMENT',
+    'string_const',
+    'int_const',
+    'float_const',
     'ERROR',  # error type, no rule associated with type except throw err
     'ID'
 ] + list(reserved.values())
@@ -135,9 +137,6 @@ def t_BOOL(t):
     t.value = True if t.value == 'true' else False
     return t
 
-def t_COMMENT(t):
-    r'(/\*(.|\n)*?\*/)|(//.*)'
-    t.lexer.lineno += t.value.count('\n')
 
 def t_if(t):
     r'if'
