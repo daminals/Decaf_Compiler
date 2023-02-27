@@ -16,8 +16,8 @@ def p_class_body(p):
                   | method_decl
                   | constructor_decl
                   | class_body field_decl
-                  | class_body method_decl
                   | class_body constructor_decl
+                  | class_body method_decl
                   | empty'''
     
 def p_field_decl(p):
@@ -54,8 +54,8 @@ def p_method_decl(p):
                    | modifier VOID ID LPAREN formals RPAREN block'''
 
 def p_constructor(p):
-    '''constructor_decl : modifier ID block
-                        | modifier ID formals block'''
+    '''constructor_decl : modifier ID LPAREN RPAREN block 
+                        | modifier ID LPAREN formals RPAREN block'''
 
 def p_formals(p):
     '''formals : formal_param
@@ -98,7 +98,7 @@ def p_primary(p):
                | THIS
                | SUPER
                | LPAREN expression RPAREN
-               | NEW ID
+               | NEW ID LPAREN RPAREN
                | NEW ID LPAREN arguments RPAREN
                | method_invocation
                | lhs'''
