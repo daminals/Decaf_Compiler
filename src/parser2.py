@@ -44,10 +44,10 @@ def p_variable(p):
                 | ID LBRACKET RBRACKET'''
 
 def p_method_decl(p):
-    '''method_decl : modifier type ID block
-                   | modifier type ID formals block
-                   | modifier VOID ID block
-                   | modifier VOID ID formals block'''
+    '''method_decl : modifier type ID LPAREN RPAREN block
+                   | modifier type ID LPAREN formals RPAREN block
+                   | modifier VOID ID LPAREN RPAREN block
+                   | modifier VOID ID LPAREN formals RPAREN block'''
 
 def p_constructor(p):
     '''constructor_decl : modifier ID block

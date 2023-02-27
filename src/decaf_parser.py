@@ -27,6 +27,7 @@ def p_field_decl(p):
 def p_modifier(p):
     '''modifier : PUBLIC
                 | PRIVATE
+                | STATIC
                 | PUBLIC STATIC
                 | PRIVATE STATIC'''
 
@@ -75,7 +76,7 @@ def p_stmt(p):
     '''stmt : IF LPAREN expression RPAREN stmt
             | IF LPAREN expression RPAREN stmt ELSE stmt
             | WHILE LPAREN expression RPAREN stmt
-            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
+            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN block
             | RETURN expression SEMICOLON
             | RETURN SEMICOLON
             | stmt_expression SEMICOLON

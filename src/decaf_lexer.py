@@ -59,7 +59,6 @@ tokens = [
     'OR',
     'AND',
     'NOT',
-    'BOOL',
     'SETEQUAL',
     'SEMICOLON',
     'STRING',
@@ -131,11 +130,6 @@ def t_FLOAT(t):
 def t_STRING(t):
     r'"([^"\\]|\\.)*"'
     t.value = t.value[1:-1] # remove the quotes from the value
-    return t
-
-def t_BOOL(t):
-    r'(true|false)'
-    t.value = True if t.value == 'true' else False
     return t
 
 
