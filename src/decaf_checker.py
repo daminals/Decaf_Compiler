@@ -38,8 +38,11 @@ def just_parse(fn=""):
     fh = open(fn, 'r')
     source = fh.read()
     fh.close()
-    result = parser.parse(source, lexer = lexer, debug = 1)
-    print(result)
+    try:
+        result = parser.parse(source, lexer = lexer, debug = 1)
+        print(result)
+    except SyntaxError:
+        print("error occured while parsing")
     # Parsing Successful
     #print()
     print("YES")

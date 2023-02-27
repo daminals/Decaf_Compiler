@@ -160,4 +160,11 @@ def p_stmt_expr(p):
                        | method_invocation'''
 def p_empty(p):
     'empty :'
-    pass             
+    pass   
+
+def p_error(p):
+    if p:
+        print("Syntax error at line %d, pos %d:'" % (p.lineno, p.lexpos))
+    else:
+        print("Syntax error: unexpected end of input")
+    raise SyntaxError();     
