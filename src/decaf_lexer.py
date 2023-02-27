@@ -32,7 +32,7 @@ reserved = {
     'if': 'IF',
     'int': 'INT',
     'return': 'RETURN',
-    'static': 'STATIC'
+    'static': 'STATIC',
 }
 
 # List of token names.   This is always required
@@ -78,6 +78,7 @@ t_CLASS = r'class'
 t_CONTINUE = r'continue'
 t_DIVIDE = r'/'
 t_DO = r'do'
+t_DOT= r'\.'
 t_DOUBLE = r'double'
 t_ELSE = r'else'
 t_EQUAL = r'\=\='
