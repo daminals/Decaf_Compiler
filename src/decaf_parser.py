@@ -17,8 +17,7 @@ def p_class_body(p):
                   | constructor_decl
                   | class_body field_decl
                   | class_body constructor_decl
-                  | class_body method_decl
-                  | empty'''
+                  | class_body method_decl'''
     
 def p_field_decl(p):
     '''field_decl : var_decl
