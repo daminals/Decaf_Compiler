@@ -25,12 +25,12 @@ Rule 7     class_body -> class_body field_decl
 Rule 8     class_body -> class_body method_decl
 Rule 9     class_body -> class_body constructor_decl
 Rule 10    class_body -> empty
-Rule 11    field_decl -> modifier var_decl
-Rule 12    modifier -> PUBLIC
-Rule 13    modifier -> PRIVATE
-Rule 14    modifier -> PUBLIC STATIC
-Rule 15    modifier -> PRIVATE STATIC
-Rule 16    modifier -> empty
+Rule 11    field_decl -> var_decl
+Rule 12    field_decl -> modifier var_decl
+Rule 13    modifier -> PUBLIC
+Rule 14    modifier -> PRIVATE
+Rule 15    modifier -> PUBLIC STATIC
+Rule 16    modifier -> PRIVATE STATIC
 Rule 17    var_decl -> type variables SEMICOLON
 Rule 18    type -> INT
 Rule 19    type -> FLOAT
@@ -148,15 +148,15 @@ NOTEQUAL             : 86
 NULL                 : 53
 OR                   : 88
 PLUS                 : 77 89
-PRIVATE              : 13 15
-PUBLIC               : 12 14
+PRIVATE              : 14 16
+PUBLIC               : 13 15
 RBRACKET             : 
 RCURLY               : 2 3 34
 RETURN               : 42 43
 RPAREN               : 25 26 27 28 38 39 40 41 59 61 66 67
 SEMICOLON            : 17 41 41 42 43 44 45 46 49
 SETEQUAL             : 76
-STATIC               : 14 15
+STATIC               : 15 16
 STRING               : 52
 SUPER                : 58
 THIS                 : 57
@@ -179,7 +179,7 @@ bool_op              : 71
 class_body           : 2 3 7 8 9
 class_decl           : 1
 constructor_decl     : 6 9
-empty                : 10 16 35
+empty                : 10 35
 expression           : 38 39 40 41 42 59 64 65 70 70 71 71 72 76
 field_access         : 66 67 73
 field_decl           : 4 7
@@ -189,7 +189,7 @@ lhs                  : 63 76
 literal              : 56
 method_decl          : 5 8
 method_invocation    : 62 93
-modifier             : 11 25 26 27 28 29 30
+modifier             : 12 25 26 27 28 29 30
 primary              : 68 74
 start                : 0
 stmt                 : 36 37 38 39 39 40 41
@@ -197,7 +197,7 @@ stmt_expression      : 41 41 44
 stmtlist             : 34 37
 type                 : 17 25 26 33
 unary_op             : 72
-var_decl             : 11 48
+var_decl             : 11 12 48
 variable             : 22 23 33
 variables            : 17 23
 
@@ -255,7 +255,8 @@ state 5
     (8) class_body -> . class_body method_decl
     (9) class_body -> . class_body constructor_decl
     (10) class_body -> . empty
-    (11) field_decl -> . modifier var_decl
+    (11) field_decl -> . var_decl
+    (12) field_decl -> . modifier var_decl
     (25) method_decl -> . modifier type ID LPAREN RPAREN block
     (26) method_decl -> . modifier type ID LPAREN formals RPAREN block
     (27) method_decl -> . modifier VOID ID LPAREN RPAREN block
@@ -263,146 +264,167 @@ state 5
     (29) constructor_decl -> . modifier ID block
     (30) constructor_decl -> . modifier ID formals block
     (94) empty -> .
-    (12) modifier -> . PUBLIC
-    (13) modifier -> . PRIVATE
-    (14) modifier -> . PUBLIC STATIC
-    (15) modifier -> . PRIVATE STATIC
-    (16) modifier -> . empty
+    (17) var_decl -> . type variables SEMICOLON
+    (13) modifier -> . PUBLIC
+    (14) modifier -> . PRIVATE
+    (15) modifier -> . PUBLIC STATIC
+    (16) modifier -> . PRIVATE STATIC
+    (18) type -> . INT
+    (19) type -> . FLOAT
+    (20) type -> . BOOLEAN
+    (21) type -> . ID
 
   ! shift/reduce conflict for PUBLIC resolved as shift
   ! shift/reduce conflict for PRIVATE resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
     RCURLY          reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
-    INT             reduce using rule 94 (empty -> .)
-    FLOAT           reduce using rule 94 (empty -> .)
-    BOOLEAN         reduce using rule 94 (empty -> .)
-    PUBLIC          shift and go to state 13
-    PRIVATE         shift and go to state 14
+    PUBLIC          shift and go to state 16
+    PRIVATE         shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
 
   ! PUBLIC          [ reduce using rule 94 (empty -> .) ]
   ! PRIVATE         [ reduce using rule 94 (empty -> .) ]
+  ! INT             [ reduce using rule 94 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 94 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 94 (empty -> .) ]
+  ! ID              [ reduce using rule 94 (empty -> .) ]
 
-    class_body                     shift and go to state 7
-    field_decl                     shift and go to state 8
-    method_decl                    shift and go to state 9
-    constructor_decl               shift and go to state 10
-    empty                          shift and go to state 11
-    modifier                       shift and go to state 12
+    class_body                     shift and go to state 8
+    field_decl                     shift and go to state 9
+    method_decl                    shift and go to state 10
+    constructor_decl               shift and go to state 11
+    empty                          shift and go to state 12
+    var_decl                       shift and go to state 13
+    modifier                       shift and go to state 14
+    type                           shift and go to state 15
 
 state 6
 
     (3) class_decl -> CLASS ID EXTENDS . ID LCURLY class_body RCURLY
 
-    ID              shift and go to state 15
+    ID              shift and go to state 21
 
 
 state 7
+
+    (21) type -> ID .
+
+    ID              reduce using rule 21 (type -> ID .)
+
+
+state 8
 
     (2) class_decl -> CLASS ID LCURLY class_body . RCURLY
     (7) class_body -> class_body . field_decl
     (8) class_body -> class_body . method_decl
     (9) class_body -> class_body . constructor_decl
-    (11) field_decl -> . modifier var_decl
+    (11) field_decl -> . var_decl
+    (12) field_decl -> . modifier var_decl
     (25) method_decl -> . modifier type ID LPAREN RPAREN block
     (26) method_decl -> . modifier type ID LPAREN formals RPAREN block
     (27) method_decl -> . modifier VOID ID LPAREN RPAREN block
     (28) method_decl -> . modifier VOID ID LPAREN formals RPAREN block
     (29) constructor_decl -> . modifier ID block
     (30) constructor_decl -> . modifier ID formals block
-    (12) modifier -> . PUBLIC
-    (13) modifier -> . PRIVATE
-    (14) modifier -> . PUBLIC STATIC
-    (15) modifier -> . PRIVATE STATIC
-    (16) modifier -> . empty
-    (94) empty -> .
+    (17) var_decl -> . type variables SEMICOLON
+    (13) modifier -> . PUBLIC
+    (14) modifier -> . PRIVATE
+    (15) modifier -> . PUBLIC STATIC
+    (16) modifier -> . PRIVATE STATIC
+    (18) type -> . INT
+    (19) type -> . FLOAT
+    (20) type -> . BOOLEAN
+    (21) type -> . ID
 
-    RCURLY          shift and go to state 16
-    PUBLIC          shift and go to state 13
-    PRIVATE         shift and go to state 14
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
-    INT             reduce using rule 94 (empty -> .)
-    FLOAT           reduce using rule 94 (empty -> .)
-    BOOLEAN         reduce using rule 94 (empty -> .)
+    RCURLY          shift and go to state 22
+    PUBLIC          shift and go to state 16
+    PRIVATE         shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
 
-    field_decl                     shift and go to state 17
-    method_decl                    shift and go to state 18
-    constructor_decl               shift and go to state 19
-    modifier                       shift and go to state 12
-    empty                          shift and go to state 20
+    field_decl                     shift and go to state 23
+    method_decl                    shift and go to state 24
+    constructor_decl               shift and go to state 25
+    var_decl                       shift and go to state 13
+    modifier                       shift and go to state 14
+    type                           shift and go to state 15
 
-state 8
+state 9
 
     (4) class_body -> field_decl .
 
     RCURLY          reduce using rule 4 (class_body -> field_decl .)
     PUBLIC          reduce using rule 4 (class_body -> field_decl .)
     PRIVATE         reduce using rule 4 (class_body -> field_decl .)
-    VOID            reduce using rule 4 (class_body -> field_decl .)
-    ID              reduce using rule 4 (class_body -> field_decl .)
     INT             reduce using rule 4 (class_body -> field_decl .)
     FLOAT           reduce using rule 4 (class_body -> field_decl .)
     BOOLEAN         reduce using rule 4 (class_body -> field_decl .)
+    ID              reduce using rule 4 (class_body -> field_decl .)
 
 
-state 9
+state 10
 
     (5) class_body -> method_decl .
 
     RCURLY          reduce using rule 5 (class_body -> method_decl .)
     PUBLIC          reduce using rule 5 (class_body -> method_decl .)
     PRIVATE         reduce using rule 5 (class_body -> method_decl .)
-    VOID            reduce using rule 5 (class_body -> method_decl .)
-    ID              reduce using rule 5 (class_body -> method_decl .)
     INT             reduce using rule 5 (class_body -> method_decl .)
     FLOAT           reduce using rule 5 (class_body -> method_decl .)
     BOOLEAN         reduce using rule 5 (class_body -> method_decl .)
+    ID              reduce using rule 5 (class_body -> method_decl .)
 
 
-state 10
+state 11
 
     (6) class_body -> constructor_decl .
 
     RCURLY          reduce using rule 6 (class_body -> constructor_decl .)
     PUBLIC          reduce using rule 6 (class_body -> constructor_decl .)
     PRIVATE         reduce using rule 6 (class_body -> constructor_decl .)
-    VOID            reduce using rule 6 (class_body -> constructor_decl .)
-    ID              reduce using rule 6 (class_body -> constructor_decl .)
     INT             reduce using rule 6 (class_body -> constructor_decl .)
     FLOAT           reduce using rule 6 (class_body -> constructor_decl .)
     BOOLEAN         reduce using rule 6 (class_body -> constructor_decl .)
-
-
-state 11
-
-    (10) class_body -> empty .
-    (16) modifier -> empty .
-
-  ! reduce/reduce conflict for VOID resolved using rule 10 (class_body -> empty .)
-  ! reduce/reduce conflict for ID resolved using rule 10 (class_body -> empty .)
-  ! reduce/reduce conflict for INT resolved using rule 10 (class_body -> empty .)
-  ! reduce/reduce conflict for FLOAT resolved using rule 10 (class_body -> empty .)
-  ! reduce/reduce conflict for BOOLEAN resolved using rule 10 (class_body -> empty .)
-    RCURLY          reduce using rule 10 (class_body -> empty .)
-    PUBLIC          reduce using rule 10 (class_body -> empty .)
-    PRIVATE         reduce using rule 10 (class_body -> empty .)
-    VOID            reduce using rule 10 (class_body -> empty .)
-    ID              reduce using rule 10 (class_body -> empty .)
-    INT             reduce using rule 10 (class_body -> empty .)
-    FLOAT           reduce using rule 10 (class_body -> empty .)
-    BOOLEAN         reduce using rule 10 (class_body -> empty .)
-
-  ! VOID            [ reduce using rule 16 (modifier -> empty .) ]
-  ! ID              [ reduce using rule 16 (modifier -> empty .) ]
-  ! INT             [ reduce using rule 16 (modifier -> empty .) ]
-  ! FLOAT           [ reduce using rule 16 (modifier -> empty .) ]
-  ! BOOLEAN         [ reduce using rule 16 (modifier -> empty .) ]
+    ID              reduce using rule 6 (class_body -> constructor_decl .)
 
 
 state 12
 
-    (11) field_decl -> modifier . var_decl
+    (10) class_body -> empty .
+
+    RCURLY          reduce using rule 10 (class_body -> empty .)
+    PUBLIC          reduce using rule 10 (class_body -> empty .)
+    PRIVATE         reduce using rule 10 (class_body -> empty .)
+    INT             reduce using rule 10 (class_body -> empty .)
+    FLOAT           reduce using rule 10 (class_body -> empty .)
+    BOOLEAN         reduce using rule 10 (class_body -> empty .)
+    ID              reduce using rule 10 (class_body -> empty .)
+
+
+state 13
+
+    (11) field_decl -> var_decl .
+
+    RCURLY          reduce using rule 11 (field_decl -> var_decl .)
+    PUBLIC          reduce using rule 11 (field_decl -> var_decl .)
+    PRIVATE         reduce using rule 11 (field_decl -> var_decl .)
+    INT             reduce using rule 11 (field_decl -> var_decl .)
+    FLOAT           reduce using rule 11 (field_decl -> var_decl .)
+    BOOLEAN         reduce using rule 11 (field_decl -> var_decl .)
+    ID              reduce using rule 11 (field_decl -> var_decl .)
+
+
+state 14
+
+    (12) field_decl -> modifier . var_decl
     (25) method_decl -> modifier . type ID LPAREN RPAREN block
     (26) method_decl -> modifier . type ID LPAREN formals RPAREN block
     (27) method_decl -> modifier . VOID ID LPAREN RPAREN block
@@ -415,123 +437,141 @@ state 12
     (20) type -> . BOOLEAN
     (21) type -> . ID
 
-    VOID            shift and go to state 24
-    ID              shift and go to state 23
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 26
-    BOOLEAN         shift and go to state 27
+    VOID            shift and go to state 29
+    ID              shift and go to state 28
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
 
-    var_decl                       shift and go to state 21
-    type                           shift and go to state 22
-
-state 13
-
-    (12) modifier -> PUBLIC .
-    (14) modifier -> PUBLIC . STATIC
-
-    VOID            reduce using rule 12 (modifier -> PUBLIC .)
-    ID              reduce using rule 12 (modifier -> PUBLIC .)
-    INT             reduce using rule 12 (modifier -> PUBLIC .)
-    FLOAT           reduce using rule 12 (modifier -> PUBLIC .)
-    BOOLEAN         reduce using rule 12 (modifier -> PUBLIC .)
-    STATIC          shift and go to state 28
-
-
-state 14
-
-    (13) modifier -> PRIVATE .
-    (15) modifier -> PRIVATE . STATIC
-
-    VOID            reduce using rule 13 (modifier -> PRIVATE .)
-    ID              reduce using rule 13 (modifier -> PRIVATE .)
-    INT             reduce using rule 13 (modifier -> PRIVATE .)
-    FLOAT           reduce using rule 13 (modifier -> PRIVATE .)
-    BOOLEAN         reduce using rule 13 (modifier -> PRIVATE .)
-    STATIC          shift and go to state 29
-
+    var_decl                       shift and go to state 26
+    type                           shift and go to state 27
 
 state 15
 
-    (3) class_decl -> CLASS ID EXTENDS ID . LCURLY class_body RCURLY
+    (17) var_decl -> type . variables SEMICOLON
+    (22) variables -> . variable
+    (23) variables -> . variable COMMA variables
+    (24) variable -> . ID
 
-    LCURLY          shift and go to state 30
+    ID              shift and go to state 32
 
+    variables                      shift and go to state 30
+    variable                       shift and go to state 31
 
 state 16
+
+    (13) modifier -> PUBLIC .
+    (15) modifier -> PUBLIC . STATIC
+
+    VOID            reduce using rule 13 (modifier -> PUBLIC .)
+    ID              reduce using rule 13 (modifier -> PUBLIC .)
+    INT             reduce using rule 13 (modifier -> PUBLIC .)
+    FLOAT           reduce using rule 13 (modifier -> PUBLIC .)
+    BOOLEAN         reduce using rule 13 (modifier -> PUBLIC .)
+    STATIC          shift and go to state 33
+
+
+state 17
+
+    (14) modifier -> PRIVATE .
+    (16) modifier -> PRIVATE . STATIC
+
+    VOID            reduce using rule 14 (modifier -> PRIVATE .)
+    ID              reduce using rule 14 (modifier -> PRIVATE .)
+    INT             reduce using rule 14 (modifier -> PRIVATE .)
+    FLOAT           reduce using rule 14 (modifier -> PRIVATE .)
+    BOOLEAN         reduce using rule 14 (modifier -> PRIVATE .)
+    STATIC          shift and go to state 34
+
+
+state 18
+
+    (18) type -> INT .
+
+    ID              reduce using rule 18 (type -> INT .)
+
+
+state 19
+
+    (19) type -> FLOAT .
+
+    ID              reduce using rule 19 (type -> FLOAT .)
+
+
+state 20
+
+    (20) type -> BOOLEAN .
+
+    ID              reduce using rule 20 (type -> BOOLEAN .)
+
+
+state 21
+
+    (3) class_decl -> CLASS ID EXTENDS ID . LCURLY class_body RCURLY
+
+    LCURLY          shift and go to state 35
+
+
+state 22
 
     (2) class_decl -> CLASS ID LCURLY class_body RCURLY .
 
     $end            reduce using rule 2 (class_decl -> CLASS ID LCURLY class_body RCURLY .)
 
 
-state 17
+state 23
 
     (7) class_body -> class_body field_decl .
 
     RCURLY          reduce using rule 7 (class_body -> class_body field_decl .)
     PUBLIC          reduce using rule 7 (class_body -> class_body field_decl .)
     PRIVATE         reduce using rule 7 (class_body -> class_body field_decl .)
-    VOID            reduce using rule 7 (class_body -> class_body field_decl .)
-    ID              reduce using rule 7 (class_body -> class_body field_decl .)
     INT             reduce using rule 7 (class_body -> class_body field_decl .)
     FLOAT           reduce using rule 7 (class_body -> class_body field_decl .)
     BOOLEAN         reduce using rule 7 (class_body -> class_body field_decl .)
+    ID              reduce using rule 7 (class_body -> class_body field_decl .)
 
 
-state 18
+state 24
 
     (8) class_body -> class_body method_decl .
 
     RCURLY          reduce using rule 8 (class_body -> class_body method_decl .)
     PUBLIC          reduce using rule 8 (class_body -> class_body method_decl .)
     PRIVATE         reduce using rule 8 (class_body -> class_body method_decl .)
-    VOID            reduce using rule 8 (class_body -> class_body method_decl .)
-    ID              reduce using rule 8 (class_body -> class_body method_decl .)
     INT             reduce using rule 8 (class_body -> class_body method_decl .)
     FLOAT           reduce using rule 8 (class_body -> class_body method_decl .)
     BOOLEAN         reduce using rule 8 (class_body -> class_body method_decl .)
+    ID              reduce using rule 8 (class_body -> class_body method_decl .)
 
 
-state 19
+state 25
 
     (9) class_body -> class_body constructor_decl .
 
     RCURLY          reduce using rule 9 (class_body -> class_body constructor_decl .)
     PUBLIC          reduce using rule 9 (class_body -> class_body constructor_decl .)
     PRIVATE         reduce using rule 9 (class_body -> class_body constructor_decl .)
-    VOID            reduce using rule 9 (class_body -> class_body constructor_decl .)
-    ID              reduce using rule 9 (class_body -> class_body constructor_decl .)
     INT             reduce using rule 9 (class_body -> class_body constructor_decl .)
     FLOAT           reduce using rule 9 (class_body -> class_body constructor_decl .)
     BOOLEAN         reduce using rule 9 (class_body -> class_body constructor_decl .)
+    ID              reduce using rule 9 (class_body -> class_body constructor_decl .)
 
 
-state 20
+state 26
 
-    (16) modifier -> empty .
+    (12) field_decl -> modifier var_decl .
 
-    VOID            reduce using rule 16 (modifier -> empty .)
-    ID              reduce using rule 16 (modifier -> empty .)
-    INT             reduce using rule 16 (modifier -> empty .)
-    FLOAT           reduce using rule 16 (modifier -> empty .)
-    BOOLEAN         reduce using rule 16 (modifier -> empty .)
-
-
-state 21
-
-    (11) field_decl -> modifier var_decl .
-
-    RCURLY          reduce using rule 11 (field_decl -> modifier var_decl .)
-    PUBLIC          reduce using rule 11 (field_decl -> modifier var_decl .)
-    PRIVATE         reduce using rule 11 (field_decl -> modifier var_decl .)
-    VOID            reduce using rule 11 (field_decl -> modifier var_decl .)
-    ID              reduce using rule 11 (field_decl -> modifier var_decl .)
-    INT             reduce using rule 11 (field_decl -> modifier var_decl .)
-    FLOAT           reduce using rule 11 (field_decl -> modifier var_decl .)
-    BOOLEAN         reduce using rule 11 (field_decl -> modifier var_decl .)
+    RCURLY          reduce using rule 12 (field_decl -> modifier var_decl .)
+    PUBLIC          reduce using rule 12 (field_decl -> modifier var_decl .)
+    PRIVATE         reduce using rule 12 (field_decl -> modifier var_decl .)
+    INT             reduce using rule 12 (field_decl -> modifier var_decl .)
+    FLOAT           reduce using rule 12 (field_decl -> modifier var_decl .)
+    BOOLEAN         reduce using rule 12 (field_decl -> modifier var_decl .)
+    ID              reduce using rule 12 (field_decl -> modifier var_decl .)
 
 
-state 22
+state 27
 
     (25) method_decl -> modifier type . ID LPAREN RPAREN block
     (26) method_decl -> modifier type . ID LPAREN formals RPAREN block
@@ -540,12 +580,12 @@ state 22
     (23) variables -> . variable COMMA variables
     (24) variable -> . ID
 
-    ID              shift and go to state 31
+    ID              shift and go to state 36
 
-    variables                      shift and go to state 32
-    variable                       shift and go to state 33
+    variables                      shift and go to state 30
+    variable                       shift and go to state 31
 
-state 23
+state 28
 
     (29) constructor_decl -> modifier ID . block
     (30) constructor_decl -> modifier ID . formals block
@@ -566,80 +606,91 @@ state 23
   ! shift/reduce conflict for FLOAT resolved as shift
   ! shift/reduce conflict for BOOLEAN resolved as shift
   ! shift/reduce conflict for ID resolved as shift
-    LCURLY          shift and go to state 37
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
     PUBLIC          reduce using rule 94 (empty -> .)
     PRIVATE         reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 26
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 34
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
 
   ! ID              [ reduce using rule 21 (type -> ID .) ]
-  ! ID              [ reduce using rule 94 (empty -> .) ]
   ! INT             [ reduce using rule 94 (empty -> .) ]
   ! FLOAT           [ reduce using rule 94 (empty -> .) ]
   ! BOOLEAN         [ reduce using rule 94 (empty -> .) ]
+  ! ID              [ reduce using rule 94 (empty -> .) ]
 
-    block                          shift and go to state 35
-    formals                        shift and go to state 36
-    empty                          shift and go to state 38
-    formal_param                   shift and go to state 39
-    type                           shift and go to state 40
+    block                          shift and go to state 37
+    formals                        shift and go to state 38
+    empty                          shift and go to state 40
+    formal_param                   shift and go to state 41
+    type                           shift and go to state 42
 
-state 24
+state 29
 
     (27) method_decl -> modifier VOID . ID LPAREN RPAREN block
     (28) method_decl -> modifier VOID . ID LPAREN formals RPAREN block
 
-    ID              shift and go to state 41
-
-
-state 25
-
-    (18) type -> INT .
-
-    ID              reduce using rule 18 (type -> INT .)
-
-
-state 26
-
-    (19) type -> FLOAT .
-
-    ID              reduce using rule 19 (type -> FLOAT .)
-
-
-state 27
-
-    (20) type -> BOOLEAN .
-
-    ID              reduce using rule 20 (type -> BOOLEAN .)
-
-
-state 28
-
-    (14) modifier -> PUBLIC STATIC .
-
-    VOID            reduce using rule 14 (modifier -> PUBLIC STATIC .)
-    ID              reduce using rule 14 (modifier -> PUBLIC STATIC .)
-    INT             reduce using rule 14 (modifier -> PUBLIC STATIC .)
-    FLOAT           reduce using rule 14 (modifier -> PUBLIC STATIC .)
-    BOOLEAN         reduce using rule 14 (modifier -> PUBLIC STATIC .)
-
-
-state 29
-
-    (15) modifier -> PRIVATE STATIC .
-
-    VOID            reduce using rule 15 (modifier -> PRIVATE STATIC .)
-    ID              reduce using rule 15 (modifier -> PRIVATE STATIC .)
-    INT             reduce using rule 15 (modifier -> PRIVATE STATIC .)
-    FLOAT           reduce using rule 15 (modifier -> PRIVATE STATIC .)
-    BOOLEAN         reduce using rule 15 (modifier -> PRIVATE STATIC .)
+    ID              shift and go to state 43
 
 
 state 30
+
+    (17) var_decl -> type variables . SEMICOLON
+
+    SEMICOLON       shift and go to state 44
+
+
+state 31
+
+    (22) variables -> variable .
+    (23) variables -> variable . COMMA variables
+
+    SEMICOLON       reduce using rule 22 (variables -> variable .)
+    COMMA           shift and go to state 45
+
+
+state 32
+
+    (24) variable -> ID .
+
+    COMMA           reduce using rule 24 (variable -> ID .)
+    SEMICOLON       reduce using rule 24 (variable -> ID .)
+    LCURLY          reduce using rule 24 (variable -> ID .)
+    RCURLY          reduce using rule 24 (variable -> ID .)
+    PUBLIC          reduce using rule 24 (variable -> ID .)
+    PRIVATE         reduce using rule 24 (variable -> ID .)
+    INT             reduce using rule 24 (variable -> ID .)
+    FLOAT           reduce using rule 24 (variable -> ID .)
+    BOOLEAN         reduce using rule 24 (variable -> ID .)
+    ID              reduce using rule 24 (variable -> ID .)
+    RPAREN          reduce using rule 24 (variable -> ID .)
+
+
+state 33
+
+    (15) modifier -> PUBLIC STATIC .
+
+    VOID            reduce using rule 15 (modifier -> PUBLIC STATIC .)
+    ID              reduce using rule 15 (modifier -> PUBLIC STATIC .)
+    INT             reduce using rule 15 (modifier -> PUBLIC STATIC .)
+    FLOAT           reduce using rule 15 (modifier -> PUBLIC STATIC .)
+    BOOLEAN         reduce using rule 15 (modifier -> PUBLIC STATIC .)
+
+
+state 34
+
+    (16) modifier -> PRIVATE STATIC .
+
+    VOID            reduce using rule 16 (modifier -> PRIVATE STATIC .)
+    ID              reduce using rule 16 (modifier -> PRIVATE STATIC .)
+    INT             reduce using rule 16 (modifier -> PRIVATE STATIC .)
+    FLOAT           reduce using rule 16 (modifier -> PRIVATE STATIC .)
+    BOOLEAN         reduce using rule 16 (modifier -> PRIVATE STATIC .)
+
+
+state 35
 
     (3) class_decl -> CLASS ID EXTENDS ID LCURLY . class_body RCURLY
     (4) class_body -> . field_decl
@@ -649,7 +700,8 @@ state 30
     (8) class_body -> . class_body method_decl
     (9) class_body -> . class_body constructor_decl
     (10) class_body -> . empty
-    (11) field_decl -> . modifier var_decl
+    (11) field_decl -> . var_decl
+    (12) field_decl -> . modifier var_decl
     (25) method_decl -> . modifier type ID LPAREN RPAREN block
     (26) method_decl -> . modifier type ID LPAREN formals RPAREN block
     (27) method_decl -> . modifier VOID ID LPAREN RPAREN block
@@ -657,102 +709,90 @@ state 30
     (29) constructor_decl -> . modifier ID block
     (30) constructor_decl -> . modifier ID formals block
     (94) empty -> .
-    (12) modifier -> . PUBLIC
-    (13) modifier -> . PRIVATE
-    (14) modifier -> . PUBLIC STATIC
-    (15) modifier -> . PRIVATE STATIC
-    (16) modifier -> . empty
+    (17) var_decl -> . type variables SEMICOLON
+    (13) modifier -> . PUBLIC
+    (14) modifier -> . PRIVATE
+    (15) modifier -> . PUBLIC STATIC
+    (16) modifier -> . PRIVATE STATIC
+    (18) type -> . INT
+    (19) type -> . FLOAT
+    (20) type -> . BOOLEAN
+    (21) type -> . ID
 
   ! shift/reduce conflict for PUBLIC resolved as shift
   ! shift/reduce conflict for PRIVATE resolved as shift
+  ! shift/reduce conflict for INT resolved as shift
+  ! shift/reduce conflict for FLOAT resolved as shift
+  ! shift/reduce conflict for BOOLEAN resolved as shift
+  ! shift/reduce conflict for ID resolved as shift
     RCURLY          reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
-    INT             reduce using rule 94 (empty -> .)
-    FLOAT           reduce using rule 94 (empty -> .)
-    BOOLEAN         reduce using rule 94 (empty -> .)
-    PUBLIC          shift and go to state 13
-    PRIVATE         shift and go to state 14
+    PUBLIC          shift and go to state 16
+    PRIVATE         shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
 
   ! PUBLIC          [ reduce using rule 94 (empty -> .) ]
   ! PRIVATE         [ reduce using rule 94 (empty -> .) ]
+  ! INT             [ reduce using rule 94 (empty -> .) ]
+  ! FLOAT           [ reduce using rule 94 (empty -> .) ]
+  ! BOOLEAN         [ reduce using rule 94 (empty -> .) ]
+  ! ID              [ reduce using rule 94 (empty -> .) ]
 
-    class_body                     shift and go to state 42
-    field_decl                     shift and go to state 8
-    method_decl                    shift and go to state 9
-    constructor_decl               shift and go to state 10
-    empty                          shift and go to state 11
-    modifier                       shift and go to state 12
+    class_body                     shift and go to state 46
+    field_decl                     shift and go to state 9
+    method_decl                    shift and go to state 10
+    constructor_decl               shift and go to state 11
+    empty                          shift and go to state 12
+    var_decl                       shift and go to state 13
+    modifier                       shift and go to state 14
+    type                           shift and go to state 15
 
-state 31
+state 36
 
     (25) method_decl -> modifier type ID . LPAREN RPAREN block
     (26) method_decl -> modifier type ID . LPAREN formals RPAREN block
     (24) variable -> ID .
 
-    LPAREN          shift and go to state 43
+    LPAREN          shift and go to state 47
     COMMA           reduce using rule 24 (variable -> ID .)
     SEMICOLON       reduce using rule 24 (variable -> ID .)
 
 
-state 32
-
-    (17) var_decl -> type variables . SEMICOLON
-
-    SEMICOLON       shift and go to state 44
-
-
-state 33
-
-    (22) variables -> variable .
-    (23) variables -> variable . COMMA variables
-
-    SEMICOLON       reduce using rule 22 (variables -> variable .)
-    COMMA           shift and go to state 45
-
-
-state 34
-
-    (21) type -> ID .
-
-    ID              reduce using rule 21 (type -> ID .)
-
-
-state 35
+state 37
 
     (29) constructor_decl -> modifier ID block .
 
     RCURLY          reduce using rule 29 (constructor_decl -> modifier ID block .)
     PUBLIC          reduce using rule 29 (constructor_decl -> modifier ID block .)
     PRIVATE         reduce using rule 29 (constructor_decl -> modifier ID block .)
-    VOID            reduce using rule 29 (constructor_decl -> modifier ID block .)
-    ID              reduce using rule 29 (constructor_decl -> modifier ID block .)
     INT             reduce using rule 29 (constructor_decl -> modifier ID block .)
     FLOAT           reduce using rule 29 (constructor_decl -> modifier ID block .)
     BOOLEAN         reduce using rule 29 (constructor_decl -> modifier ID block .)
+    ID              reduce using rule 29 (constructor_decl -> modifier ID block .)
 
 
-state 36
+state 38
 
     (30) constructor_decl -> modifier ID formals . block
     (34) block -> . LCURLY stmtlist RCURLY
     (35) block -> . empty
     (94) empty -> .
 
-    LCURLY          shift and go to state 37
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
     PUBLIC          reduce using rule 94 (empty -> .)
     PRIVATE         reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
     INT             reduce using rule 94 (empty -> .)
     FLOAT           reduce using rule 94 (empty -> .)
     BOOLEAN         reduce using rule 94 (empty -> .)
+    ID              reduce using rule 94 (empty -> .)
 
-    block                          shift and go to state 46
-    empty                          shift and go to state 38
+    block                          shift and go to state 48
+    empty                          shift and go to state 40
 
-state 37
+state 39
 
     (34) block -> LCURLY . stmtlist RCURLY
     (36) stmtlist -> . stmt
@@ -821,28 +861,28 @@ state 37
   ! shift/reduce conflict for NULL resolved as shift
   ! shift/reduce conflict for FALSE resolved as shift
   ! shift/reduce conflict for TRUE resolved as shift
-    IF              shift and go to state 49
-    WHILE           shift and go to state 51
-    FOR             shift and go to state 52
-    RETURN          shift and go to state 55
-    BREAK           shift and go to state 56
-    CONTINUE        shift and go to state 57
-    SEMICOLON       shift and go to state 54
-    LCURLY          shift and go to state 37
+    IF              shift and go to state 51
+    WHILE           shift and go to state 53
+    FOR             shift and go to state 54
+    RETURN          shift and go to state 57
+    BREAK           shift and go to state 58
+    CONTINUE        shift and go to state 59
+    SEMICOLON       shift and go to state 56
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 65
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 66
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 66
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 67
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
   ! IF              [ reduce using rule 94 (empty -> .) ]
   ! WHILE           [ reduce using rule 94 (empty -> .) ]
@@ -866,32 +906,31 @@ state 37
   ! FALSE           [ reduce using rule 94 (empty -> .) ]
   ! TRUE            [ reduce using rule 94 (empty -> .) ]
 
-    stmtlist                       shift and go to state 47
-    stmt                           shift and go to state 48
-    stmt_expression                shift and go to state 53
-    block                          shift and go to state 58
-    var_decl                       shift and go to state 59
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    empty                          shift and go to state 38
-    type                           shift and go to state 62
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    stmtlist                       shift and go to state 49
+    stmt                           shift and go to state 50
+    stmt_expression                shift and go to state 55
+    block                          shift and go to state 60
+    var_decl                       shift and go to state 61
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    empty                          shift and go to state 40
+    type                           shift and go to state 15
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
-state 38
+state 40
 
     (35) block -> empty .
 
     RCURLY          reduce using rule 35 (block -> empty .)
     PUBLIC          reduce using rule 35 (block -> empty .)
     PRIVATE         reduce using rule 35 (block -> empty .)
-    VOID            reduce using rule 35 (block -> empty .)
-    ID              reduce using rule 35 (block -> empty .)
     INT             reduce using rule 35 (block -> empty .)
     FLOAT           reduce using rule 35 (block -> empty .)
     BOOLEAN         reduce using rule 35 (block -> empty .)
+    ID              reduce using rule 35 (block -> empty .)
     IF              reduce using rule 35 (block -> empty .)
     WHILE           reduce using rule 35 (block -> empty .)
     FOR             reduce using rule 35 (block -> empty .)
@@ -912,7 +951,7 @@ state 38
     ELSE            reduce using rule 35 (block -> empty .)
 
 
-state 39
+state 41
 
     (31) formals -> formal_param .
     (32) formals -> formal_param . COMMA formals
@@ -921,88 +960,30 @@ state 39
     RCURLY          reduce using rule 31 (formals -> formal_param .)
     PUBLIC          reduce using rule 31 (formals -> formal_param .)
     PRIVATE         reduce using rule 31 (formals -> formal_param .)
-    VOID            reduce using rule 31 (formals -> formal_param .)
-    ID              reduce using rule 31 (formals -> formal_param .)
     INT             reduce using rule 31 (formals -> formal_param .)
     FLOAT           reduce using rule 31 (formals -> formal_param .)
     BOOLEAN         reduce using rule 31 (formals -> formal_param .)
+    ID              reduce using rule 31 (formals -> formal_param .)
     RPAREN          reduce using rule 31 (formals -> formal_param .)
-    COMMA           shift and go to state 77
+    COMMA           shift and go to state 78
 
 
-state 40
+state 42
 
     (33) formal_param -> type . variable
     (24) variable -> . ID
 
-    ID              shift and go to state 79
+    ID              shift and go to state 32
 
-    variable                       shift and go to state 78
+    variable                       shift and go to state 79
 
-state 41
+state 43
 
     (27) method_decl -> modifier VOID ID . LPAREN RPAREN block
     (28) method_decl -> modifier VOID ID . LPAREN formals RPAREN block
 
     LPAREN          shift and go to state 80
 
-
-state 42
-
-    (3) class_decl -> CLASS ID EXTENDS ID LCURLY class_body . RCURLY
-    (7) class_body -> class_body . field_decl
-    (8) class_body -> class_body . method_decl
-    (9) class_body -> class_body . constructor_decl
-    (11) field_decl -> . modifier var_decl
-    (25) method_decl -> . modifier type ID LPAREN RPAREN block
-    (26) method_decl -> . modifier type ID LPAREN formals RPAREN block
-    (27) method_decl -> . modifier VOID ID LPAREN RPAREN block
-    (28) method_decl -> . modifier VOID ID LPAREN formals RPAREN block
-    (29) constructor_decl -> . modifier ID block
-    (30) constructor_decl -> . modifier ID formals block
-    (12) modifier -> . PUBLIC
-    (13) modifier -> . PRIVATE
-    (14) modifier -> . PUBLIC STATIC
-    (15) modifier -> . PRIVATE STATIC
-    (16) modifier -> . empty
-    (94) empty -> .
-
-    RCURLY          shift and go to state 81
-    PUBLIC          shift and go to state 13
-    PRIVATE         shift and go to state 14
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
-    INT             reduce using rule 94 (empty -> .)
-    FLOAT           reduce using rule 94 (empty -> .)
-    BOOLEAN         reduce using rule 94 (empty -> .)
-
-    field_decl                     shift and go to state 17
-    method_decl                    shift and go to state 18
-    constructor_decl               shift and go to state 19
-    modifier                       shift and go to state 12
-    empty                          shift and go to state 20
-
-state 43
-
-    (25) method_decl -> modifier type ID LPAREN . RPAREN block
-    (26) method_decl -> modifier type ID LPAREN . formals RPAREN block
-    (31) formals -> . formal_param
-    (32) formals -> . formal_param COMMA formals
-    (33) formal_param -> . type variable
-    (18) type -> . INT
-    (19) type -> . FLOAT
-    (20) type -> . BOOLEAN
-    (21) type -> . ID
-
-    RPAREN          shift and go to state 82
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 26
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 34
-
-    type                           shift and go to state 40
-    formals                        shift and go to state 83
-    formal_param                   shift and go to state 39
 
 state 44
 
@@ -1011,11 +992,10 @@ state 44
     RCURLY          reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     PUBLIC          reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     PRIVATE         reduce using rule 17 (var_decl -> type variables SEMICOLON .)
-    VOID            reduce using rule 17 (var_decl -> type variables SEMICOLON .)
-    ID              reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     INT             reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     FLOAT           reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     BOOLEAN         reduce using rule 17 (var_decl -> type variables SEMICOLON .)
+    ID              reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     IF              reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     WHILE           reduce using rule 17 (var_decl -> type variables SEMICOLON .)
     FOR             reduce using rule 17 (var_decl -> type variables SEMICOLON .)
@@ -1043,26 +1023,86 @@ state 45
     (23) variables -> . variable COMMA variables
     (24) variable -> . ID
 
-    ID              shift and go to state 79
+    ID              shift and go to state 32
 
-    variable                       shift and go to state 33
-    variables                      shift and go to state 84
+    variable                       shift and go to state 31
+    variables                      shift and go to state 81
 
 state 46
+
+    (3) class_decl -> CLASS ID EXTENDS ID LCURLY class_body . RCURLY
+    (7) class_body -> class_body . field_decl
+    (8) class_body -> class_body . method_decl
+    (9) class_body -> class_body . constructor_decl
+    (11) field_decl -> . var_decl
+    (12) field_decl -> . modifier var_decl
+    (25) method_decl -> . modifier type ID LPAREN RPAREN block
+    (26) method_decl -> . modifier type ID LPAREN formals RPAREN block
+    (27) method_decl -> . modifier VOID ID LPAREN RPAREN block
+    (28) method_decl -> . modifier VOID ID LPAREN formals RPAREN block
+    (29) constructor_decl -> . modifier ID block
+    (30) constructor_decl -> . modifier ID formals block
+    (17) var_decl -> . type variables SEMICOLON
+    (13) modifier -> . PUBLIC
+    (14) modifier -> . PRIVATE
+    (15) modifier -> . PUBLIC STATIC
+    (16) modifier -> . PRIVATE STATIC
+    (18) type -> . INT
+    (19) type -> . FLOAT
+    (20) type -> . BOOLEAN
+    (21) type -> . ID
+
+    RCURLY          shift and go to state 82
+    PUBLIC          shift and go to state 16
+    PRIVATE         shift and go to state 17
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
+
+    field_decl                     shift and go to state 23
+    method_decl                    shift and go to state 24
+    constructor_decl               shift and go to state 25
+    var_decl                       shift and go to state 13
+    modifier                       shift and go to state 14
+    type                           shift and go to state 15
+
+state 47
+
+    (25) method_decl -> modifier type ID LPAREN . RPAREN block
+    (26) method_decl -> modifier type ID LPAREN . formals RPAREN block
+    (31) formals -> . formal_param
+    (32) formals -> . formal_param COMMA formals
+    (33) formal_param -> . type variable
+    (18) type -> . INT
+    (19) type -> . FLOAT
+    (20) type -> . BOOLEAN
+    (21) type -> . ID
+
+    RPAREN          shift and go to state 83
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
+
+    type                           shift and go to state 42
+    formals                        shift and go to state 84
+    formal_param                   shift and go to state 41
+
+state 48
 
     (30) constructor_decl -> modifier ID formals block .
 
     RCURLY          reduce using rule 30 (constructor_decl -> modifier ID formals block .)
     PUBLIC          reduce using rule 30 (constructor_decl -> modifier ID formals block .)
     PRIVATE         reduce using rule 30 (constructor_decl -> modifier ID formals block .)
-    VOID            reduce using rule 30 (constructor_decl -> modifier ID formals block .)
-    ID              reduce using rule 30 (constructor_decl -> modifier ID formals block .)
     INT             reduce using rule 30 (constructor_decl -> modifier ID formals block .)
     FLOAT           reduce using rule 30 (constructor_decl -> modifier ID formals block .)
     BOOLEAN         reduce using rule 30 (constructor_decl -> modifier ID formals block .)
+    ID              reduce using rule 30 (constructor_decl -> modifier ID formals block .)
 
 
-state 47
+state 49
 
     (34) block -> LCURLY stmtlist . RCURLY
     (37) stmtlist -> stmtlist . stmt
@@ -1132,27 +1172,27 @@ state 47
   ! shift/reduce conflict for FALSE resolved as shift
   ! shift/reduce conflict for TRUE resolved as shift
     RCURLY          shift and go to state 85
-    IF              shift and go to state 49
-    WHILE           shift and go to state 51
-    FOR             shift and go to state 52
-    RETURN          shift and go to state 55
-    BREAK           shift and go to state 56
-    CONTINUE        shift and go to state 57
-    SEMICOLON       shift and go to state 54
-    LCURLY          shift and go to state 37
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 65
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 66
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    IF              shift and go to state 51
+    WHILE           shift and go to state 53
+    FOR             shift and go to state 54
+    RETURN          shift and go to state 57
+    BREAK           shift and go to state 58
+    CONTINUE        shift and go to state 59
+    SEMICOLON       shift and go to state 56
+    LCURLY          shift and go to state 39
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 66
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 67
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
   ! RCURLY          [ reduce using rule 94 (empty -> .) ]
   ! IF              [ reduce using rule 94 (empty -> .) ]
@@ -1178,19 +1218,19 @@ state 47
   ! TRUE            [ reduce using rule 94 (empty -> .) ]
 
     stmt                           shift and go to state 86
-    stmt_expression                shift and go to state 53
-    block                          shift and go to state 58
-    var_decl                       shift and go to state 59
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    empty                          shift and go to state 38
-    type                           shift and go to state 62
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    stmt_expression                shift and go to state 55
+    block                          shift and go to state 60
+    var_decl                       shift and go to state 61
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    empty                          shift and go to state 40
+    type                           shift and go to state 15
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
-state 48
+state 50
 
     (36) stmtlist -> stmt .
 
@@ -1218,7 +1258,7 @@ state 48
     TRUE            reduce using rule 36 (stmtlist -> stmt .)
 
 
-state 49
+state 51
 
     (38) stmt -> IF . LPAREN expression RPAREN stmt
     (39) stmt -> IF . LPAREN expression RPAREN stmt ELSE stmt
@@ -1226,7 +1266,7 @@ state 49
     LPAREN          shift and go to state 87
 
 
-state 50
+state 52
 
     (59) primary -> LPAREN . expression RPAREN
     (68) expression -> . primary
@@ -1258,52 +1298,52 @@ state 50
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 88
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
-state 51
+state 53
 
     (40) stmt -> WHILE . LPAREN expression RPAREN stmt
 
     LPAREN          shift and go to state 99
 
 
-state 52
+state 54
 
     (41) stmt -> FOR . LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
 
     LPAREN          shift and go to state 100
 
 
-state 53
+state 55
 
     (44) stmt -> stmt_expression . SEMICOLON
 
     SEMICOLON       shift and go to state 101
 
 
-state 54
+state 56
 
     (49) stmt -> SEMICOLON .
 
@@ -1332,7 +1372,7 @@ state 54
     ELSE            reduce using rule 49 (stmt -> SEMICOLON .)
 
 
-state 55
+state 57
 
     (42) stmt -> RETURN . expression SEMICOLON
     (43) stmt -> RETURN . SEMICOLON
@@ -1366,45 +1406,45 @@ state 55
     (75) field_access -> . ID
 
     SEMICOLON       shift and go to state 103
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 102
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
-state 56
+state 58
 
     (45) stmt -> BREAK . SEMICOLON
 
     SEMICOLON       shift and go to state 104
 
 
-state 57
+state 59
 
     (46) stmt -> CONTINUE . SEMICOLON
 
     SEMICOLON       shift and go to state 105
 
 
-state 58
+state 60
 
     (47) stmt -> block .
 
@@ -1433,7 +1473,7 @@ state 58
     ELSE            reduce using rule 47 (stmt -> block .)
 
 
-state 59
+state 61
 
     (48) stmt -> var_decl .
 
@@ -1462,7 +1502,7 @@ state 59
     ELSE            reduce using rule 48 (stmt -> var_decl .)
 
 
-state 60
+state 62
 
     (92) stmt_expression -> assign .
 
@@ -1470,7 +1510,7 @@ state 60
     RPAREN          reduce using rule 92 (stmt_expression -> assign .)
 
 
-state 61
+state 63
 
     (93) stmt_expression -> method_invocation .
     (62) primary -> method_invocation .
@@ -1480,19 +1520,7 @@ state 61
     DOT             reduce using rule 62 (primary -> method_invocation .)
 
 
-state 62
-
-    (17) var_decl -> type . variables SEMICOLON
-    (22) variables -> . variable
-    (23) variables -> . variable COMMA variables
-    (24) variable -> . ID
-
-    ID              shift and go to state 79
-
-    variables                      shift and go to state 32
-    variable                       shift and go to state 33
-
-state 63
+state 64
 
     (76) assign -> lhs . SETEQUAL expression
     (63) primary -> lhs .
@@ -1501,7 +1529,7 @@ state 63
     DOT             reduce using rule 63 (primary -> lhs .)
 
 
-state 64
+state 65
 
     (66) method_invocation -> field_access . LPAREN arguments RPAREN
     (67) method_invocation -> field_access . LPAREN RPAREN
@@ -1527,7 +1555,7 @@ state 64
     COMMA           reduce using rule 73 (lhs -> field_access .)
 
 
-state 65
+state 66
 
     (19) type -> FLOAT .
     (51) literal -> FLOAT .
@@ -1536,7 +1564,7 @@ state 65
     DOT             reduce using rule 51 (literal -> FLOAT .)
 
 
-state 66
+state 67
 
     (21) type -> ID .
     (75) field_access -> ID .
@@ -1547,14 +1575,14 @@ state 66
     DOT             reduce using rule 75 (field_access -> ID .)
 
 
-state 67
+state 68
 
     (74) field_access -> primary . DOT ID
 
     DOT             shift and go to state 108
 
 
-state 68
+state 69
 
     (56) primary -> literal .
 
@@ -1576,7 +1604,7 @@ state 68
     COMMA           reduce using rule 56 (primary -> literal .)
 
 
-state 69
+state 70
 
     (57) primary -> THIS .
 
@@ -1598,7 +1626,7 @@ state 69
     COMMA           reduce using rule 57 (primary -> THIS .)
 
 
-state 70
+state 71
 
     (58) primary -> SUPER .
 
@@ -1620,7 +1648,7 @@ state 70
     COMMA           reduce using rule 58 (primary -> SUPER .)
 
 
-state 71
+state 72
 
     (60) primary -> NEW . ID
     (61) primary -> NEW . ID LPAREN arguments RPAREN
@@ -1628,7 +1656,7 @@ state 71
     ID              shift and go to state 109
 
 
-state 72
+state 73
 
     (50) literal -> INTEGER .
 
@@ -1650,7 +1678,7 @@ state 72
     COMMA           reduce using rule 50 (literal -> INTEGER .)
 
 
-state 73
+state 74
 
     (52) literal -> STRING .
 
@@ -1672,7 +1700,7 @@ state 73
     COMMA           reduce using rule 52 (literal -> STRING .)
 
 
-state 74
+state 75
 
     (53) literal -> NULL .
 
@@ -1694,7 +1722,7 @@ state 74
     COMMA           reduce using rule 53 (literal -> NULL .)
 
 
-state 75
+state 76
 
     (54) literal -> FALSE .
 
@@ -1716,7 +1744,7 @@ state 75
     COMMA           reduce using rule 54 (literal -> FALSE .)
 
 
-state 76
+state 77
 
     (55) literal -> TRUE .
 
@@ -1738,7 +1766,7 @@ state 76
     COMMA           reduce using rule 55 (literal -> TRUE .)
 
 
-state 77
+state 78
 
     (32) formals -> formal_param COMMA . formals
     (31) formals -> . formal_param
@@ -1749,16 +1777,16 @@ state 77
     (20) type -> . BOOLEAN
     (21) type -> . ID
 
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 26
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 34
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
 
-    formal_param                   shift and go to state 39
+    formal_param                   shift and go to state 41
     formals                        shift and go to state 110
-    type                           shift and go to state 40
+    type                           shift and go to state 42
 
-state 78
+state 79
 
     (33) formal_param -> type variable .
 
@@ -1767,30 +1795,11 @@ state 78
     RCURLY          reduce using rule 33 (formal_param -> type variable .)
     PUBLIC          reduce using rule 33 (formal_param -> type variable .)
     PRIVATE         reduce using rule 33 (formal_param -> type variable .)
-    VOID            reduce using rule 33 (formal_param -> type variable .)
-    ID              reduce using rule 33 (formal_param -> type variable .)
     INT             reduce using rule 33 (formal_param -> type variable .)
     FLOAT           reduce using rule 33 (formal_param -> type variable .)
     BOOLEAN         reduce using rule 33 (formal_param -> type variable .)
+    ID              reduce using rule 33 (formal_param -> type variable .)
     RPAREN          reduce using rule 33 (formal_param -> type variable .)
-
-
-state 79
-
-    (24) variable -> ID .
-
-    COMMA           reduce using rule 24 (variable -> ID .)
-    LCURLY          reduce using rule 24 (variable -> ID .)
-    RCURLY          reduce using rule 24 (variable -> ID .)
-    PUBLIC          reduce using rule 24 (variable -> ID .)
-    PRIVATE         reduce using rule 24 (variable -> ID .)
-    VOID            reduce using rule 24 (variable -> ID .)
-    ID              reduce using rule 24 (variable -> ID .)
-    INT             reduce using rule 24 (variable -> ID .)
-    FLOAT           reduce using rule 24 (variable -> ID .)
-    BOOLEAN         reduce using rule 24 (variable -> ID .)
-    RPAREN          reduce using rule 24 (variable -> ID .)
-    SEMICOLON       reduce using rule 24 (variable -> ID .)
 
 
 state 80
@@ -1806,54 +1815,53 @@ state 80
     (21) type -> . ID
 
     RPAREN          shift and go to state 111
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 26
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 34
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 19
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 7
 
     formals                        shift and go to state 112
-    formal_param                   shift and go to state 39
-    type                           shift and go to state 40
+    formal_param                   shift and go to state 41
+    type                           shift and go to state 42
 
 state 81
+
+    (23) variables -> variable COMMA variables .
+
+    SEMICOLON       reduce using rule 23 (variables -> variable COMMA variables .)
+
+
+state 82
 
     (3) class_decl -> CLASS ID EXTENDS ID LCURLY class_body RCURLY .
 
     $end            reduce using rule 3 (class_decl -> CLASS ID EXTENDS ID LCURLY class_body RCURLY .)
 
 
-state 82
+state 83
 
     (25) method_decl -> modifier type ID LPAREN RPAREN . block
     (34) block -> . LCURLY stmtlist RCURLY
     (35) block -> . empty
     (94) empty -> .
 
-    LCURLY          shift and go to state 37
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
     PUBLIC          reduce using rule 94 (empty -> .)
     PRIVATE         reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
     INT             reduce using rule 94 (empty -> .)
     FLOAT           reduce using rule 94 (empty -> .)
     BOOLEAN         reduce using rule 94 (empty -> .)
+    ID              reduce using rule 94 (empty -> .)
 
     block                          shift and go to state 113
-    empty                          shift and go to state 38
+    empty                          shift and go to state 40
 
-state 83
+state 84
 
     (26) method_decl -> modifier type ID LPAREN formals . RPAREN block
 
     RPAREN          shift and go to state 114
-
-
-state 84
-
-    (23) variables -> variable COMMA variables .
-
-    SEMICOLON       reduce using rule 23 (variables -> variable COMMA variables .)
 
 
 state 85
@@ -1863,11 +1871,10 @@ state 85
     RCURLY          reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     PUBLIC          reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     PRIVATE         reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
-    VOID            reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
-    ID              reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     INT             reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     FLOAT           reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     BOOLEAN         reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
+    ID              reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     IF              reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     WHILE           reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
     FOR             reduce using rule 34 (block -> LCURLY stmtlist RCURLY .)
@@ -1949,29 +1956,29 @@ state 87
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 115
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 88
 
@@ -2084,29 +2091,29 @@ state 91
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     unary_op                       shift and go to state 91
     expression                     shift and go to state 131
     primary                        shift and go to state 89
     assign                         shift and go to state 90
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 92
 
@@ -2292,29 +2299,29 @@ state 99
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 132
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 100
 
@@ -2343,24 +2350,24 @@ state 100
     (55) literal -> . TRUE
 
     ID              shift and go to state 92
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
     stmt_expression                shift and go to state 133
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
 state 101
 
@@ -2545,19 +2552,19 @@ state 106
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     lhs                            shift and go to state 94
@@ -2565,9 +2572,9 @@ state 106
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 107
 
@@ -2605,28 +2612,28 @@ state 107
     (75) field_access -> . ID
 
     RPAREN          shift and go to state 137
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
     arguments                      shift and go to state 136
     expression                     shift and go to state 138
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
 
@@ -2669,11 +2676,10 @@ state 110
     RCURLY          reduce using rule 32 (formals -> formal_param COMMA formals .)
     PUBLIC          reduce using rule 32 (formals -> formal_param COMMA formals .)
     PRIVATE         reduce using rule 32 (formals -> formal_param COMMA formals .)
-    VOID            reduce using rule 32 (formals -> formal_param COMMA formals .)
-    ID              reduce using rule 32 (formals -> formal_param COMMA formals .)
     INT             reduce using rule 32 (formals -> formal_param COMMA formals .)
     FLOAT           reduce using rule 32 (formals -> formal_param COMMA formals .)
     BOOLEAN         reduce using rule 32 (formals -> formal_param COMMA formals .)
+    ID              reduce using rule 32 (formals -> formal_param COMMA formals .)
     RPAREN          reduce using rule 32 (formals -> formal_param COMMA formals .)
 
 
@@ -2684,18 +2690,17 @@ state 111
     (35) block -> . empty
     (94) empty -> .
 
-    LCURLY          shift and go to state 37
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
     PUBLIC          reduce using rule 94 (empty -> .)
     PRIVATE         reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
     INT             reduce using rule 94 (empty -> .)
     FLOAT           reduce using rule 94 (empty -> .)
     BOOLEAN         reduce using rule 94 (empty -> .)
+    ID              reduce using rule 94 (empty -> .)
 
     block                          shift and go to state 141
-    empty                          shift and go to state 38
+    empty                          shift and go to state 40
 
 state 112
 
@@ -2711,11 +2716,10 @@ state 113
     RCURLY          reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
     PUBLIC          reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
     PRIVATE         reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
-    VOID            reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
-    ID              reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
     INT             reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
     FLOAT           reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
     BOOLEAN         reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
+    ID              reduce using rule 25 (method_decl -> modifier type ID LPAREN RPAREN block .)
 
 
 state 114
@@ -2725,18 +2729,17 @@ state 114
     (35) block -> . empty
     (94) empty -> .
 
-    LCURLY          shift and go to state 37
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
     PUBLIC          reduce using rule 94 (empty -> .)
     PRIVATE         reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
     INT             reduce using rule 94 (empty -> .)
     FLOAT           reduce using rule 94 (empty -> .)
     BOOLEAN         reduce using rule 94 (empty -> .)
+    ID              reduce using rule 94 (empty -> .)
 
     block                          shift and go to state 143
-    empty                          shift and go to state 38
+    empty                          shift and go to state 40
 
 state 115
 
@@ -2828,29 +2831,29 @@ state 117
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 145
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 118
 
@@ -2884,29 +2887,29 @@ state 118
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 146
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 119
 
@@ -3467,19 +3470,19 @@ state 140
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     arguments                      shift and go to state 151
@@ -3487,10 +3490,10 @@ state 140
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 141
 
@@ -3499,11 +3502,10 @@ state 141
     RCURLY          reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
     PUBLIC          reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
     PRIVATE         reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
-    VOID            reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
-    ID              reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
     INT             reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
     FLOAT           reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
     BOOLEAN         reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
+    ID              reduce using rule 27 (method_decl -> modifier VOID ID LPAREN RPAREN block .)
 
 
 state 142
@@ -3513,18 +3515,17 @@ state 142
     (35) block -> . empty
     (94) empty -> .
 
-    LCURLY          shift and go to state 37
+    LCURLY          shift and go to state 39
     RCURLY          reduce using rule 94 (empty -> .)
     PUBLIC          reduce using rule 94 (empty -> .)
     PRIVATE         reduce using rule 94 (empty -> .)
-    VOID            reduce using rule 94 (empty -> .)
-    ID              reduce using rule 94 (empty -> .)
     INT             reduce using rule 94 (empty -> .)
     FLOAT           reduce using rule 94 (empty -> .)
     BOOLEAN         reduce using rule 94 (empty -> .)
+    ID              reduce using rule 94 (empty -> .)
 
     block                          shift and go to state 152
-    empty                          shift and go to state 38
+    empty                          shift and go to state 40
 
 state 143
 
@@ -3533,11 +3534,10 @@ state 143
     RCURLY          reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
     PUBLIC          reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
     PRIVATE         reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
-    VOID            reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
-    ID              reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
     INT             reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
     FLOAT           reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
     BOOLEAN         reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
+    ID              reduce using rule 26 (method_decl -> modifier type ID LPAREN formals RPAREN block .)
 
 
 state 144
@@ -3608,29 +3608,29 @@ state 144
   ! shift/reduce conflict for NULL resolved as shift
   ! shift/reduce conflict for FALSE resolved as shift
   ! shift/reduce conflict for TRUE resolved as shift
-    IF              shift and go to state 49
-    WHILE           shift and go to state 51
-    FOR             shift and go to state 52
-    RETURN          shift and go to state 55
-    BREAK           shift and go to state 56
-    CONTINUE        shift and go to state 57
-    SEMICOLON       shift and go to state 54
-    LCURLY          shift and go to state 37
+    IF              shift and go to state 51
+    WHILE           shift and go to state 53
+    FOR             shift and go to state 54
+    RETURN          shift and go to state 57
+    BREAK           shift and go to state 58
+    CONTINUE        shift and go to state 59
+    SEMICOLON       shift and go to state 56
+    LCURLY          shift and go to state 39
     ELSE            reduce using rule 94 (empty -> .)
     RCURLY          reduce using rule 94 (empty -> .)
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 65
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 66
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 66
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 67
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
   ! IF              [ reduce using rule 94 (empty -> .) ]
   ! WHILE           [ reduce using rule 94 (empty -> .) ]
@@ -3655,17 +3655,17 @@ state 144
   ! TRUE            [ reduce using rule 94 (empty -> .) ]
 
     stmt                           shift and go to state 153
-    stmt_expression                shift and go to state 53
-    block                          shift and go to state 58
-    var_decl                       shift and go to state 59
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    empty                          shift and go to state 38
-    type                           shift and go to state 62
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    stmt_expression                shift and go to state 55
+    block                          shift and go to state 60
+    var_decl                       shift and go to state 61
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    empty                          shift and go to state 40
+    type                           shift and go to state 15
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
 state 145
 
@@ -3858,29 +3858,29 @@ state 147
   ! shift/reduce conflict for NULL resolved as shift
   ! shift/reduce conflict for FALSE resolved as shift
   ! shift/reduce conflict for TRUE resolved as shift
-    IF              shift and go to state 49
-    WHILE           shift and go to state 51
-    FOR             shift and go to state 52
-    RETURN          shift and go to state 55
-    BREAK           shift and go to state 56
-    CONTINUE        shift and go to state 57
-    SEMICOLON       shift and go to state 54
-    LCURLY          shift and go to state 37
+    IF              shift and go to state 51
+    WHILE           shift and go to state 53
+    FOR             shift and go to state 54
+    RETURN          shift and go to state 57
+    BREAK           shift and go to state 58
+    CONTINUE        shift and go to state 59
+    SEMICOLON       shift and go to state 56
+    LCURLY          shift and go to state 39
     ELSE            reduce using rule 94 (empty -> .)
     RCURLY          reduce using rule 94 (empty -> .)
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 65
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 66
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 66
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 67
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
   ! IF              [ reduce using rule 94 (empty -> .) ]
   ! WHILE           [ reduce using rule 94 (empty -> .) ]
@@ -3905,17 +3905,17 @@ state 147
   ! TRUE            [ reduce using rule 94 (empty -> .) ]
 
     stmt                           shift and go to state 154
-    stmt_expression                shift and go to state 53
-    block                          shift and go to state 58
-    var_decl                       shift and go to state 59
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    empty                          shift and go to state 38
-    type                           shift and go to state 62
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    stmt_expression                shift and go to state 55
+    block                          shift and go to state 60
+    var_decl                       shift and go to state 61
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    empty                          shift and go to state 40
+    type                           shift and go to state 15
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
 state 148
 
@@ -3949,29 +3949,29 @@ state 148
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 155
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 149
 
@@ -4029,19 +4029,19 @@ state 150
     (74) field_access -> . primary DOT ID
     (75) field_access -> . ID
 
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
     PLUS            shift and go to state 95
     MINUS           shift and go to state 96
     NOT             shift and go to state 97
-    INTEGER         shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
     ID              shift and go to state 92
 
     expression                     shift and go to state 138
@@ -4049,10 +4049,10 @@ state 150
     primary                        shift and go to state 89
     assign                         shift and go to state 90
     unary_op                       shift and go to state 91
-    literal                        shift and go to state 68
+    literal                        shift and go to state 69
     method_invocation              shift and go to state 93
     lhs                            shift and go to state 94
-    field_access                   shift and go to state 64
+    field_access                   shift and go to state 65
 
 state 151
 
@@ -4068,11 +4068,10 @@ state 152
     RCURLY          reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
     PUBLIC          reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
     PRIVATE         reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
-    VOID            reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
-    ID              reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
     INT             reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
     FLOAT           reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
     BOOLEAN         reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
+    ID              reduce using rule 28 (method_decl -> modifier VOID ID LPAREN formals RPAREN block .)
 
 
 state 153
@@ -4268,29 +4267,29 @@ state 158
   ! shift/reduce conflict for NULL resolved as shift
   ! shift/reduce conflict for FALSE resolved as shift
   ! shift/reduce conflict for TRUE resolved as shift
-    IF              shift and go to state 49
-    WHILE           shift and go to state 51
-    FOR             shift and go to state 52
-    RETURN          shift and go to state 55
-    BREAK           shift and go to state 56
-    CONTINUE        shift and go to state 57
-    SEMICOLON       shift and go to state 54
-    LCURLY          shift and go to state 37
+    IF              shift and go to state 51
+    WHILE           shift and go to state 53
+    FOR             shift and go to state 54
+    RETURN          shift and go to state 57
+    BREAK           shift and go to state 58
+    CONTINUE        shift and go to state 59
+    SEMICOLON       shift and go to state 56
+    LCURLY          shift and go to state 39
     ELSE            reduce using rule 94 (empty -> .)
     RCURLY          reduce using rule 94 (empty -> .)
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 65
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 66
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 66
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 67
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
   ! IF              [ reduce using rule 94 (empty -> .) ]
   ! WHILE           [ reduce using rule 94 (empty -> .) ]
@@ -4315,17 +4314,17 @@ state 158
   ! TRUE            [ reduce using rule 94 (empty -> .) ]
 
     stmt                           shift and go to state 160
-    stmt_expression                shift and go to state 53
-    block                          shift and go to state 58
-    var_decl                       shift and go to state 59
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    empty                          shift and go to state 38
-    type                           shift and go to state 62
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    stmt_expression                shift and go to state 55
+    block                          shift and go to state 60
+    var_decl                       shift and go to state 61
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    empty                          shift and go to state 40
+    type                           shift and go to state 15
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
 state 159
 
@@ -4354,24 +4353,24 @@ state 159
     (55) literal -> . TRUE
 
     ID              shift and go to state 92
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
     FLOAT           shift and go to state 98
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
     stmt_expression                shift and go to state 161
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
 state 160
 
@@ -4476,29 +4475,29 @@ state 162
   ! shift/reduce conflict for NULL resolved as shift
   ! shift/reduce conflict for FALSE resolved as shift
   ! shift/reduce conflict for TRUE resolved as shift
-    IF              shift and go to state 49
-    WHILE           shift and go to state 51
-    FOR             shift and go to state 52
-    RETURN          shift and go to state 55
-    BREAK           shift and go to state 56
-    CONTINUE        shift and go to state 57
-    SEMICOLON       shift and go to state 54
-    LCURLY          shift and go to state 37
+    IF              shift and go to state 51
+    WHILE           shift and go to state 53
+    FOR             shift and go to state 54
+    RETURN          shift and go to state 57
+    BREAK           shift and go to state 58
+    CONTINUE        shift and go to state 59
+    SEMICOLON       shift and go to state 56
+    LCURLY          shift and go to state 39
     ELSE            reduce using rule 94 (empty -> .)
     RCURLY          reduce using rule 94 (empty -> .)
-    INT             shift and go to state 25
-    FLOAT           shift and go to state 65
-    BOOLEAN         shift and go to state 27
-    ID              shift and go to state 66
-    THIS            shift and go to state 69
-    SUPER           shift and go to state 70
-    LPAREN          shift and go to state 50
-    NEW             shift and go to state 71
-    INTEGER         shift and go to state 72
-    STRING          shift and go to state 73
-    NULL            shift and go to state 74
-    FALSE           shift and go to state 75
-    TRUE            shift and go to state 76
+    INT             shift and go to state 18
+    FLOAT           shift and go to state 66
+    BOOLEAN         shift and go to state 20
+    ID              shift and go to state 67
+    THIS            shift and go to state 70
+    SUPER           shift and go to state 71
+    LPAREN          shift and go to state 52
+    NEW             shift and go to state 72
+    INTEGER         shift and go to state 73
+    STRING          shift and go to state 74
+    NULL            shift and go to state 75
+    FALSE           shift and go to state 76
+    TRUE            shift and go to state 77
 
   ! IF              [ reduce using rule 94 (empty -> .) ]
   ! WHILE           [ reduce using rule 94 (empty -> .) ]
@@ -4522,18 +4521,18 @@ state 162
   ! FALSE           [ reduce using rule 94 (empty -> .) ]
   ! TRUE            [ reduce using rule 94 (empty -> .) ]
 
-    stmt_expression                shift and go to state 53
+    stmt_expression                shift and go to state 55
     stmt                           shift and go to state 163
-    block                          shift and go to state 58
-    var_decl                       shift and go to state 59
-    assign                         shift and go to state 60
-    method_invocation              shift and go to state 61
-    empty                          shift and go to state 38
-    type                           shift and go to state 62
-    lhs                            shift and go to state 63
-    field_access                   shift and go to state 64
-    primary                        shift and go to state 67
-    literal                        shift and go to state 68
+    block                          shift and go to state 60
+    var_decl                       shift and go to state 61
+    assign                         shift and go to state 62
+    method_invocation              shift and go to state 63
+    empty                          shift and go to state 40
+    type                           shift and go to state 15
+    lhs                            shift and go to state 64
+    field_access                   shift and go to state 65
+    primary                        shift and go to state 68
+    literal                        shift and go to state 69
 
 state 163
 
@@ -4568,55 +4567,63 @@ WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for PUBLIC in state 5 resolved as shift
 WARNING: shift/reduce conflict for PRIVATE in state 5 resolved as shift
-WARNING: shift/reduce conflict for INT in state 23 resolved as shift
-WARNING: shift/reduce conflict for FLOAT in state 23 resolved as shift
-WARNING: shift/reduce conflict for BOOLEAN in state 23 resolved as shift
-WARNING: shift/reduce conflict for ID in state 23 resolved as shift
-WARNING: shift/reduce conflict for PUBLIC in state 30 resolved as shift
-WARNING: shift/reduce conflict for PRIVATE in state 30 resolved as shift
-WARNING: shift/reduce conflict for IF in state 37 resolved as shift
-WARNING: shift/reduce conflict for WHILE in state 37 resolved as shift
-WARNING: shift/reduce conflict for FOR in state 37 resolved as shift
-WARNING: shift/reduce conflict for RETURN in state 37 resolved as shift
-WARNING: shift/reduce conflict for BREAK in state 37 resolved as shift
-WARNING: shift/reduce conflict for CONTINUE in state 37 resolved as shift
-WARNING: shift/reduce conflict for SEMICOLON in state 37 resolved as shift
-WARNING: shift/reduce conflict for LCURLY in state 37 resolved as shift
-WARNING: shift/reduce conflict for INT in state 37 resolved as shift
-WARNING: shift/reduce conflict for FLOAT in state 37 resolved as shift
-WARNING: shift/reduce conflict for BOOLEAN in state 37 resolved as shift
-WARNING: shift/reduce conflict for ID in state 37 resolved as shift
-WARNING: shift/reduce conflict for THIS in state 37 resolved as shift
-WARNING: shift/reduce conflict for SUPER in state 37 resolved as shift
-WARNING: shift/reduce conflict for LPAREN in state 37 resolved as shift
-WARNING: shift/reduce conflict for NEW in state 37 resolved as shift
-WARNING: shift/reduce conflict for INTEGER in state 37 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 37 resolved as shift
-WARNING: shift/reduce conflict for NULL in state 37 resolved as shift
-WARNING: shift/reduce conflict for FALSE in state 37 resolved as shift
-WARNING: shift/reduce conflict for TRUE in state 37 resolved as shift
-WARNING: shift/reduce conflict for RCURLY in state 47 resolved as shift
-WARNING: shift/reduce conflict for IF in state 47 resolved as shift
-WARNING: shift/reduce conflict for WHILE in state 47 resolved as shift
-WARNING: shift/reduce conflict for FOR in state 47 resolved as shift
-WARNING: shift/reduce conflict for RETURN in state 47 resolved as shift
-WARNING: shift/reduce conflict for BREAK in state 47 resolved as shift
-WARNING: shift/reduce conflict for CONTINUE in state 47 resolved as shift
-WARNING: shift/reduce conflict for SEMICOLON in state 47 resolved as shift
-WARNING: shift/reduce conflict for LCURLY in state 47 resolved as shift
-WARNING: shift/reduce conflict for INT in state 47 resolved as shift
-WARNING: shift/reduce conflict for FLOAT in state 47 resolved as shift
-WARNING: shift/reduce conflict for BOOLEAN in state 47 resolved as shift
-WARNING: shift/reduce conflict for ID in state 47 resolved as shift
-WARNING: shift/reduce conflict for THIS in state 47 resolved as shift
-WARNING: shift/reduce conflict for SUPER in state 47 resolved as shift
-WARNING: shift/reduce conflict for LPAREN in state 47 resolved as shift
-WARNING: shift/reduce conflict for NEW in state 47 resolved as shift
-WARNING: shift/reduce conflict for INTEGER in state 47 resolved as shift
-WARNING: shift/reduce conflict for STRING in state 47 resolved as shift
-WARNING: shift/reduce conflict for NULL in state 47 resolved as shift
-WARNING: shift/reduce conflict for FALSE in state 47 resolved as shift
-WARNING: shift/reduce conflict for TRUE in state 47 resolved as shift
+WARNING: shift/reduce conflict for INT in state 5 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 5 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 5 resolved as shift
+WARNING: shift/reduce conflict for ID in state 5 resolved as shift
+WARNING: shift/reduce conflict for INT in state 28 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 28 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 28 resolved as shift
+WARNING: shift/reduce conflict for ID in state 28 resolved as shift
+WARNING: shift/reduce conflict for PUBLIC in state 35 resolved as shift
+WARNING: shift/reduce conflict for PRIVATE in state 35 resolved as shift
+WARNING: shift/reduce conflict for INT in state 35 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 35 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 35 resolved as shift
+WARNING: shift/reduce conflict for ID in state 35 resolved as shift
+WARNING: shift/reduce conflict for IF in state 39 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 39 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 39 resolved as shift
+WARNING: shift/reduce conflict for RETURN in state 39 resolved as shift
+WARNING: shift/reduce conflict for BREAK in state 39 resolved as shift
+WARNING: shift/reduce conflict for CONTINUE in state 39 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 39 resolved as shift
+WARNING: shift/reduce conflict for LCURLY in state 39 resolved as shift
+WARNING: shift/reduce conflict for INT in state 39 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 39 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 39 resolved as shift
+WARNING: shift/reduce conflict for ID in state 39 resolved as shift
+WARNING: shift/reduce conflict for THIS in state 39 resolved as shift
+WARNING: shift/reduce conflict for SUPER in state 39 resolved as shift
+WARNING: shift/reduce conflict for LPAREN in state 39 resolved as shift
+WARNING: shift/reduce conflict for NEW in state 39 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 39 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 39 resolved as shift
+WARNING: shift/reduce conflict for NULL in state 39 resolved as shift
+WARNING: shift/reduce conflict for FALSE in state 39 resolved as shift
+WARNING: shift/reduce conflict for TRUE in state 39 resolved as shift
+WARNING: shift/reduce conflict for RCURLY in state 49 resolved as shift
+WARNING: shift/reduce conflict for IF in state 49 resolved as shift
+WARNING: shift/reduce conflict for WHILE in state 49 resolved as shift
+WARNING: shift/reduce conflict for FOR in state 49 resolved as shift
+WARNING: shift/reduce conflict for RETURN in state 49 resolved as shift
+WARNING: shift/reduce conflict for BREAK in state 49 resolved as shift
+WARNING: shift/reduce conflict for CONTINUE in state 49 resolved as shift
+WARNING: shift/reduce conflict for SEMICOLON in state 49 resolved as shift
+WARNING: shift/reduce conflict for LCURLY in state 49 resolved as shift
+WARNING: shift/reduce conflict for INT in state 49 resolved as shift
+WARNING: shift/reduce conflict for FLOAT in state 49 resolved as shift
+WARNING: shift/reduce conflict for BOOLEAN in state 49 resolved as shift
+WARNING: shift/reduce conflict for ID in state 49 resolved as shift
+WARNING: shift/reduce conflict for THIS in state 49 resolved as shift
+WARNING: shift/reduce conflict for SUPER in state 49 resolved as shift
+WARNING: shift/reduce conflict for LPAREN in state 49 resolved as shift
+WARNING: shift/reduce conflict for NEW in state 49 resolved as shift
+WARNING: shift/reduce conflict for INTEGER in state 49 resolved as shift
+WARNING: shift/reduce conflict for STRING in state 49 resolved as shift
+WARNING: shift/reduce conflict for NULL in state 49 resolved as shift
+WARNING: shift/reduce conflict for FALSE in state 49 resolved as shift
+WARNING: shift/reduce conflict for TRUE in state 49 resolved as shift
 WARNING: shift/reduce conflict for PLUS in state 131 resolved as shift
 WARNING: shift/reduce conflict for MINUS in state 131 resolved as shift
 WARNING: shift/reduce conflict for TIMES in state 131 resolved as shift
@@ -4750,7 +4757,5 @@ WARNING: shift/reduce conflict for STRING in state 162 resolved as shift
 WARNING: shift/reduce conflict for NULL in state 162 resolved as shift
 WARNING: shift/reduce conflict for FALSE in state 162 resolved as shift
 WARNING: shift/reduce conflict for TRUE in state 162 resolved as shift
-WARNING: reduce/reduce conflict in state 11 resolved using rule (class_body -> empty)
-WARNING: rejected rule (modifier -> empty) in state 11
-WARNING: reduce/reduce conflict in state 23 resolved using rule (type -> ID)
-WARNING: rejected rule (empty -> <empty>) in state 23
+WARNING: reduce/reduce conflict in state 28 resolved using rule (type -> ID)
+WARNING: rejected rule (empty -> <empty>) in state 28

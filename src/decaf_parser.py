@@ -21,14 +21,14 @@ def p_class_body(p):
                   | empty'''
     
 def p_field_decl(p):
-    '''field_decl : modifier var_decl'''
+    '''field_decl : var_decl
+                  | modifier var_decl'''
 
 def p_modifier(p):
     '''modifier : PUBLIC
                 | PRIVATE
                 | PUBLIC STATIC
-                | PRIVATE STATIC
-                | empty'''
+                | PRIVATE STATIC'''
 
 
 def p_var_decl(p):
