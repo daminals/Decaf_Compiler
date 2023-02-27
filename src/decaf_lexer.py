@@ -59,6 +59,8 @@ tokens = [
     'OR',
     'AND',
     'NOT',
+    'TRUE',
+    'FALSE',  
     'SETEQUAL',
     'SEMICOLON',
     'STRING',
@@ -133,6 +135,21 @@ def t_STRING(t):
     t.value = t.value[1:-1] # remove the quotes from the value
     return t
 
+# def t_BOOL(t):
+#     r'(true|false)'
+#     t.value = True if t.value == 'true' else False
+#     return t
+
+
+def t_TRUE(t):
+    r'true'
+    t.value = True
+    return t
+
+def t_FALSE(t):
+    r'false'
+    t.value = False
+    return t
 
 def t_if(t):
     r'if'

@@ -1,5 +1,5 @@
 import unittest, sys, os
-from src import decaf_checker
+import src.decaf_checker
 
 class TestDecafFiles(unittest.TestCase):
     def test_0(self):

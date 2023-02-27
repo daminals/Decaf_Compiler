@@ -2,3 +2,4 @@ parsetab.py
 __pycache__
 .coverage
 src/parser.out
+src/old_decaf_parser.py

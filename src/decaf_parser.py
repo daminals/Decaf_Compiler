@@ -4,6 +4,7 @@
 # 02.21.2023
 import ply.yacc as yacc
 from decaf_lexer import tokens
+
 def p_start(p):
     '''start : class_decl'''
 
