@@ -17,8 +17,8 @@ def p_class_body(p):
                   | method_decl
                   | constructor_decl
                   | class_body field_decl
-                  | class_body method_decl
                   | class_body constructor_decl
+                  | class_body method_decl
                   | empty'''
     
 def p_field_decl(p):
