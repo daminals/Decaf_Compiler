@@ -4,6 +4,7 @@
 # 02.21.2023
 import ply.yacc as yacc
 from decaf_lexer import tokens
+
 def p_start(p):
     '''start : class_decl'''
 
@@ -54,8 +55,8 @@ def p_method_decl(p):
                    | modifier VOID ID LPAREN formals RPAREN block'''
 
 def p_constructor(p):
-    '''constructor_decl : modifier ID block
-                        | modifier ID formals block'''
+    '''constructor_decl : modifier ID LPAREN RPAREN block 
+                        | modifier ID LPAREN formals RPAREN block'''
 
 def p_formals(p):
     '''formals : formal_param
@@ -98,7 +99,7 @@ def p_primary(p):
                | THIS
                | SUPER
                | LPAREN expression RPAREN
-               | NEW ID
+               | NEW ID LPAREN RPAREN
                | NEW ID LPAREN arguments RPAREN
                | method_invocation
                | lhs'''
