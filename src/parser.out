@@ -3,12 +3,10 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 Unused terminals:
 
     BOOL
+    COMMENT
     DO
     DOUBLE
     ERROR
-    float_const
-    int_const
-    string_const
 
 Grammar
 
@@ -112,9 +110,9 @@ BOOL                 :
 BOOLEAN              : 19
 BREAK                : 42
 CLASS                : 2 3
-COMMA                : 22 32 62
-CONTINUE             : 43
-DIVIDE               : 77
+COMMA                : 22 31 61
+CONTINUE             : 42
+DIVIDE               : 76
 DO                   : 
 DOT                  : 64
 DOUBLE               : 
@@ -160,9 +158,6 @@ TRUE                 : 52
 VOID                 : 27 28
 WHILE                : 37
 error                : 
-float_const          : 
-int_const            : 
-string_const         : 
 
 Nonterminals, with rules where they appear
 
