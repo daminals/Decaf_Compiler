@@ -70,7 +70,8 @@ tokens = [
     'ID'
 ] + list(reserved.values())
 
-# Regular expression rules for simple tokens
+# Regular expression rules for simple tokens\
+t_DOT = r'\.'
 t_AND = r'\&\&'
 t_BOOLEAN = r'boolean'
 t_BREAK = r'break'
