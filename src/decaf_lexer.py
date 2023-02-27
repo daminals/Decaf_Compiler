@@ -200,11 +200,10 @@ t_ignore = ' \t'
 # needs to be last in the file since regex is greedy
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    if t.value in reserved:             # Check for reserved words
-        t.type = reserved.get(t.value, 'ID')    # Check for reserved words
-    elif t.value not in tokens:
-        print(f"{TERMINAL_RED_PRINT}Invalid token: {t.value}{TERMINAL_CLEAR_PRINT}")
-        t.type = 'ERROR'
+    if t.value in reserved:
+        t.type = reserved[t.value]  # set the token type to the reserved word's type
+    else:
+        t.type = 'ID'  # set the token type to 'ID' if it's a valid ID
     return t
 
 # Error handling rule
