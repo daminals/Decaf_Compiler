@@ -32,7 +32,7 @@ def p_modifier(p):
 
 
 def p_var_decl(p):
-    'var_decl : type variables SEMICOLON'
+    '''var_decl : type variables SEMICOLON'''
 #put new types here
 def p_type(p):
     '''type : INT
@@ -65,8 +65,11 @@ def p_formals_param(p):
     '''formal_param : type variable'''
 
 def p_block(p):
-    '''block : LCURLY stmt RCURLY
+    '''block : LCURLY stmtlist RCURLY
              | empty'''
+def p_stmtlist(p):
+    '''stmtlist : stmt
+                | stmtlist stmt'''
 
 def p_stmt(p):
     '''stmt : IF LPAREN expression RPAREN stmt
@@ -121,7 +124,12 @@ def p_expr(p):
                   | expression arith_op expression
                   | expression bool_op expression
                   | unary_op expression'''
+def p_lhs(p):
+    '''lhs : field_access'''
 
+def p_field(p):
+    '''field_access : primary DOT ID
+                    | ID'''
 def p_assign(p):
     'assign : lhs SETEQUAL expression'
 
