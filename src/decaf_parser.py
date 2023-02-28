@@ -77,6 +77,13 @@ def p_stmt(p):
             | IF LPAREN expression RPAREN stmt ELSE stmt
             | WHILE LPAREN expression RPAREN stmt
             | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN SEMICOLON expression SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON RPAREN block
+            | FOR LPAREN SEMICOLON SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN block
+            | FOR LPAREN SEMICOLON SEMICOLON RPAREN block
             | RETURN expression SEMICOLON
             | RETURN SEMICOLON
             | stmt_expression SEMICOLON
