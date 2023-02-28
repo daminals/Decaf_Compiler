@@ -1,6 +1,6 @@
 # decaf_parser.py
-# Daniel Kogan 114439349
-# Jason Zhang 112710259
+# Daniel Kogan dkogan 114439349
+# Jason Zhang jasozhang 112710259
 # 02.21.2023
 import sys
 import ply.lex as lex

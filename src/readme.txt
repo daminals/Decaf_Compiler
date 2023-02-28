@@ -1,4 +1,7 @@
 Decaf Compiler - A02
+By: 
+  - Daniel Kogan dkogan 114439349
+  - Jason Zhang jasozhang 112710259
 
 Python Version: 3.9.6
 Ply Version: 3.11
