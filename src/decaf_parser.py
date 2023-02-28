@@ -49,6 +49,7 @@ def p_type(p):
     '''type : INT
             | FLOAT
             | BOOLEAN
+            | STRING
             | ID'''
 
 def p_variables(p):
@@ -106,7 +107,7 @@ def p_stmt(p):
 def p_literal(p):
     '''literal : INTEGER
                | FLOAT
-               | STRING
+               | STRING_LITERAL
                | NULL
                | FALSE
                | TRUE'''
@@ -181,10 +182,11 @@ def p_empty(p):
 
 def p_error(p):
     if p:
-        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value), file=sys.stderr)
+        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value))
     else:
-        print("Syntax error: unexpected end of input",file=sys.stderr)
+        print("Syntax error: unexpected end of input")
     raise SyntaxError();     
+
 def find_column(token):
     input_str = token.lexer.lexdata
     last = input_str.rfind('\n', 0, token.lexpos)

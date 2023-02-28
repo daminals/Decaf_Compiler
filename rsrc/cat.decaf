@@ -1,0 +1,23 @@
+  // Sample class demonstrating constructor overloading.
+
+class Cat {
+  string breed;
+  string color; 
+  int age;
+  
+  public Cat() {
+    this.breed = "unknown";
+    this.color = "white";
+    this.age = 0;
+  }
+  public Cat(string breed, string color, int age) { 
+    this.breed = breed;
+    this.color = color;
+    this.age = age;
+  } 
+  public static void main() {
+    // Instantiation
+    Cat my_pet = new Cat("Himalayan Cat", "white", 3);
+    Out.print(my_pet.color);
+  }
+}

@@ -30,7 +30,8 @@ reserved = {
     'if': 'IF',
     'int': 'INT',
     'return': 'RETURN',
-    'static': 'STATIC'
+    'static': 'STATIC',
+    'string': 'STRING'
 }
 
 # List of token names.   This is always required
@@ -61,10 +62,7 @@ tokens = [
     'FALSE',  
     'SETEQUAL',
     'SEMICOLON',
-    'STRING',
-    'string_const',
-    'int_const',
-    'float_const',
+    'STRING_LITERAL',
     'ERROR',  # error type, no rule associated with type except throw err
     'ID'
 ] + list(reserved.values())
@@ -109,6 +107,7 @@ t_RPAREN = r'\)'
 t_SEMICOLON = r'\;'
 t_SETEQUAL = r'\='
 t_STATIC = r'static'
+t_STRING= r'string'
 t_SUPER = r'super'
 t_THIS = r'this'
 t_TIMES = r'\*'
@@ -128,7 +127,7 @@ def t_FLOAT(t):
     return t
 
 # Regular expression rule for string literals
-def t_STRING(t):
+def t_STRING_LITERAL(t):
     r'"([^"\\]|\\.)*"'
     t.value = t.value[1:-1] # remove the quotes from the value
     return t
