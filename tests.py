@@ -8,7 +8,7 @@ CLEAR_FORMAT = '\033[0m'
 
 class TestDecafFiles(unittest.TestCase):
     def run_file(testcase_class, file, expected_return_code=0):
-      cmd_str = f"source venv/bin/activate && python3 src/decaf_checker.py {file}"
+      cmd_str = f"source venv/bin/activate && python src/decaf_checker.py {file}"
       process = subprocess.Popen(cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
       stdout, stderr = process.communicate()
       err_message = f"{RED}{file}{CLEAR_FORMAT} {UNDERLINE}exited with return code {process.returncode}, not {expected_return_code}{CLEAR_FORMAT}"
