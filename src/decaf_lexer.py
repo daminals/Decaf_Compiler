@@ -19,7 +19,6 @@ reserved = {
     'continue': 'CONTINUE',
     'class': 'CLASS',
     'float': 'FLOAT',
-    'double': 'DOUBLE',
     'for': 'FOR',
     'private': 'PRIVATE',
     'public': 'PUBLIC',
@@ -40,7 +39,9 @@ tokens = [
     'COMMA',
     'INTEGER',
     'PLUS',
+    'PLUSPLUS',
     'MINUS',
+    'MINUSMINUS',
     'TIMES',
     'DIVIDE',
     'LPAREN',
@@ -76,7 +77,6 @@ t_BREAK = r'break'
 t_CLASS = r'class'
 t_CONTINUE = r'continue'
 t_DIVIDE = r'/'
-t_DOUBLE = r'double'
 t_DO = r'do'
 t_ELSE = r'else'
 t_EQUAL = r'\=\='
@@ -91,12 +91,14 @@ t_LCURLY = r'\{'
 t_LESS = r'\<'
 t_LESSEQ = r'\<\='
 t_LPAREN = r'\('
+t_MINUSMINUS = r'\-\-'
 t_MINUS = r'-'
 t_NEW = r'new'
 t_NOT = r'\!'
 t_NOTEQUAL = r'\!\='
 t_NULL = r'null'
 t_OR = r'\|\|'
+t_PLUSPLUS = r'\+\+'
 t_PLUS = r'\+'
 t_PRIVATE = r'private'
 t_PUBLIC = r'public'

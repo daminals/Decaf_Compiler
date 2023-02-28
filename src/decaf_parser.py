@@ -49,7 +49,6 @@ def p_type(p):
     '''type : INT
             | FLOAT
             | BOOLEAN
-            | DOUBLE
             | STRING
             | ID'''
 
@@ -151,7 +150,11 @@ def p_field(p):
     '''field_access : primary DOT ID
                     | ID'''
 def p_assign(p):
-    'assign : lhs SETEQUAL expression'
+    '''assign : lhs SETEQUAL expression
+              | lhs PLUSPLUS
+              | lhs MINUSMINUS
+              | PLUSPLUS lhs
+              | MINUSMINUS lhs'''
 
 def p_arith_op(p):
     '''arith_op : PLUS
