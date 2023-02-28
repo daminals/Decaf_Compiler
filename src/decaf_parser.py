@@ -16,7 +16,9 @@ precedence = (
     ('right', 'NOT'),
 )
 def p_start(p):
-    '''start : class_decl'''
+    '''start : class_decl
+              | class_decl start
+              | empty'''
 
 def p_class(p):
     '''class_decl : CLASS ID LCURLY class_body RCURLY
