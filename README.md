@@ -1,3 +1,4 @@
+![github repo badge: Language](https://img.shields.io/badge/Language-Python-181717?color=blue) ![github repo badge: Compiling](https://img.shields.io/badge/Compiling-Decaf-181717?color=orange) [![Unit Tests](https://github.com/TyuiX/CSE307HW2/actions/workflows/action.yaml/badge.svg)](https://github.com/TyuiX/CSE307HW2/actions/workflows/action.yaml)
 # Decaf Compiler
 
 This is a simple implementation of a Decaf Compiler using PLY (Python Lex-Yacc) tool for parsing and lexical analysis in Python.
