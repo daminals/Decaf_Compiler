@@ -12,7 +12,6 @@ reserved = {
     'boolean': 'BOOLEAN',
     'break': 'BREAK',
     'extends': 'EXTENDS',
-    'false': 'FALSE',
     'new': 'NEW',
     'null': 'NULL',
     'super': 'SUPER',
@@ -24,7 +23,6 @@ reserved = {
     'for': 'FOR',
     'private': 'PRIVATE',
     'public': 'PUBLIC',
-    'true': 'TRUE',
     'void': 'VOID',
     'while': 'WHILE',
     'do': 'DO',
@@ -134,12 +132,6 @@ def t_STRING(t):
     r'"([^"\\]|\\.)*"'
     t.value = t.value[1:-1] # remove the quotes from the value
     return t
-
-# def t_BOOL(t):
-#     r'(true|false)'
-#     t.value = True if t.value == 'true' else False
-#     return t
-
 
 def t_TRUE(t):
     r'true'

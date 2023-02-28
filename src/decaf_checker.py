@@ -19,6 +19,7 @@ def just_scan(fn=""):
 
     fh = open(fn, 'r')
     source = fh.read()
+    fh.close()
     lexer.input(source)
     next_token = lexer.token()
     while next_token != None:

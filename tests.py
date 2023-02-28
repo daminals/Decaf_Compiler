@@ -34,11 +34,20 @@ class TestDecafFiles(unittest.TestCase):
     #   self.assertEqual(1, result, f"{file} succeeded to compile")
 
     def test_failure(self):
-      file = "rsrc/failure.decaf"
-      cmd_str = f"source venv/bin/activate && python3 src/decaf_checker.py {file} > /dev/null 2>&1"
-      process = subprocess.Popen(cmd_str, shell=True, stderr=subprocess.PIPE)
-      process.wait()
-      self.assertNotEqual(process.returncode, 0, f"{file} succeeded to compile")
+        file = "rsrc/failure.decaf"
+        cmd_str = f"source venv/bin/activate && python3 src/decaf_checker.py {file}"
+        process = subprocess.Popen(cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        self.assertEqual(1, process.returncode, f"{file} succeeded to compile")
+        self.assertIn("Syntax error at line 8, column 3, token: this'", stderr.decode(), f"{file} succeeded to compile")
+    
+    def test_unexpectedEOF(self):
+        file = "rsrc/unexpectedEOF.decaf"
+        cmd_str = f"source venv/bin/activate && python3 src/decaf_checker.py {file}"
+        process = subprocess.Popen(cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        self.assertEqual(1, process.returncode, f"{file} succeeded to compile")
+        self.assertIn("Syntax error: unexpected end of input", stderr.decode(), f"\n{file} succeeded to compile")
 
 
   

@@ -172,9 +172,9 @@ def p_empty(p):
 
 def p_error(p):
     if p:
-        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value))
+        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value), file=sys.stderr)
     else:
-        print("Syntax error: unexpected end of input")
+        print("Syntax error: unexpected end of input",file=sys.stderr)
     raise SyntaxError();     
 def find_column(token):
     input_str = token.lexer.lexdata

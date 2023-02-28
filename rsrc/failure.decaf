@@ -1,0 +1,9 @@
+/*
+* failure
+* Daniel Kogan 114439349
+* 02.27.2023
+*/
+
+class failure {
+  this fails to compile
+}
