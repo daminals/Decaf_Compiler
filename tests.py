@@ -70,6 +70,11 @@ class TestDecafFiles(unittest.TestCase):
       file = "rsrc/Bicycle.decaf"
       stdout, stderr = TestDecafFiles.run_file(self,file)
       self.assertIn("YES", stdout.decode())
+    
+    def test_Lamp(self):
+      file = "rsrc/Lamp.decaf"
+      stdout, stderr = TestDecafFiles.run_file(self,file)
+      self.assertIn("YES", stdout.decode())
 
 if __name__ == '__main__':
     unittest.main(argv=[''],verbosity=0)

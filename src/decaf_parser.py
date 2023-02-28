@@ -39,7 +39,8 @@ def p_modifier(p):
                 | PRIVATE
                 | STATIC
                 | PUBLIC STATIC
-                | PRIVATE STATIC'''
+                | PRIVATE STATIC
+                | empty'''
 
 
 def p_var_decl(p):
@@ -79,7 +80,7 @@ def p_formals_param(p):
 def p_block(p):
     '''block : LCURLY stmtlist RCURLY
              | empty'''
-             
+
 def p_stmtlist(p):
     '''stmtlist : stmt
                 | stmtlist stmt'''

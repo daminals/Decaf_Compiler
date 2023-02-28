@@ -1,0 +1,17 @@
+class Bicycle {
+
+  // state or field
+  private int gear;
+  private int wheels;
+
+  // constructor
+  public Bicycle() {
+    gear = 5;
+    wheels=2;
+  }
+
+  // behavior or method
+  public void braking() {
+    Out.print("Working of Braking");
+  }
+}
