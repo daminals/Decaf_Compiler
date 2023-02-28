@@ -60,6 +60,11 @@ class TestDecafFiles(unittest.TestCase):
       file = "rsrc/multiply.decaf"
       stdout, stderr = TestDecafFiles.run_file(self,file)
       self.assertIn("YES", stdout.decode())
+    
+    def test_CelsiusToFahrenheit(self):
+      file = "rsrc/CelsiusToFahrenheit.decaf"
+      stdout, stderr = TestDecafFiles.run_file(self,file)
+      self.assertIn("YES", stdout.decode())
 
 if __name__ == '__main__':
     unittest.main(argv=[''],verbosity=0)
