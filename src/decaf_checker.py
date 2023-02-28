@@ -38,13 +38,16 @@ def just_parse(fn=""):
     fh = open(fn, 'r')
     source = fh.read()
     fh.close()
-    result = parser.parse(source, lexer = lexer, debug = 1)
-    # print(parser.error)
-    # print(result)
-    # Parsing Successful
-    #print()
-    # print("YES")
-    #print()
+    try:
+        result = parser.parse(source, lexer = lexer, debug = 1)
+        #print(result)
+    except SyntaxError:
+        sys.exit(1)
+    else:
+        # Parsing Successful
+        #print()
+        print("YES")
+        #print()
 
 def main():
     fn = sys.argv[1] if len(sys.argv) > 1 else ""

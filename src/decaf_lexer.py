@@ -225,7 +225,9 @@ def t_ID(t):
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
+    t.lexer.lexpos += len(t.value)    
 
 def t_COMMENT(t):
     r'(/\*(.|\n)*?\*/)|(//.*)'
     t.lexer.lineno += t.value.count('\n')
+    

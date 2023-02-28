@@ -19,8 +19,7 @@ def p_class_body(p):
                   | constructor_decl
                   | class_body field_decl
                   | class_body constructor_decl
-                  | class_body method_decl
-                  | empty'''
+                  | class_body method_decl'''
     
 def p_field_decl(p):
     '''field_decl : var_decl
@@ -79,6 +78,13 @@ def p_stmt(p):
             | IF LPAREN expression RPAREN stmt ELSE stmt
             | WHILE LPAREN expression RPAREN stmt
             | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN SEMICOLON expression SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON RPAREN block
+            | FOR LPAREN SEMICOLON SEMICOLON stmt_expression RPAREN block
+            | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN block
+            | FOR LPAREN SEMICOLON SEMICOLON RPAREN block
             | RETURN expression SEMICOLON
             | RETURN SEMICOLON
             | stmt_expression SEMICOLON
@@ -162,8 +168,16 @@ def p_stmt_expr(p):
                        | method_invocation'''
 def p_empty(p):
     'empty :'
-    pass
+    pass   
 
 def p_error(p):
-    print("Syntax error in input!")
-    sys.exit(1)
+    if p:
+        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value))
+    else:
+        print("Syntax error: unexpected end of input")
+    raise SyntaxError();     
+def find_column(token):
+    input_str = token.lexer.lexdata
+    last = input_str.rfind('\n', 0, token.lexpos)
+    column = (token.lexpos - last)
+    return column
