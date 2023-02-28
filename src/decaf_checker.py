@@ -40,13 +40,14 @@ def just_parse(fn=""):
     fh.close()
     try:
         result = parser.parse(source, lexer = lexer, debug = 1)
-        print(result)
+        #print(result)
     except SyntaxError:
         print("error occured while parsing")
-    # Parsing Successful
-    #print()
-    print("YES")
-    #print()
+    else:
+        # Parsing Successful
+        #print()
+        print("YES")
+        #print()
 
 def main():
     fn = sys.argv[1] if len(sys.argv) > 1 else ""

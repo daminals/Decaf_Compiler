@@ -171,7 +171,12 @@ def p_empty(p):
 
 def p_error(p):
     if p:
-        print("Syntax error at line %d, pos %d:'" % (p.lineno, p.lexpos))
+        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value))
     else:
         print("Syntax error: unexpected end of input")
     raise SyntaxError();     
+def find_column(token):
+    input_str = token.lexer.lexdata
+    last = input_str.rfind('\n', 0, token.lexpos)
+    column = (token.lexpos - last)
+    return column
