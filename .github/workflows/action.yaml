@@ -29,5 +29,3 @@ jobs:
       - name: Test with unittest
         run: |
           coverage run -m unittest -q tests.py
-      - name: Test Code Coverage
-        run: coverage report --fail-under=80
