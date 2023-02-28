@@ -49,6 +49,8 @@ def p_type(p):
     '''type : INT
             | FLOAT
             | BOOLEAN
+            | VOID
+            | DOUBLE
             | STRING
             | ID'''
 
@@ -61,9 +63,7 @@ def p_variable(p):
 
 def p_method_decl(p):
     '''method_decl : modifier type ID LPAREN RPAREN block
-                   | modifier type ID LPAREN formals RPAREN block
-                   | modifier VOID ID LPAREN RPAREN block
-                   | modifier VOID ID LPAREN formals RPAREN block'''
+                   | modifier type ID LPAREN formals RPAREN block'''
 
 def p_constructor(p):
     '''constructor_decl : modifier ID LPAREN RPAREN block 

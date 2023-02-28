@@ -56,5 +56,10 @@ class TestDecafFiles(unittest.TestCase):
       stdout, stderr = TestDecafFiles.run_file(self,file)
       self.assertIn("YES", stdout.decode())
 
+    def test_multiply(self):
+      file = "rsrc/multiply.decaf"
+      stdout, stderr = TestDecafFiles.run_file(self,file)
+      self.assertIn("YES", stdout.decode())
+
 if __name__ == '__main__':
     unittest.main(argv=[''],verbosity=0)
