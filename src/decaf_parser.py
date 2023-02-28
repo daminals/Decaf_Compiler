@@ -5,7 +5,16 @@
 import ply.yacc as yacc
 import sys
 from decaf_lexer import tokens
-
+precedence = (
+    ('right', 'SETEQUAL'),
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('nonassoc', 'NOTEQUAL', 'EQUAL'),
+    ('nonassoc', 'LESS', 'GREATEREQ', 'LESSEQ', 'GREATER'),
+    ('left', 'PLUS', 'MINUS'),  
+    ('left', 'TIMES', 'DIVIDE'),
+    ('right', 'NOT'),
+)
 def p_start(p):
     '''start : class_decl'''
 
@@ -77,14 +86,14 @@ def p_stmt(p):
     '''stmt : IF LPAREN expression RPAREN stmt
             | IF LPAREN expression RPAREN stmt ELSE stmt
             | WHILE LPAREN expression RPAREN stmt
-            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN block
-            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON RPAREN block
-            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON stmt_expression RPAREN block
-            | FOR LPAREN SEMICOLON expression SEMICOLON stmt_expression RPAREN block
-            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON RPAREN block
-            | FOR LPAREN SEMICOLON SEMICOLON stmt_expression RPAREN block
-            | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN block
-            | FOR LPAREN SEMICOLON SEMICOLON RPAREN block
+            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
+            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON RPAREN stmt
+            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON stmt_expression RPAREN stmt
+            | FOR LPAREN SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
+            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON RPAREN stmt
+            | FOR LPAREN SEMICOLON SEMICOLON stmt_expression RPAREN stmt
+            | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN stmt
+            | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
             | RETURN expression SEMICOLON
             | RETURN SEMICOLON
             | stmt_expression SEMICOLON
