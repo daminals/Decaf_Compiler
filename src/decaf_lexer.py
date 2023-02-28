@@ -116,6 +116,8 @@ t_TIMES = r'\*'
 t_VOID = r'void'
 t_WHILE = r'while'
 
+# A string containing ignored characters (spaces and tabs)
+t_ignore = ' \t'
 
 # A regular expression rule with some action code
 def t_INTEGER(t):
@@ -144,33 +146,6 @@ def t_FALSE(t):
     t.value = False
     return t
 
-def t_if(t):
-    r'if'
-    t.type = reserved.get(t.value, 'IF')
-    return t
-
-
-def t_for(t):
-    r'for'
-    t.type = reserved.get(t.value, 'FOR')
-    return t
-
-
-def t_else(t):
-    r'else'
-    t.type = reserved.get(t.value, 'ELSE')
-    return t
-
-
-def t_while(t):
-    r'while'
-    t.type = reserved.get(t.value, 'WHILE')
-    return t
-
-
-def t_do(t):
-    r'do'
-    return t
 
 # Define a rule so we can track line numbers
 
@@ -199,8 +174,7 @@ def find_column(input, token):
     return None '''
 
 
-# A string containing ignored characters (spaces and tabs)
-t_ignore = ' \t'
+
 
 # rules for reserved words
 # needs to be last in the file since regex is greedy
@@ -214,12 +188,12 @@ def t_ID(t):
 
 # Error handling rule
 
-
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
     t.lexer.lexpos += len(t.value)    
 
+# comments
 def t_COMMENT(t):
     r'(/\*(.|\n)*?\*/)|(//.*)'
     t.lexer.lineno += t.value.count('\n')

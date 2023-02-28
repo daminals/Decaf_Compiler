@@ -16,10 +16,9 @@ class runningAvgCalc {
   public float average(int next){
     if (this.count == 0){
       this.current = next;
-      this.count = 1;
+      this.count++;
     } else {
-      this.current = ((this.current * this.count) + next) / (this.count + 1);
-      this.count = this.count + 1;
+      this.current = ((this.current * this.count) + next) / (++this.count);
     }
   }
   public static void main(){

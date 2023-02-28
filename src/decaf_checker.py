@@ -6,6 +6,9 @@ import sys
 import ply.lex as lex
 import ply.yacc as yacc
 
+GREEN = '\033[92m'
+CLEAR_FORMAT = '\033[0m'
+
 import decaf_lexer
 import decaf_parser
 
@@ -47,7 +50,7 @@ def just_parse(fn=""):
     else:
         # Parsing Successful
         #print()
-        print("YES")
+        print(GREEN+ "YES" + CLEAR_FORMAT)
         #print()
 
 def main():

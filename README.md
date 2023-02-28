@@ -8,7 +8,7 @@ This is a simple implementation of a Decaf Compiler using PLY (Python Lex-Yacc) 
 You need to have Python 3.x installed on your machine. PLY is a third-party tool that needs to be installed separately. You can install it using pip.
 
 ```bash
-pip install ply
+pip3 install -r requirements.txt
 ```
 
 ## Usage

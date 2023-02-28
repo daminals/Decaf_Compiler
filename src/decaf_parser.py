@@ -196,16 +196,20 @@ def p_empty(p):
     'empty :'
     pass
 
+RED = '\033[91m'
+CLEAR_FORMAT = '\033[0m'
+
 def p_error(p):
+    formatted_string = f"{RED}ERROR: {CLEAR_FORMAT}"
+    sys.stderr.write(formatted_string)
     if p:
-        print("Syntax error at line %d, column %d, token: %s'" % (p.lineno, find_column(p), p.value))
+        sys.stdout.write(f"Syntax error at line {p.lineno}, column {find_column(p)}, token: {p.value}'")
     else:
-        print("Syntax error: unexpected end of input")
+        sys.stdout.write("Syntax error: unexpected end of input")
     raise SyntaxError();     
 
 def find_column(token):
     input_str = token.lexer.lexdata
     last = input_str.rfind('\n', 0, token.lexpos)
-    print(last)
     column = (token.lexpos - last)
     return column
