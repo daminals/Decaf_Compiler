@@ -4,7 +4,16 @@
 # 02.21.2023
 import ply.yacc as yacc
 from decaf_lexer import tokens
-
+precedence = (
+    ('right', 'SETEQUAL')
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('nonassoc', 'NOTEQUAL', 'EQUAL'),
+    ('nonassoc', 'LESS', 'GREATEREQ', 'LESSEQ', 'GREATER'),
+    ('left', 'PLUS', 'MINUS'),  
+    ('left', 'TIMES', 'DIVIDE'),
+    ('right', 'NOT'),
+)
 def p_start(p):
     '''start : class_decl'''
 
