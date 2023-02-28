@@ -132,7 +132,7 @@ def t_FLOAT(t):
 
 # Regular expression rule for string literals
 def t_STRING_LITERAL(t):
-    r'"([^"\\]|\\.)*"'
+    r'"([^"\\]*(\\.[^"\\]*)*)"'
     t.value = t.value[1:-1] # remove the quotes from the value
     return t
 
