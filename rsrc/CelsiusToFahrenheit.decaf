@@ -1,0 +1,7 @@
+class CelsiusToFahrenheit {
+  public static void main() {
+      float celsius = 28;
+      float fahrenheit;
+      fahrenheit = (celsius * 9 / 5) + 32;
+  }
+}
