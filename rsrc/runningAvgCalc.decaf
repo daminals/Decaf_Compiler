@@ -1,0 +1,34 @@
+/*
+* runningAvgCalc
+* Daniel Kogan 114439349
+* 02.28.2023
+*/
+
+class runningAvgCalc {
+  float current;
+  int count;  
+
+  runningAvgCalc(){
+    this.current = 0;
+    this.count = 0;
+  }
+
+  public float average(int next){
+    if (this.count == 0){
+      this.current = next;
+      this.count = 1;
+    } else {
+      this.current = ((this.current * this.count) + next) / (this.count + 1);
+      this.count = this.count + 1;
+    }
+  }
+  public static void main(){
+    runningAvgCalc calc;
+    calc = new runningAvgCalc();
+    Out.print(calc.average(1));
+    Out.print(calc.average(2));
+    Out.print(calc.average(3));
+    Out.print(calc.average(4));
+    Out.print(calc.average(5));
+  }
+}

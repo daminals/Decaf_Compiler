@@ -1,4 +1,4 @@
-  // Sample class demonstrating constructor overloading.
+// Sample class demonstrating constructor overloading.
 
 class Cat {
   string breed;
@@ -21,4 +21,14 @@ class Cat {
     my_pet = new Cat("Himalayan Cat", "white", 3);
     Out.print(my_pet.color);
   }
+}
+
+class FictionalCat extends Cat { 
+  string reference;
+  
+  FictionalCat(string name, string color, int age, string reference) { 
+    // super(name, color, age);
+    this.reference = reference;
+    super.name = name;
+  } 
 }

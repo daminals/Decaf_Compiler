@@ -17,8 +17,8 @@ precedence = (
 )
 def p_start(p):
     '''start : class_decl
-              | class_decl start
-              | empty'''
+             | class_decl start
+             | empty'''
 
 def p_class(p):
     '''class_decl : CLASS ID LCURLY class_body RCURLY
@@ -43,6 +43,7 @@ def p_modifier(p):
                 | PUBLIC STATIC
                 | PRIVATE STATIC
                 | empty'''
+    p[0] = p[1] if p[1] is not None else ''
 
 
 def p_var_decl(p):
@@ -66,11 +67,17 @@ def p_method_decl(p):
     '''method_decl : modifier type ID LPAREN RPAREN block
                    | modifier type ID LPAREN formals RPAREN block
                    | modifier VOID ID LPAREN RPAREN block
-                   | modifier VOID ID LPAREN formals RPAREN block'''
+                   | modifier VOID ID LPAREN formals RPAREN block
+                   | type ID LPAREN RPAREN block
+                   | type ID LPAREN formals RPAREN block
+                   | VOID ID LPAREN RPAREN block
+                   | VOID ID LPAREN formals RPAREN block'''
 
 def p_constructor(p):
     '''constructor_decl : modifier ID LPAREN RPAREN block 
-                        | modifier ID LPAREN formals RPAREN block'''
+                        | modifier ID LPAREN formals RPAREN block
+                        | ID LPAREN RPAREN block 
+                        | ID LPAREN formals RPAREN block'''
 
 def p_formals(p):
     '''formals : formal_param
@@ -184,9 +191,10 @@ def p_unary_op(p):
 def p_stmt_expr(p):
     '''stmt_expression : assign
                        | method_invocation'''
+
 def p_empty(p):
     'empty :'
-    pass   
+    pass
 
 def p_error(p):
     if p:
@@ -198,5 +206,6 @@ def p_error(p):
 def find_column(token):
     input_str = token.lexer.lexdata
     last = input_str.rfind('\n', 0, token.lexpos)
+    print(last)
     column = (token.lexpos - last)
     return column

@@ -76,5 +76,15 @@ class TestDecafFiles(unittest.TestCase):
       stdout, stderr = TestDecafFiles.run_file(self,file)
       self.assertIn("YES", stdout.decode())
 
+    def test_empty_file(self):
+      file = "rsrc/empty_file.decaf"
+      stdout, stderr = TestDecafFiles.run_file(self,file,0)
+      self.assertIn("YES", stdout.decode())
+
+    def test_runningAvgCalc(self):
+      file = "rsrc/runningAvgCalc.decaf"
+      stdout, stderr = TestDecafFiles.run_file(self,file)
+      self.assertIn("YES", stdout.decode())
+
 if __name__ == '__main__':
     unittest.main(argv=[''],verbosity=0)
