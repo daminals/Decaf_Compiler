@@ -5,7 +5,7 @@
 import ply.yacc as yacc
 from decaf_lexer import tokens
 precedence = (
-    ('right', 'SETEQUAL')
+    ('right', 'SETEQUAL'),
     ('left', 'OR'),
     ('left', 'AND'),
     ('nonassoc', 'NOTEQUAL', 'EQUAL'),
