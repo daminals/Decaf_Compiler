@@ -79,6 +79,7 @@ def p_formals_param(p):
 def p_block(p):
     '''block : LCURLY stmtlist RCURLY
              | empty'''
+             
 def p_stmtlist(p):
     '''stmtlist : stmt
                 | stmtlist stmt'''

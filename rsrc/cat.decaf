@@ -17,7 +17,8 @@ class Cat {
   } 
   public static void main() {
     // Instantiation
-    Cat my_pet = new Cat("Himalayan Cat", "white", 3);
+    Cat my_pet;
+    my_pet = new Cat("Himalayan Cat", "white", 3);
     Out.print(my_pet.color);
   }
 }

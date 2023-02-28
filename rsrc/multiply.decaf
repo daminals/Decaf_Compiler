@@ -1,8 +1,11 @@
 class multiply {
   static void main() {
-    int num1 = 10;
-    int num2 = 5;
-    int result = num1 * num2;
+    int num1;
+    num1 = 10;
+    int num2;
+    num2 = 5;
+    int result;
+    result = num1 * num2;
     Out.print(result);
   }
 }
