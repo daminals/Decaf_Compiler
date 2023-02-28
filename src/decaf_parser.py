@@ -200,11 +200,11 @@ RED = '\033[91m'
 CLEAR_FORMAT = '\033[0m'
 
 def p_error(p):
-    print(f"{RED}ERROR: {CLEAR_FORMAT}", file=sys.stderr)
+    print(f"", file=sys.stderr)
     if p:
-        print(f"Syntax error at line {p.lineno}, column {find_column(p)}, token: {p.value}'")
+        print(f"{RED}ERROR: Syntax error at line {p.lineno}, column {find_column(p)}, token: {p.value}'{CLEAR_FORMAT}")
     else:
-        print("Syntax error: unexpected end of input")
+        print("{RED}ERROR: Syntax error: unexpected end of input{CLEAR_FORMAT}")
     raise SyntaxError();     
 
 def find_column(token):
