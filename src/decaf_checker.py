@@ -39,10 +39,11 @@ def just_parse(fn=""):
     source = fh.read()
     fh.close()
     result = parser.parse(source, lexer = lexer, debug = 1)
-    print(result)
+    # print(parser.error)
+    # print(result)
     # Parsing Successful
     #print()
-    print("YES")
+    # print("YES")
     #print()
 
 def main():

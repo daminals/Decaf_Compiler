@@ -3,6 +3,7 @@
 # Jason Zhang 112710259
 # 02.21.2023
 import ply.yacc as yacc
+import sys
 from decaf_lexer import tokens
 
 def p_start(p):
@@ -161,4 +162,8 @@ def p_stmt_expr(p):
                        | method_invocation'''
 def p_empty(p):
     'empty :'
-    pass             
+    pass
+
+def p_error(p):
+    print("Syntax error in input!")
+    sys.exit(1)
