@@ -1,0 +1,12 @@
+/*
+* IllegalString
+* Daniel Kogan 114439349
+* 03.02.2023
+*/
+
+class IllegalString {
+  public static void main(){
+    Out.print("IllegalString");
+    Out.print("This is an \" illegal String ");        
+  }
+}

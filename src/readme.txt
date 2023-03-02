@@ -28,6 +28,10 @@ How to Run:
     - parser.out
     - parsetab.py
 
+Limitations:
+
+- Similar to what Professor Kane mentioned in class where in Python, errors at the end of a line are often times mislabeled as errors on the next line, within a string such as "hello \" world", since the specifications mention a string is anything between double quotes excluding a double quote, the parser will throw an error on 'world' instead of the illegal " character
+
 Contents of Submitted Files:
 
 1. decaf_lexer_.py

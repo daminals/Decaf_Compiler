@@ -1,103 +1,99 @@
+# tests.py
+# Daniel Kogan
+# 03.02.2023
+
 import unittest
 import sys
 import os
 import subprocess
-
-GREEN = '\033[92m'
-RED = '\033[91m'
-UNDERLINE = '\033[4m'
-CLEAR_FORMAT = '\033[0m'
+from helpers import Runner
+from helpers import GREEN, RED, UNDERLINE, CLEAR_FORMAT
 
 
 class TestDecafFiles(unittest.TestCase):
-    def run_file(testcase_class, file, expected_return_code=0):
-        cmd_str = f"python src/decaf_checker.py {file}"
-        process = subprocess.Popen(
-            cmd_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate()
-        err_message = f"{RED}{file}{CLEAR_FORMAT} {UNDERLINE}exited with return code {process.returncode}, not {expected_return_code}{CLEAR_FORMAT}\n {GREEN}Output:{CLEAR_FORMAT} {stdout}\n\n {RED}Error:{CLEAR_FORMAT} {stderr}"
-        # print(f"{GREEN}{file}{CLEAR_FORMAT}: {stdout}")
-        testcase_class.assertEqual(
-            expected_return_code, process.returncode, err_message)
-        return stdout, stderr
+    folder = f"rsrc"
 
     def test_hello_world(self):
-        file = "rsrc/hello_world.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/hello_world.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_IntList(self):
-        file = "rsrc/IntList.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/IntList.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_nrfib(self):
-        file = "rsrc/nrfib.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/nrfib.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_rfib(self):
-        file = "rsrc/rfib.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/rfib.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
-    def test_failure(self):
-        file = "rsrc/failure.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file, 1)
-        self.assertIn("Syntax error at line 8, column 3, token: this'", stdout.decode(
-        ), f"{file} did not throw syntax err @ line 8, column 3")
-
-    def test_unexpectedEOF(self):
-        file = "rsrc/unexpectedEOF.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file, 1)
-        self.assertIn("Syntax error: unexpected end of input",
-                      stdout.decode(), f"{file} reached unexpected EOF")
-
-    def test_unexpectedEOF(self):
-        file = "rsrc/unexpectedEOF.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file, 1)
-        self.assertIn("Syntax error: unexpected end of input",
-                      stdout.decode(), f"\n{file} succeeded to compile")
-
     def test_Cat(self):
-        file = "rsrc/Cat.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/Cat.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_multiply(self):
-        file = "rsrc/multiply.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/multiply.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_CelsiusToFahrenheit(self):
-        file = "rsrc/CelsiusToFahrenheit.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/CelsiusToFahrenheit.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_Bicycle(self):
-        file = "rsrc/Bicycle.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/Bicycle.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_Lamp(self):
-        file = "rsrc/Lamp.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/Lamp.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_empty_file(self):
-        file = "rsrc/empty_file.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file, 0)
+        file = f"{self.folder}/empty_file.decaf"
+        stdout, stderr = Runner.run_file(self, file, 0)
         self.assertIn("YES", stdout.decode())
 
     def test_runningAvgCalc(self):
-        file = "rsrc/runningAvgCalc.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/runningAvgCalc.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
 
     def test_MultiLineComments(self):
-        file = "rsrc/MultiLineComments.decaf"
-        stdout, stderr = TestDecafFiles.run_file(self, file)
+        file = f"{self.folder}/MultiLineComments.decaf"
+        stdout, stderr = Runner.run_file(self, file)
         self.assertIn("YES", stdout.decode())
+
+
+class TestDecafFilesExpectErr(unittest.TestCase):
+    folder = "rsrc/fail"
+
+    def test_unexpectedEOF(self):
+        file = f"{self.folder}/unexpectedEOF.decaf"
+        stdout, stderr = Runner.run_file(self, file, 1)
+        self.assertIn("Syntax error: unexpected end of input",
+                      stdout.decode(), f"\n{file} succeeded to compile")
+
+    def test_failure(self):
+        file = f"{self.folder}/failure.decaf"
+        stdout, stderr = Runner.run_file(self, file, 1)
+        self.assertIn("Syntax error at line 8, column 3, token: this'", stdout.decode(
+        ), f"{file} did not throw syntax err @ line 8, column 3")
+
+    def test_IllegalString(self):
+        file = f"{self.folder}/IllegalString.decaf"
+        stdout, stderr = Runner.run_file(self, file, 1)
+        self.assertIn("Syntax error at line 10, column 30", stdout.decode(
+        ), f"{file} did not throw syntax err @ line 10, column 30")
 
 
 if __name__ == '__main__':

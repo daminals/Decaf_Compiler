@@ -132,7 +132,7 @@ def t_FLOAT(t):
 
 # Regular expression rule for string literals
 def t_STRING_LITERAL(t):
-    r'"([^"\\]*(\\.[^"\\]*)*)"'
+    r'"[^"]*"'
     t.value = t.value[1:-1] # remove the quotes from the value
     return t
 
@@ -172,8 +172,6 @@ def find_column(input, token):
         self.lexer.input(more)
         return self.lexer.token()
     return None '''
-
-
 
 
 # rules for reserved words
