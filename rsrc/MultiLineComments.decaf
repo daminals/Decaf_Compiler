@@ -1,0 +1,19 @@
+/*
+* MultiLineComments
+* Daniel Kogan 114439349
+* 03.02.2023
+*/
+
+class MultiLineComments {
+  public static void main(){
+    Out.print("MultiLineComments");
+    /* Hello
+     * Do 
+     * Not
+     * Syntax
+     * Err
+     * Me
+     * Lolz
+     */
+  }
+}

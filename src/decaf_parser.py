@@ -43,7 +43,6 @@ def p_modifier(p):
                 | PUBLIC STATIC
                 | PRIVATE STATIC
                 | empty'''
-    p[0] = p[1] if p[1] is not None else ''
 
 
 def p_var_decl(p):
