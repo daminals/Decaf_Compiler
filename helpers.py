@@ -23,3 +23,7 @@ class Runner():
     testcase_class.assertEqual(
         expected_return_code, process.returncode, err_message)
     return stdout, stderr
+
+  def syntax_err_msg(line_col):
+    line, column = line_col
+    return f"Syntax error at line {line}, column {column}"

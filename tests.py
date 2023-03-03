@@ -81,19 +81,21 @@ class TestDecafFilesExpectErr(unittest.TestCase):
         file = f"{self.folder}/unexpectedEOF.decaf"
         stdout, stderr = Runner.run_file(self, file, 1)
         self.assertIn("Syntax error: unexpected end of input",
-                      stdout.decode(), f"\n{file} succeeded to compile")
+                      stderr.decode(), f"\n{file} succeeded to compile")
 
     def test_failure(self):
         file = f"{self.folder}/failure.decaf"
         stdout, stderr = Runner.run_file(self, file, 1)
-        self.assertIn("Syntax error at line 8, column 3, token: this'", stdout.decode(
-        ), f"{file} did not throw syntax err @ line 8, column 3")
+        line_col = [8, 3]
+        self.assertIn(Runner.syntax_err_msg(line_col), stderr.decode(
+        ), f"{file} did not throw syntax err @ line {line_col[0]}, column {line_col[1]}")
 
     def test_IllegalString(self):
         file = f"{self.folder}/IllegalString.decaf"
         stdout, stderr = Runner.run_file(self, file, 1)
-        self.assertIn("Syntax error at line 10, column 30", stdout.decode(
-        ), f"{file} did not throw syntax err @ line 10, column 30")
+        line_col = [10, 30]
+        self.assertIn(Runner.syntax_err_msg(line_col), stderr.decode(
+        ), f"{file} did not throw syntax err @ line {line_col[0]}, column {line_col[1]}")
 
 
 if __name__ == '__main__':

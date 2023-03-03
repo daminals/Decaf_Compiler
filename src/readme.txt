@@ -21,7 +21,7 @@ How to Run:
       - "YES" in green text to stdout
       - Return code: 0
     - On failure, the program will exit with the following:
-      - "ERROR: {error_message}" in red text to stdout
+      - "ERROR: {error_message}" in red text to stderr
       - Return code: 1
 
   - The program will also output the following files:
