@@ -86,14 +86,14 @@ class TestDecafFilesExpectErr(unittest.TestCase):
     def test_failure(self):
         file = f"{self.folder}/failure.decaf"
         stdout, stderr = Runner.run_file(self, file, 1)
-        line_col = [8, 3]
+        line_col = [8, 3] # line, column
         self.assertIn(Runner.syntax_err_msg(line_col), stderr.decode(
         ), f"{file} did not throw syntax err @ line {line_col[0]}, column {line_col[1]}")
 
     def test_IllegalString(self):
         file = f"{self.folder}/IllegalString.decaf"
         stdout, stderr = Runner.run_file(self, file, 1)
-        line_col = [10, 30]
+        line_col = [10, 30] # line 10, column 30
         self.assertIn(Runner.syntax_err_msg(line_col), stderr.decode(
         ), f"{file} did not throw syntax err @ line {line_col[0]}, column {line_col[1]}")
 

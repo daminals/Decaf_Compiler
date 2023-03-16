@@ -5,6 +5,7 @@
 import ply.yacc as yacc
 import sys
 from decaf_lexer import tokens
+
 precedence = (
     ('right', 'SETEQUAL'),
     ('left', 'OR'),
@@ -19,10 +20,18 @@ def p_start(p):
     '''start : class_decl
              | class_decl start
              | empty'''
+    p[0] = p[1]
+    
+
 
 def p_class(p):
     '''class_decl : CLASS ID LCURLY class_body RCURLY
                   | CLASS ID EXTENDS ID LCURLY class_body RCURLY'''
+    # p[0] = ('class_name',p[2])
+    if p[3] == '{':
+        p[0] = {'class_name': p[2], 'superclass': None, 'body': p[4]}
+    else:
+        p[0] = {'class_name': p[2], "superclass": p[4], "body": p[6]}
     
 def p_class_body(p):
     '''class_body : field_decl
@@ -31,10 +40,12 @@ def p_class_body(p):
                   | class_body field_decl
                   | class_body constructor_decl
                   | class_body method_decl'''
+    p[0] = p[1]
     
 def p_field_decl(p):
     '''field_decl : var_decl
                   | modifier var_decl'''
+    p[0] = ('field', p[1])
 
 def p_modifier(p):
     '''modifier : PUBLIC

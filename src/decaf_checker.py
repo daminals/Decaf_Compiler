@@ -44,7 +44,7 @@ def just_parse(fn=""):
     fh.close()
     try:
         result = parser.parse(source, lexer = lexer, debug = 1)
-        #print(result)
+        print(result)
     except SyntaxError:
         sys.exit(1)
     else:
