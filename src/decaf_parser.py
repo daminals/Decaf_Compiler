@@ -20,7 +20,10 @@ def p_start(p):
     '''start : class_decl
              | class_decl start
              | empty'''
-    p[0] = p[1]
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else: 
+      p[0] = [p[1], p[2]]
     
 
 
@@ -40,12 +43,18 @@ def p_class_body(p):
                   | class_body field_decl
                   | class_body constructor_decl
                   | class_body method_decl'''
-    p[0] = p[1]
+    if len(p) > 2:
+        p[0] = [p[1], p[2]]
+    else:
+      p[0] = [p[1]]
     
 def p_field_decl(p):
     '''field_decl : var_decl
                   | modifier var_decl'''
-    p[0] = ('field', p[1])
+    if len(p) > 2:
+      p[0] = ('field', p[1], p[2])
+    else:
+      p[0] = ('field', {'modifiers': []}, p[1])
 
 def p_modifier(p):
     '''modifier : PUBLIC
@@ -54,10 +63,15 @@ def p_modifier(p):
                 | PUBLIC STATIC
                 | PRIVATE STATIC
                 | empty'''
-
+    if len(p) > 2:
+      p[0] = {'modifiers': [p[1], p[2]]}
+    else:
+      p[0] = {'modifiers': [p[1]]}
 
 def p_var_decl(p):
     '''var_decl : type variables SEMICOLON'''
+    p[0] = {'variables': {"type": p[1], "ids": p[2]}}
+
 #put new types here
 def p_type(p):
     '''type : INT
@@ -65,13 +79,19 @@ def p_type(p):
             | BOOLEAN
             | STRING
             | ID'''
+    p[0] = p[1]
 
 def p_variables(p):
     '''variables : variable
                  | variable COMMA variables'''
+    if len(p) > 2:
+      p[0] = [p[1], p[3]]
+    else:
+      p[0] = [p[1]]
 
 def p_variable(p):
     '''variable : ID'''
+    p[0] = p[1]
 
 def p_method_decl(p):
     '''method_decl : modifier type ID LPAREN RPAREN block
@@ -82,6 +102,15 @@ def p_method_decl(p):
                    | type ID LPAREN formals RPAREN block
                    | VOID ID LPAREN RPAREN block
                    | VOID ID LPAREN formals RPAREN block'''
+    if len(p) == 6:
+      p[0] = ('method', {'modifiers': []}, {"type": p[1]},  {"function_id":p[2]}, {"formals": None}, {"function_body": p[5]})
+    elif len(p) == 7:
+      if p[3] == '(':
+        p[0] = ('method', {'modifiers': []}, {"type": p[1]}, {"function_id":p[2]}, {"formals": p[4]}, {"function_body": p[6]})
+      else:
+        p[0] = ('method', {'modifiers': p[1]}, {"type": p[2]}, {"function_id":p[3]}, {"formals": None}, {"function_body": p[6]})
+    elif len(p) == 8:
+      p[0] = ('method', {'modifiers': p[1]}, {"type": p[2]}, {"function_id":p[3]}, {"formals": p[5]}, {"function_body": p[7]})
 
 def p_constructor(p):
     '''constructor_decl : modifier ID LPAREN RPAREN block 
