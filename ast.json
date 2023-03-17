@@ -1,0 +1,21 @@
+{
+  "class_name": "CelsiusToFahrenheit",
+  "superclass": null,
+  "body": {
+    "method": {
+      "modifiers": [
+        "public",
+        "static"
+      ],
+      "type": "void",
+      "function_id": "main",
+      "formals": null,
+      "function_body": [
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  }
+}
