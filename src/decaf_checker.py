@@ -11,6 +11,7 @@ CLEAR_FORMAT = '\033[0m'
 
 import decaf_lexer
 import decaf_parser
+import decaf_ast
 
 
 def just_scan(fn=""):
@@ -44,7 +45,7 @@ def just_parse(fn=""):
     fh.close()
     try:
         result = parser.parse(source, lexer = lexer, debug = 1)
-        print(result)
+        decaf_ast.writeAST(result)
     except SyntaxError:
         sys.exit(1)
     else:
