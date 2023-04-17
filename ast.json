@@ -1,21 +1,155 @@
-{
-  "class_name": "CelsiusToFahrenheit",
-  "superclass": null,
-  "body": {
-    "method": {
-      "modifiers": [
-        "public",
-        "static"
-      ],
-      "type": "void",
-      "function_id": "main",
-      "formals": null,
-      "function_body": [
-        null,
-        null,
-        null,
-        null
-      ]
-    }
+[
+  {
+    "class_name": "Cat",
+    "superclass": null,
+    "body": [
+      {
+        "field": {
+          "modifiers": [],
+          "variables": {
+            "type": "string",
+            "ids": "breed"
+          }
+        }
+      },
+      {
+        "field": {
+          "modifiers": [],
+          "variables": {
+            "type": "string",
+            "ids": "color"
+          }
+        }
+      },
+      {
+        "field": {
+          "modifiers": [],
+          "variables": {
+            "type": "int",
+            "ids": "age"
+          }
+        }
+      },
+      {
+        "constructor": {
+          "modifiers": [
+            "public"
+          ],
+          "constructor_id": "Cat",
+          "formals": null,
+          "constructor_body": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      {
+        "constructor": {
+          "modifiers": [
+            "public"
+          ],
+          "constructor_id": "Cat",
+          "formals": [
+            {
+              "parameter": {
+                "type": "string",
+                "id": "breed"
+              }
+            },
+            [
+              {
+                "parameter": {
+                  "type": "string",
+                  "id": "color"
+                }
+              },
+              {
+                "parameter": {
+                  "type": "int",
+                  "id": "age"
+                }
+              }
+            ]
+          ],
+          "constructor_body": [
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      {
+        "method": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "main",
+          "formals": null,
+          "function_body": [
+            null,
+            null,
+            null
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "class_name": "FictionalCat",
+    "superclass": "Cat",
+    "body": [
+      {
+        "field": {
+          "modifiers": [],
+          "variables": {
+            "type": "string",
+            "ids": "reference"
+          }
+        }
+      },
+      {
+        "constructor": {
+          "modifiers": [],
+          "constructor_id": "FictionalCat",
+          "formals": [
+            {
+              "parameter": {
+                "type": "string",
+                "id": "name"
+              }
+            },
+            [
+              {
+                "parameter": {
+                  "type": "string",
+                  "id": "color"
+                }
+              },
+              [
+                {
+                  "parameter": {
+                    "type": "int",
+                    "id": "age"
+                  }
+                },
+                {
+                  "parameter": {
+                    "type": "string",
+                    "id": "reference"
+                  }
+                }
+              ]
+            ]
+          ],
+          "constructor_body": [
+            null,
+            null
+          ]
+        }
+      }
+    ]
   }
-}
+]

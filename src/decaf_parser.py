@@ -127,22 +127,29 @@ def p_constructor(p):
                         | ID LPAREN RPAREN block 
                         | ID LPAREN formals RPAREN block'''
     if len(p) == 7:
-      p[0] = {'constructor', {'modifiers': p[1], "constructor_id": p[2], "formals": p[4], "constructor_body": p[6]}}
+      p[0] = {'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": p[4], "constructor_body": p[6]}}
     elif len(p) == 5:
-      p[0] = {'constructor', {'modifiers': [], "constructor_id": p[1], "formals": None, "constructor_body": p[4]}}
+      p[0] = {'constructor': {'modifiers': [], "constructor_id": p[1], "formals": None, "constructor_body": p[4]}}
     else:
       if p[2] == '(':
-        p[0] = {'constructor', {'modifiers': [], "constructor_id": p[1], "formals": p[3], "constructor_body": p[5]}}
+        p[0] = {'constructor': {'modifiers': [], "constructor_id": p[1], "formals": p[3], "constructor_body": p[5]}}
       else:
-        p[0] = {'constructor', {'modifiers': p[1], "constructor_id": p[2], "formals": None, "constructor_body": p[5]}}
+        p[0] = {'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": None, "constructor_body": p[5]}}
 
 def p_formals(p):
     '''formals : formal_param
                | formal_param COMMA formals '''
-    if len(p) > 2:
-      p[0] = (p[1], p[3])
+    if len(p) == 2:
+        p[0] = p[1]
     else:
-      p[0] = (p[1])
+      if isinstance(p[1], list):
+          p[0] = p[1] + [p[3]]  # flatten the list
+      else:
+          p[0] = [p[1], p[3]]
+    # if len(p) > 2:
+    #   p[0] = (p[1], p[3])
+    # else:
+    #   p[0] = (p[1])
 
 def p_formals_param(p):
     '''formal_param : type variable'''
