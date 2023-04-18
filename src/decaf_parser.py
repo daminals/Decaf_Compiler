@@ -1,10 +1,21 @@
 # decaf_lexer.py
 # Daniel Kogan dkogan 114439349
-# Jason Zhang jasozhang 112710259
 # 02.21.2023
+
 import ply.yacc as yacc
 import sys
 from decaf_lexer import tokens
+from decaf_ast import extract_body, extract_variables_from_formals, extract_variables_from_field
+
+def flatten(lst):
+    result = []
+    for item in lst:
+        if isinstance(item, list):
+            result.extend(flatten(item))
+        else:
+            result.append(item)
+    return result
+
 
 precedence = (
     ('right', 'SETEQUAL'),
@@ -27,19 +38,16 @@ def p_start_statement(p):
   if len(p) == 2:
       p[0] = p[1]
   else:
-      if isinstance(p[1], list):
-          p[0] = p[1] + [p[2]]  # flatten the list
-      else:
-          p[0] = [p[1], p[2]]
+      p[0] = flatten([p[1],p[2]]);
 
 
 def p_class(p):
     '''class_decl : CLASS ID LCURLY class_body RCURLY
                   | CLASS ID EXTENDS ID LCURLY class_body RCURLY'''
     if p[3] == '{':
-        p[0] = {'class_name': p[2], 'superclass': None, 'body': p[4]}
+        p[0] = extract_body({'class_name': p[2], 'superclass': "", 'body': p[4]})
     else:
-        p[0] = {'class_name': p[2], "superclass": p[4], "body": p[6]}
+        p[0] = extract_body({'class_name': p[2], "superclass": p[4], "body": p[6]})
     
 def p_class_body(p):
     '''class_body : field_decl
@@ -51,19 +59,16 @@ def p_class_body(p):
     if len(p) == 2:
       p[0] = p[1]
     else:
-        if isinstance(p[1], list):
-            p[0] = p[1] + [p[2]]  # flatten the list
-        else:
-            p[0] = [p[1], p[2]]
+      p[0] = flatten([p[1], p[2]])
 
     
 def p_field_decl(p):
     '''field_decl : var_decl
                   | modifier var_decl'''
     if len(p) > 2:
-      p[0] = {'field': {'modifiers': p[1], "variables": p[2] }}
+      p[0] = extract_variables_from_field({'field': {'modifiers': p[1], "variables": p[2], "var_type": "field" }})
     else:
-      p[0] = {'field': {'modifiers': [], "variables": p[1] }}
+      p[0] = extract_variables_from_field({'field': {'modifiers': [], "variables": p[1], "var_type": "field" }})
 
 def p_modifier(p):
     '''modifier : PUBLIC
@@ -94,9 +99,9 @@ def p_variables(p):
     '''variables : variable
                  | variables COMMA variable'''
     if len(p) > 2:
-      p[0] = (p[1], p[3])
+      p[0] = flatten([p[1], p[3]])
     else:
-      p[0] = (p[1])
+      p[0] = [p[1]]
 
 def p_variable(p):
     '''variable : ID'''
@@ -112,14 +117,14 @@ def p_method_decl(p):
                    | VOID ID LPAREN RPAREN block
                    | VOID ID LPAREN formals RPAREN block'''
     if len(p) == 6:
-      p[0] = {'method': {'modifiers': [], "type": p[1],  "function_id":p[2], "formals": None, "function_body": p[5]}}
+      p[0] = extract_variables_from_formals("method",{'method': {'modifiers': [], "type": p[1],  "function_id":p[2], "formals":[], "function_body": p[5]}})
     elif len(p) == 7:
       if p[3] == '(':
-        p[0] = {'method': {'modifiers': [], "type": p[1], "function_id":p[2], "formals": p[4], "function_body": p[6]}}
+        p[0] = extract_variables_from_formals("method",{'method': {'modifiers': [], "type": p[1], "function_id":p[2], "formals": p[4], "function_body": p[6]}})
       else:
-        p[0] = {'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": None, "function_body": p[6]}}
+        p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": [], "function_body": p[6]}})
     elif len(p) == 8:
-      p[0] = {'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": p[5], "function_body": p[7]}}
+      p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": p[5], "function_body": p[7]}})
 
 def p_constructor(p):
     '''constructor_decl : modifier ID LPAREN RPAREN block 
@@ -127,14 +132,14 @@ def p_constructor(p):
                         | ID LPAREN RPAREN block 
                         | ID LPAREN formals RPAREN block'''
     if len(p) == 7:
-      p[0] = {'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": p[4], "constructor_body": p[6]}}
+      p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": p[4], "constructor_body": p[6]}})
     elif len(p) == 5:
-      p[0] = {'constructor': {'modifiers': [], "constructor_id": p[1], "formals": None, "constructor_body": p[4]}}
+      p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': [], "constructor_id": p[1], "formals": [], "constructor_body": p[4]}})
     else:
       if p[2] == '(':
-        p[0] = {'constructor': {'modifiers': [], "constructor_id": p[1], "formals": p[3], "constructor_body": p[5]}}
+        p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': [], "constructor_id": p[1], "formals": p[3], "constructor_body": p[5]}})
       else:
-        p[0] = {'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": None, "constructor_body": p[5]}}
+        p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": [], "constructor_body": p[5]}})
 
 def p_formals(p):
     '''formals : formal_param
@@ -142,14 +147,7 @@ def p_formals(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-      if isinstance(p[1], list):
-          p[0] = p[1] + [p[3]]  # flatten the list
-      else:
-          p[0] = [p[1], p[3]]
-    # if len(p) > 2:
-    #   p[0] = (p[1], p[3])
-    # else:
-    #   p[0] = (p[1])
+        p[0] = flatten([p[1], p[3]])
 
 def p_formals_param(p):
     '''formal_param : type variable'''
@@ -176,27 +174,66 @@ def p_stmtlist(p):
 
 
 def p_stmt(p):
-    '''stmt : IF LPAREN expression RPAREN stmt
-            | IF LPAREN expression RPAREN stmt ELSE stmt
-            | WHILE LPAREN expression RPAREN stmt
-            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
-            | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON RPAREN stmt
-            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON stmt_expression RPAREN stmt
-            | FOR LPAREN SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
-            | FOR LPAREN stmt_expression SEMICOLON SEMICOLON RPAREN stmt
-            | FOR LPAREN SEMICOLON SEMICOLON stmt_expression RPAREN stmt
-            | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN stmt
-            | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt
-            | RETURN expression SEMICOLON
-            | RETURN SEMICOLON
+    '''stmt : if_stmt
+            | while_stmt
+            | for_loop
+            | return_stmt
             | stmt_expression SEMICOLON
             | BREAK SEMICOLON
             | CONTINUE SEMICOLON
             | block
             | var_decl
             | SEMICOLON'''
+    # TODO: make all the different blocks into different functions to be handled
+    p[0] = p[1]
+
+
+
+def p_return_stmt(p):
+    '''return_stmt : RETURN expression SEMICOLON
+                   | RETURN SEMICOLON'''
+    if len(p) == 4:
+      p[0] = {'return': p[2]}
+    else:
+      p[0] = {'return': None}
+
+def p_if_stmt(p):
+    '''if_stmt : IF LPAREN expression RPAREN stmt
+               | IF LPAREN expression RPAREN stmt ELSE stmt'''
+    if len(p) == 6:
+      p[0] = {'if': {'condition': p[3], 'if_block': p[5]}}
+    else:
+      p[0] = {'if': {'condition': p[3], 'if_block': p[5], 'else_block': p[7]}}
     
-    
+def p_while_stmt(p):
+    '''while_stmt : WHILE LPAREN expression RPAREN stmt'''
+    p[0] = {'while': {'condition': p[3], 'while_block': p[5]}}
+
+def p_for_loop(p):
+  '''for_loop : FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
+              | FOR LPAREN stmt_expression SEMICOLON expression SEMICOLON RPAREN stmt
+              | FOR LPAREN stmt_expression SEMICOLON SEMICOLON stmt_expression RPAREN stmt
+              | FOR LPAREN SEMICOLON expression SEMICOLON stmt_expression RPAREN stmt
+              | FOR LPAREN stmt_expression SEMICOLON SEMICOLON RPAREN stmt
+              | FOR LPAREN SEMICOLON SEMICOLON stmt_expression RPAREN stmt
+              | FOR LPAREN SEMICOLON expression SEMICOLON RPAREN stmt
+              | FOR LPAREN SEMICOLON SEMICOLON RPAREN stmt'''   
+  if len(p) == 10:
+    p[0] = {'for': {'init': p[3], 'condition': p[5], 'update': p[7], 'for_block': p[9]}}
+  elif len(p) == 9:
+    init = p[3] if p[3] != ';' else None
+    condition = p[5] if p[5] != ';' else None
+    update = p[7] if p[7] != ';' else None
+    p[0] = {'for': {'init': init, 'condition': condition, 'update': update, 'for_block': p[8]}}
+  elif len(p) == 8:
+    p[0] = {'for': {'init': None, 'condition': None, 'update': None, 'for_block': p[7]}}
+  else:
+    init = p[3] if p[3] != ';' else None
+    update = p[4] if p[4] != ';' else None
+    p[0] = {'for': {'init': init, 'condition': condition, 'update': update, 'for_block': p[6]}}
+
+
+
 def p_literal(p):
     '''literal : INTEGER
                | FLOAT
@@ -220,7 +257,7 @@ def p_primary(p):
     elif len(p) == 3:
       p[0] = p[2]
     elif len(p) == 4:
-      p[0] = {"new": {"type": p[2], "arguments": None}}
+      p[0] = {"new": {"type": p[2], "arguments": []}}
     else:
       p[0] = {"new": {"type": p[2], "arguments": p[4]}}
     
@@ -245,7 +282,7 @@ def p_field(p):
     '''field_access : primary DOT ID
                     | ID'''
     if len(p) == 2:
-      p[0] =  {'id': p[1], 'primary': None}
+      p[0] =  {'id': p[1], 'primary': []}
     else:
       p[0] =  {'primary': p[1], 'id': p[3]}
 
@@ -255,7 +292,7 @@ def p_method_invo(p):
     if len(p) == 5:
       p[0] = {'method_invocation': {'field_access': p[1], 'arguments': p[3]}}
     else:
-      p[0] = {'method_invocation': {'field_access': p[1], 'arguments': None}}
+      p[0] = {'method_invocation': {'field_access': p[1], 'arguments': []}}
 
 def p_expr(p):
     '''expression : primary
@@ -266,10 +303,7 @@ def p_expr(p):
     if len(p) == 2:
       p[0] = p[1]
     else:
-      if isinstance(p[1], list):
-          p[0] = p[1] + [p[2]]  # flatten the list
-      else:
-          p[0] = [p[1], p[2]]
+      p[0] = flatten([p[1], p[2]])
 
 
 def p_assign(p):
@@ -279,7 +313,7 @@ def p_assign(p):
               | PLUSPLUS lhs
               | MINUSMINUS lhs'''
     if len(p) == 4:
-      p[0] = {'assign': {'lhs': p[1], 'expression': p[3]}}
+      p[0] = {'set_equal': {'assign': {'lhs': p[1], 'expression': p[3]}}}
     else:
       if p[1] == '++':
         p[0] = {'assign': {'lhs': p[2], 'expression': 'prefix++'}}

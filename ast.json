@@ -1,155 +1,344 @@
 [
   {
     "class_name": "Cat",
-    "superclass": null,
-    "body": [
-      {
-        "field": {
+    "superclass": "",
+    "body": {
+      "fields": {
+        "1": {
           "modifiers": [],
-          "variables": {
-            "type": "string",
-            "ids": "breed"
-          }
-        }
-      },
-      {
-        "field": {
+          "var_type": "field",
+          "type": "string",
+          "ids": [
+            "breed"
+          ]
+        },
+        "2": {
           "modifiers": [],
-          "variables": {
-            "type": "string",
-            "ids": "color"
-          }
-        }
-      },
-      {
-        "field": {
+          "var_type": "field",
+          "type": "string",
+          "ids": [
+            "color"
+          ]
+        },
+        "3": {
           "modifiers": [],
-          "variables": {
-            "type": "int",
-            "ids": "age"
-          }
-        }
-      },
-      {
-        "constructor": {
-          "modifiers": [
-            "public"
-          ],
-          "constructor_id": "Cat",
-          "formals": null,
-          "constructor_body": [
-            null,
-            null,
-            null
+          "var_type": "field",
+          "type": "int",
+          "ids": [
+            "age"
           ]
         }
       },
-      {
-        "constructor": {
-          "modifiers": [
-            "public"
-          ],
-          "constructor_id": "Cat",
-          "formals": [
-            {
-              "parameter": {
-                "type": "string",
-                "id": "breed"
-              }
-            },
-            [
-              {
-                "parameter": {
-                  "type": "string",
-                  "id": "color"
-                }
-              },
-              {
-                "parameter": {
-                  "type": "int",
-                  "id": "age"
-                }
-              }
-            ]
-          ],
-          "constructor_body": [
-            null,
-            null,
-            null
-          ]
-        }
-      },
-      {
-        "method": {
+      "methods": {
+        "1": {
           "modifiers": [
             "public",
             "static"
           ],
           "type": "void",
           "function_id": "main",
-          "formals": null,
+          "formals": {},
           "function_body": [
-            null,
-            null,
-            null
+            {
+              "type": "Cat",
+              "ids": [
+                "my_pet"
+              ]
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "my_pet",
+                        "primary": []
+                      }
+                    }
+                  },
+                  "expression": {
+                    "new": {
+                      "type": "Cat",
+                      "arguments": [
+                        "Himalayan Cat",
+                        ","
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "method_invocation": {
+                "field_access": {
+                  "primary": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "Out",
+                        "primary": []
+                      }
+                    }
+                  },
+                  "id": "print"
+                },
+                "arguments": {
+                  "lhs": {
+                    "field_access": {
+                      "primary": {
+                        "lhs": {
+                          "field_access": {
+                            "id": "my_pet",
+                            "primary": []
+                          }
+                        }
+                      },
+                      "id": "color"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "constructors": {
+        "1": {
+          "modifiers": [
+            "public"
+          ],
+          "constructor_id": "Cat",
+          "formals": {},
+          "constructor_body": [
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "breed"
+                      }
+                    }
+                  },
+                  "expression": "unknown"
+                }
+              }
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "color"
+                      }
+                    }
+                  },
+                  "expression": "white"
+                }
+              }
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "age"
+                      }
+                    }
+                  },
+                  "expression": 0
+                }
+              }
+            }
+          ]
+        },
+        "2": {
+          "modifiers": [
+            "public"
+          ],
+          "constructor_id": "Cat",
+          "formals": {
+            "1": {
+              "type": "string",
+              "id": "breed",
+              "var_type": "formal"
+            },
+            "2": {
+              "type": "string",
+              "id": "color",
+              "var_type": "formal"
+            },
+            "3": {
+              "type": "int",
+              "id": "age",
+              "var_type": "formal"
+            }
+          },
+          "constructor_body": [
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "breed"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "breed",
+                        "primary": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "color"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "color",
+                        "primary": []
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "age"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "age",
+                        "primary": []
+                      }
+                    }
+                  }
+                }
+              }
+            }
           ]
         }
       }
-    ]
+    }
   },
   {
     "class_name": "FictionalCat",
     "superclass": "Cat",
-    "body": [
-      {
-        "field": {
+    "body": {
+      "fields": {
+        "4": {
           "modifiers": [],
-          "variables": {
-            "type": "string",
-            "ids": "reference"
-          }
+          "var_type": "field",
+          "type": "string",
+          "ids": [
+            "reference"
+          ]
         }
       },
-      {
-        "constructor": {
+      "methods": {},
+      "constructors": {
+        "3": {
           "modifiers": [],
           "constructor_id": "FictionalCat",
-          "formals": [
+          "formals": {
+            "4": {
+              "type": "string",
+              "id": "name",
+              "var_type": "formal"
+            },
+            "5": {
+              "type": "string",
+              "id": "color",
+              "var_type": "formal"
+            },
+            "6": {
+              "type": "int",
+              "id": "age",
+              "var_type": "formal"
+            },
+            "7": {
+              "type": "string",
+              "id": "reference",
+              "var_type": "formal"
+            }
+          },
+          "constructor_body": [
             {
-              "parameter": {
-                "type": "string",
-                "id": "name"
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "this",
+                        "id": "reference"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "reference",
+                        "primary": []
+                      }
+                    }
+                  }
+                }
               }
             },
-            [
-              {
-                "parameter": {
-                  "type": "string",
-                  "id": "color"
-                }
-              },
-              [
-                {
-                  "parameter": {
-                    "type": "int",
-                    "id": "age"
+            {
+              "set_equal": {
+                "assign": {
+                  "lhs": {
+                    "lhs": {
+                      "field_access": {
+                        "primary": "super",
+                        "id": "name"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "lhs": {
+                      "field_access": {
+                        "id": "name",
+                        "primary": []
+                      }
+                    }
                   }
-                },
-                {
-                  "parameter": {
-                    "type": "string",
-                    "id": "reference"
-                  }
                 }
-              ]
-            ]
-          ],
-          "constructor_body": [
-            null,
-            null
+              }
+            }
           ]
         }
       }
-    ]
+    }
   }
 ]

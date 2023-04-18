@@ -1,7 +1,7 @@
 # decaf_parser.py
 # Daniel Kogan dkogan 114439349
-# Jason Zhang jasozhang 112710259
 # 02.21.2023
+
 import sys
 import ply.lex as lex
 import ply.yacc as yacc
@@ -19,7 +19,7 @@ def just_scan(fn=""):
         print("Missing file name for source program.")
         print("USAGE: python3 decaf_checker.py <decaf_source_file_name>")
         sys.exit()
-    lexer = lex.lex(module = decaf_lexer, debug = 1)
+    lexer = lex.lex(module = decaf_lexer, debug = 0)
 
     fh = open(fn, 'r')
     source = fh.read()
@@ -37,14 +37,14 @@ def just_parse(fn=""):
         print("Missing file name for source program.")
         print("USAGE: python3 decaf_checker.py <decaf_source_file_name>")
         sys.exit()
-    lexer = lex.lex(module = decaf_lexer, debug = 1)
-    parser = yacc.yacc(module = decaf_parser, debug = 1)
+    lexer = lex.lex(module = decaf_lexer, debug = 0)
+    parser = yacc.yacc(module = decaf_parser, debug = 0)
 
     fh = open(fn, 'r')
     source = fh.read()
     fh.close()
     try:
-        result = parser.parse(source, lexer = lexer, debug = 1)
+        result = parser.parse(source, lexer = lexer, debug = 0)
         decaf_ast.writeAST(result)
     except SyntaxError:
         sys.exit(1)
