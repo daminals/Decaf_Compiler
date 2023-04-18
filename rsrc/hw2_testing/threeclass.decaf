@@ -1,0 +1,3 @@
+class a {int x;}
+class b extends a {int y;}
+class c extends a {int y;}

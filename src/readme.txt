@@ -1,10 +1,14 @@
-Decaf Compiler - A02
+Decaf Compiler - A03
 By: 
   - Daniel Kogan dkogan 114439349
-  - Jason Zhang jasozhang 112710259
 
 Python Version: 3.9.6
 Ply Version: 3.11
+
+Fixes:
+  - Fixed failing test case from AO2
+    - The test case was failing because we put int above float, meaning floats would not get accounted for
+
 
 Installation
   - Install Python 3.9.6

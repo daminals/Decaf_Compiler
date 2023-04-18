@@ -28,18 +28,13 @@ precedence = (
     ('right', 'NOT'),
 )
 def p_start(p):
-    '''start : start_statement
+    '''start : class_decl
+             | class_decl start
              | empty'''
-    p[0] = p[1]
-
-def p_start_statement(p):
-  '''start_statement : class_decl
-                     | class_decl start_statement'''
-  if len(p) == 2:
-      p[0] = p[1]
-  else:
+    if len(p) == 2:
+      p[0] = [p[1]]
+    else:
       p[0] = flatten([p[1],p[2]]);
-
 
 def p_class(p):
     '''class_decl : CLASS ID LCURLY class_body RCURLY
@@ -57,7 +52,7 @@ def p_class_body(p):
                   | class_body constructor_decl
                   | class_body method_decl'''
     if len(p) == 2:
-      p[0] = p[1]
+      p[0] = [p[1]]
     else:
       p[0] = flatten([p[1], p[2]])
 
@@ -145,7 +140,7 @@ def p_formals(p):
     '''formals : formal_param
                | formal_param COMMA formals '''
     if len(p) == 2:
-        p[0] = p[1]
+        p[0] = [p[1]]
     else:
         p[0] = flatten([p[1], p[3]])
 

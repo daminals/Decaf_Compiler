@@ -118,16 +118,19 @@ t_WHILE = r'while'
 # A string containing ignored characters (spaces and tabs)
 t_ignore = ' \t'
 
+# float needs to be before integer
+def t_FLOAT(t):
+    r'\d+\.\d+'
+    t.value = float(t.value)
+    return t
+
+
 # A regular expression rule with some action code
 def t_INTEGER(t):
     r'\d+'
     t.value = int(t.value)
     return t
 
-def t_FLOAT(t):
-    r'\d+\.\d+'
-    t.value = float(t.value)
-    return t
 
 # Regular expression rule for string literals
 def t_STRING_LITERAL(t):
