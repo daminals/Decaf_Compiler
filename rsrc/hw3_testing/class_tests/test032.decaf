@@ -1,0 +1,15 @@
+class Circle
+{
+    public static float pi;
+}
+
+class test032
+{
+
+    public static void main()
+    {   
+        float a;
+        
+        a = Circle.pi;
+    }
+}

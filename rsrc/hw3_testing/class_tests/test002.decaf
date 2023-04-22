@@ -1,0 +1,9 @@
+class test002
+{
+    public static void main()
+    {   
+        int a, b;
+        a = 17;
+        b = -a;
+    }
+}

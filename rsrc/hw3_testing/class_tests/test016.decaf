@@ -1,0 +1,8 @@
+class test016
+{
+    public static void main()
+    {   
+        int a;
+        a = 18;
+    }
+}

@@ -1,0 +1,95 @@
+class BankAccount
+{
+    public float balance;
+    public string firstName;
+    public string lastName;
+    
+    public BankAccount(string fn, string ln)
+    {
+        this.firstName = fn;
+        this.lastName = ln;
+        this.balance = 0.0;
+    }
+    
+    public float deposit(float amount)
+    {
+        this.balance = this.balance + amount;
+        return this.balance;
+    }
+    
+    public float withdrawal(float amount)
+    {
+        if (this.balance > amount)
+        {
+            this.balance = this.balance - amount;
+        }
+        else
+        {
+            Out.print("Insufficient funds in account.");
+        }
+        return this.balance;
+    }
+    
+    public float get_balance()
+    {
+        return this.balance;
+    }
+}
+
+class CheckingAccount extends BankAccount
+{
+    public int checkNumber;
+    
+    public CheckingAccount(string fn, string ln)
+    {
+        this.firstName = fn;
+        this.lastName = ln;
+        this.balance = 0.0;
+        this.checkNumber = 0;
+    }
+    
+    public int debit(float amount)
+    {
+        int ccn;
+        
+        ccn = this.checkNumber;
+        if (amount < this.balance)
+        {
+            this.checkNumber++;
+            this.balance = this.balance - amount;
+        }
+        else
+        {
+            Out.print("Insufficient funds in account.");
+        }
+        return ccn;
+    }
+}
+
+class test042
+{
+    public static void main()
+    {
+        float x;
+        float y;
+        int z;
+        int w;
+        CheckingAccount ca1;
+        CheckingAccount ca2;
+        
+        ca1 = new CheckingAccount("Paul", "Blart");
+        ca2 = new CheckingAccount("Michael", "Skarn");
+        
+        x = ca1.deposit(10000.0);
+        y = ca2.deposit(100.0);
+        
+        x = ca1.get_balance();
+        y = ca2.get_balance();
+        
+        x = ca1.withdrawal(1000.0);
+        y = ca2.withdrawal(1000.0);
+        
+        z = ca1.debit(1000.0);
+        w = ca2.debit(1000.0);
+    }
+}

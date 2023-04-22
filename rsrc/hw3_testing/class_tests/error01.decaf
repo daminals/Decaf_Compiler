@@ -1,0 +1,24 @@
+class error01
+{
+    int x;
+    
+    public error01(int v)
+    {
+        this.x = v;
+    }
+    
+    public int f(int y)
+    {
+        return this.x;
+    }
+}
+
+class error01
+{
+    public static void main()
+    {   
+        int z;
+        
+        z = 10;
+    }
+}

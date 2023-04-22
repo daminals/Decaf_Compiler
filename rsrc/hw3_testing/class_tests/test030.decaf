@@ -1,0 +1,14 @@
+class test030
+{
+    public static int add5(int n)
+    {
+        return n + 5;
+    }
+
+    public static void main()
+    {   
+        int a;
+        
+        a = 0;
+    }
+}

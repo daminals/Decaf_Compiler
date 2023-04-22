@@ -1,0 +1,9 @@
+class test001
+{
+    public static void main()
+    {   
+        boolean a, b;
+        a = true;
+        b = !a;
+    }
+}

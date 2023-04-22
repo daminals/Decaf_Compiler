@@ -1,0 +1,33 @@
+class A {
+  int x;
+  A() {
+    this.x = 0;
+  }
+  int funct() {
+    return this.x;
+  }
+
+  public int g() {
+    int i,j;
+    i = this.funct();
+    i++;
+    return i;
+  }
+}
+class B extends A {
+  int y;
+  public A avar;
+  B(){
+    this.y = 2;
+    if (this.y == 2) {
+      this.y = 3;
+    }
+    else {
+      this.y = 4;
+    }
+    this.avar = new A();
+  }
+  public int funct(int k) {
+    return super.funct() + k;
+  }
+}

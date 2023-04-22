@@ -1,0 +1,8 @@
+class test018
+{
+    public static void main()
+    {   
+        boolean a;
+        a = true;
+    }
+}

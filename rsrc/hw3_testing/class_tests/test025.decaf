@@ -1,0 +1,13 @@
+class test025
+{
+    public static void main()
+    {   
+        int a;
+        a = 0;
+        
+        if (10 > 5)
+        {
+            a = 10;
+        }
+    }
+}

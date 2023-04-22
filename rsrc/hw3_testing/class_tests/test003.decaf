@@ -1,0 +1,9 @@
+class test003
+{
+    public static void main()
+    {   
+        int a, b;
+        a = 19;
+        b = +a;
+    }
+}

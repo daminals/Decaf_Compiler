@@ -1,38 +1,361 @@
 [
   {
-    "class_name": "a",
+    "class_name": "A",
     "superclass": "",
     "body": {
-      "fields": {},
+      "fields": {
+        "1": {
+          "modifiers": [],
+          "var_type": "field",
+          "line_num": 3,
+          "type": "int",
+          "id": "x"
+        }
+      },
       "methods": {
         "1": {
           "modifiers": [],
           "type": "int",
-          "function_id": "x",
+          "function_id": "funct",
+          "formals": {},
+          "body": [
+            {
+              "return": {
+                "expression": {
+                  "field_access": {
+                    "primary": "this",
+                    "id": "x"
+                  },
+                  "line_num": 7
+                }
+              }
+            }
+          ],
+          "line_num": 10
+        },
+        "2": {
+          "modifiers": [
+            "public"
+          ],
+          "type": "int",
+          "function_id": "g",
+          "formals": {},
+          "body": [
+            {
+              "var_decl": {
+                "1": {
+                  "type": "int",
+                  "line_num": 12,
+                  "var_type": "local",
+                  "id": "i"
+                },
+                "2": {
+                  "type": "int",
+                  "line_num": 12,
+                  "var_type": "local",
+                  "id": "j"
+                }
+              }
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "assignee": {
+                    "field_access": {
+                      "primary": "",
+                      "id": "i"
+                    },
+                    "line_num": 12
+                  },
+                  "assigned_value": {
+                    "expression": {
+                      "method_invocation": {
+                        "field_access": {
+                          "primary": "this",
+                          "id": "funct"
+                        },
+                        "arguments": [],
+                        "line_num": 12
+                      }
+                    }
+                  }
+                },
+                "line_num": 12
+              }
+            },
+            {
+              "auto": {
+                "postfix": "inc",
+                "operand": {
+                  "field_access": {
+                    "primary": "",
+                    "id": "i"
+                  },
+                  "line_num": 13
+                }
+              }
+            },
+            {
+              "return": {
+                "expression": {
+                  "field_access": {
+                    "primary": "",
+                    "id": "i"
+                  },
+                  "line_num": 14
+                }
+              }
+            }
+          ],
+          "line_num": 16
+        }
+      },
+      "constructors": {
+        "1": {
+          "modifiers": [],
+          "constructor_id": "A",
+          "formals": {},
+          "body": [
+            {
+              "set_equal": {
+                "assign": {
+                  "assignee": {
+                    "field_access": {
+                      "primary": "this",
+                      "id": "x"
+                    },
+                    "line_num": 4
+                  },
+                  "assigned_value": {
+                    "expression": {
+                      "literal": {
+                        "type": "Integer",
+                        "value": 0,
+                        "line_num": 4
+                      }
+                    }
+                  }
+                },
+                "line_num": 4
+              }
+            }
+          ],
+          "line_num": 6
+        }
+      }
+    },
+    "line_num": 17
+  },
+  {
+    "class_name": "B",
+    "superclass": "A",
+    "body": {
+      "fields": {
+        "2": {
+          "modifiers": [],
+          "var_type": "field",
+          "line_num": 19,
+          "type": "int",
+          "id": "y"
+        },
+        "3": {
+          "modifiers": [
+            "public"
+          ],
+          "var_type": "field",
+          "line_num": 20,
+          "type": "A",
+          "id": "avar"
+        }
+      },
+      "methods": {
+        "3": {
+          "modifiers": [
+            "public"
+          ],
+          "type": "int",
+          "function_id": "funct",
           "formals": {
             "1": {
               "type": "int",
-              "id": "y",
+              "id": "k",
               "var_type": "formal"
             }
           },
-          "function_body": {
-            "if": {
-              "condition": {
-                "lhs": {
-                  "field_access": {
-                    "id": "y",
-                    "primary": []
+          "body": [
+            {
+              "return": {
+                "expression": {
+                  "binary_expression": {
+                    "left": {
+                      "expression": {
+                        "method_invocation": {
+                          "field_access": {
+                            "primary": "super",
+                            "id": "funct"
+                          },
+                          "arguments": [],
+                          "line_num": 31
+                        }
+                      }
+                    },
+                    "operator": "+",
+                    "right": {
+                      "expression": {
+                        "field_access": {
+                          "primary": "",
+                          "id": "k"
+                        },
+                        "line_num": 31
+                      }
+                    },
+                    "line_num": 31
                   }
                 }
-              },
-              "if_block": null,
-              "else_block": null
+              }
             }
-          }
+          ],
+          "line_num": 33
         }
       },
-      "constructors": {}
-    }
+      "constructors": {
+        "2": {
+          "modifiers": [],
+          "constructor_id": "B",
+          "formals": {},
+          "body": [
+            {
+              "set_equal": {
+                "assign": {
+                  "assignee": {
+                    "field_access": {
+                      "primary": "this",
+                      "id": "y"
+                    },
+                    "line_num": 21
+                  },
+                  "assigned_value": {
+                    "expression": {
+                      "literal": {
+                        "type": "Integer",
+                        "value": 2,
+                        "line_num": 21
+                      }
+                    }
+                  }
+                },
+                "line_num": 21
+              }
+            },
+            {
+              "if": {
+                "condition": {
+                  "expression": {
+                    "binary_expression": {
+                      "left": {
+                        "expression": {
+                          "field_access": {
+                            "primary": "this",
+                            "id": "y"
+                          },
+                          "line_num": 22
+                        }
+                      },
+                      "operator": "==",
+                      "right": {
+                        "expression": {
+                          "literal": {
+                            "type": "Integer",
+                            "value": 2,
+                            "line_num": 22
+                          }
+                        }
+                      },
+                      "line_num": 22
+                    }
+                  }
+                },
+                "if_block": [
+                  {
+                    "set_equal": {
+                      "assign": {
+                        "assignee": {
+                          "field_access": {
+                            "primary": "this",
+                            "id": "y"
+                          },
+                          "line_num": 23
+                        },
+                        "assigned_value": {
+                          "expression": {
+                            "literal": {
+                              "type": "Integer",
+                              "value": 3,
+                              "line_num": 23
+                            }
+                          }
+                        }
+                      },
+                      "line_num": 23
+                    }
+                  }
+                ],
+                "else_block": [
+                  {
+                    "set_equal": {
+                      "assign": {
+                        "assignee": {
+                          "field_access": {
+                            "primary": "this",
+                            "id": "y"
+                          },
+                          "line_num": 26
+                        },
+                        "assigned_value": {
+                          "expression": {
+                            "literal": {
+                              "type": "Integer",
+                              "value": 4,
+                              "line_num": 26
+                            }
+                          }
+                        }
+                      },
+                      "line_num": 26
+                    }
+                  }
+                ],
+                "line_num": 28
+              }
+            },
+            {
+              "set_equal": {
+                "assign": {
+                  "assignee": {
+                    "field_access": {
+                      "primary": "this",
+                      "id": "avar"
+                    },
+                    "line_num": 28
+                  },
+                  "assigned_value": {
+                    "expression": {
+                      "new": {
+                        "type": "A",
+                        "arguments": [],
+                        "line_num": 28
+                      }
+                    }
+                  }
+                },
+                "line_num": 28
+              }
+            }
+          ],
+          "line_num": 30
+        }
+      }
+    },
+    "line_num": 33
   }
 ]

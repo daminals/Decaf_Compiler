@@ -1,0 +1,45 @@
+test001 - Unary Negation
+test002 - Unary Minus
+test003 - Unary Plus
+test004 - Binary GTE
+test005 - Binary GT
+test006 - Binary LTE
+test007 - Binary LT
+test008 - Binary NEQ
+test009 - Binary EQ
+test010 - Binary OR
+test011 - Binary AND
+test012 - Binary DIVISION
+test013 - Binary MULTIPLICATION
+test014 - Binary SUBTRACTION
+test015 - Binary ADDITION
+test016 - INTEGER CONST Declaration and Assignment
+test017 - FLOAT CONST Declaration and Assignment
+test018 - BOOLEAN TRUE CONST Declaration and Assignment
+test019 - BOOLEAN FALSE CONST Declaration and Assignment
+test020 - STRING CONST Declaration and Assignment
+test021 - AUTO-INCREMENT PRE
+test022 - AUTO-DECREMENT PRE
+test023 - AUTO-INCREMENT POST
+test024 - AUTO-DECREMENT POST
+test025 - IF Statement
+test026 - IF ELSE Statement
+test027 - DANGLING ELSE Statement
+test028 - FOR Statement
+test029 - WHILE Statement
+test030 - STATIC METHOD Definition, RETURN Statment
+test031 - STATIC METHOD Invocation Statement
+test032 - CLASS Definition, STATIC FIELD
+test033 - CLASS Definition, CONSTRUCTOR Definition
+test034 - CLASS Definition, CONSTRUCTOR Call
+test035 - CLASS Definition, NON-STATIC METHOD Definition
+test036 - CLASS Definition, NON-STATIC METHOD Invocation
+test037 - Example in Assignment, tests EXTENDS
+test038 - hello_world.decaf
+test039 - nrfib.decaf
+test040 - rfib.decaf
+test041 - IntList.decaf
+test042 - Bank Accounts
+error01 - Duplicate Class Name
+error02 - Duplicate Field Name
+error03 - Duplicate Variable

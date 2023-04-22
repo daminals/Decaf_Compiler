@@ -1,0 +1,8 @@
+class test017
+{
+    public static void main()
+    {   
+        float a;
+        a = 17.4;
+    }
+}

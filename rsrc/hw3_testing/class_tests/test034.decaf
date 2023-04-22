@@ -1,0 +1,23 @@
+class Circle
+{
+    public static float pi;
+    public float radius;
+    
+    public Circle(float r)
+    {
+        this.radius = r;
+        Circle.pi = 3.14159;
+    }
+}
+
+class test034
+{
+    public static void main()
+    {   
+        float x;
+        Circle c;
+        
+        x = 5.0;
+        c = new Circle(x);
+    }
+}

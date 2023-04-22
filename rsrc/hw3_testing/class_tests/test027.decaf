@@ -1,0 +1,14 @@
+class test027
+{
+    public static void main()
+    {   
+        int a;
+        a = 0;
+        
+        if (10 > 5)
+            if (11 > 6)
+                a = 10;
+            else
+                a = 20;
+    }
+}

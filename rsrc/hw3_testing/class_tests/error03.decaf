@@ -1,0 +1,18 @@
+class error03
+{
+    int x;
+    
+    public error03(int v)
+    {
+        this.x = v;
+    }
+    
+    public int f(int y)
+    {
+        int y;
+        
+        y = 17;
+        this.x = y;
+        return y;
+    }
+}

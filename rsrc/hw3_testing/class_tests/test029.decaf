@@ -1,0 +1,13 @@
+class test029
+{
+    public static void main()
+    {   
+        int a;
+        a = 0;
+        
+        while (a < 10)
+        {
+            a = a + 1;
+        }
+    }
+}

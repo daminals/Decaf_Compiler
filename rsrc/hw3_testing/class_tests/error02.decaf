@@ -1,0 +1,15 @@
+class error02
+{
+    int x;
+    int x;
+    
+    public error02(int v)
+    {
+        this.x = v;
+    }
+    
+    public int f(int y)
+    {
+        return this.x;
+    }
+}

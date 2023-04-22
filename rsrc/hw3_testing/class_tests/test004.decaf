@@ -1,0 +1,8 @@
+class test004
+{
+    public static void main()
+    {   
+        boolean a;
+        a = 17 >= 14;
+    }
+}
