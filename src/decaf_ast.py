@@ -210,10 +210,10 @@ class AST:
     def create_block_record(self, ast_block, scope, scope_array):
         output = "Block([\n"
         for statement in ast_block:
-            expr =  "Expr("
+            expr =  "Expr( "
             stmt = self.create_statement_record(statement, scope, scope_array)
             expr += stmt
-            expr += ")\n, "
+            expr += " )\n, "
             if stmt == "":
                 expr = ""
             output += expr
@@ -359,7 +359,7 @@ class AST:
       output = ""
       if "field_access" in expression:
         primary = self.evaluate_primary(expression["field_access"])
-        output += f" Field-access({primary}) " if expression["field_access"]["primary"] != "" else f" Variable({self.get_var_from_scope(primary, scope_array)[0]}) "
+        output += f"Field-access({primary})" if expression["field_access"]["primary"] != "" else f" Variable({self.get_var_from_scope(primary, scope_array)[0]}) "
       elif "literal" in expression:
         output += self.evaluate_literal(expression["literal"])
       elif "method_invocation" in expression:

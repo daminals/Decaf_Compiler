@@ -13,7 +13,7 @@
         }
       },
       "methods": {
-        "1": {
+        "6": {
           "modifiers": [],
           "type": "int",
           "function_id": "funct",
@@ -33,7 +33,7 @@
           ],
           "line_num": 10
         },
-        "2": {
+        "7": {
           "modifiers": [
             "public"
           ],
@@ -169,7 +169,7 @@
         }
       },
       "methods": {
-        "3": {
+        "8": {
           "modifiers": [
             "public"
           ],
