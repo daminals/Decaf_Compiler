@@ -9,6 +9,104 @@ Fixes:
   - Fixed failing test case from AO2
     - The test case was failing because we put int above float, meaning floats would not get accounted for
 
+Installation
+  - Install Python 3.9.6
+  - Install PLY 3.11
+    - Run the following command in the terminal:
+      pip3 install ply
+
+How to Run:
+  - Run the following command in the terminal:
+    python3 decaf_parser_.py <input_file>
+
+  - The program will output the following:
+    - On success, the program will exit with the following:
+      - Abstract Syntax Tree (AST) printed to stdout
+      - "YES" in green text to stdout
+      - Return code: 0
+    - On failure, the program will exit with the following:
+      - "ERROR: {error_message}" in highlighted red text to stderr
+      - Return code: 1
+
+  - The program will also output the following files:
+    - parser.out
+    - parsetab.py
+
+Contents of Submitted Files:
+
+1. decaf_parser.py
+  - Added output definitions for each grammar expression to create a dictionary of the AST
+
+2. decaf_ast.py
+  - Added AST class to represent a decaf class
+    - Includes the following attributes:
+      - class_name: the name of the class
+      - superclass_name: the parent class of the class
+      - fields: a list of fields in the class
+      - methods: a list of methods in the class
+      - constructors: a list of constructors in the class
+      - ast: dictionary of the AST
+    - Includes the following methods:
+      - create_record(): creates a record of the class
+      - create_field_record(): creates a record of a field
+      - create_method_record(): creates a record of a method
+      - create_constructor_record(): creates a record of a constructor
+      - create_block_record(): creates a record of a block (statement list)
+      - create_type_record(): creates a record of a type
+      - create_variable_record(): creates a record of a variable
+      - create_modifiers_list(): creates a string of modifiers
+      - create_modifiers_list_PRIVATE_PUBLIC(): creates a string of modifiers for private and public exclusively
+      - create_statement_record(): creates a record of a statement 
+      - create_variable_declaration_record(): creates a record of a variable declaration
+      - create_assignment_record(): creates a record of an assignment
+      - create_expression_record(): creates a record of an expression
+      - evaluate_auto(): evaluates a postfix expression
+      - evaluate_if_block(): evaluates an if block
+      - evaluate_while_block(): evaluates a while block
+      - evaluate_for_block(): evaluates a for block
+      - evaluate_return_block(): evaluates a return block
+      - evaluate_unary_expression(): evaluates a unary expression
+      - evaluate_binary_expression(): evaluates a binary expression
+      - evaluate_method_invo(): evaluates a method call
+      - evaluate_literal(): evaluates a literal
+      - evaluate_new_object(): evaluates a new object
+      - evaluate_primary(): evaluates a primary expression
+      - traverse_scope_layer(): traverses a scope layer
+      - add_to_scope(): adds a variable to a scope
+      - get_var_from_scope(): gets a variable from a scope
+      - create_current_scope(): creates a new scope
+  - debug(): prints a debug statement
+  - warn(): prints a warning statement
+  - error(): prints an error statement and exits the program
+  - writeJSON(): writes a dictionary to a JSON file
+  - readJSON(): reads a JSON file and returns a dictionary
+  - writeAST(): prints the AST to stdout
+  - print_ast_blocks(): Creates a string of AST blocks
+  - HELPER FUNCTIONS
+    - extract_body(): extracts the body to rearrage elements of AST for readability
+    - extract_variables_from_formals(): extracts variable information from formals to create consistent layout
+    - extract_variables_from_field(): extracts variable information from field to create consistent layout
+    - compare_var(): compares two variables to see if they are the same
+3. predefined_classes.py
+  - Created predefined classes for in and out to add them to scope
+4. decaf_lexer.py
+  - Correction implemented as stated in #fixes section 
+5. decaf_checker.py
+  - Turned off debug mode
+
+
+========================================================
+================ A02 SUBMISSION README =================
+========================================================
+
+
+Decaf Compiler - A02
+By: 
+  - Daniel Kogan dkogan 114439349
+  - Jason Zhang jasozhang 112710259
+
+Python Version: 3.9.6
+Ply Version: 3.11
 
 Installation
   - Install Python 3.9.6
@@ -25,7 +123,7 @@ How to Run:
       - "YES" in green text to stdout
       - Return code: 0
     - On failure, the program will exit with the following:
-      - "ERROR: {error_message}" in red text to stderr
+      - "ERROR: {error_message}" in red text to stdout
       - Return code: 1
 
   - The program will also output the following files:

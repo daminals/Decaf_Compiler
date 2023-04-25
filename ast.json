@@ -1,55 +1,127 @@
-[
-  {
-    "class_name": "a",
-    "superclass": "",
-    "body": {
-      "fields": {},
-      "methods": {
-        "6": {
-          "modifiers": [],
-          "type": "int",
-          "function_id": "x",
-          "formals": {
-            "1": {
-              "type": "int",
-              "id": "y",
-              "line_num": 2,
-              "col_num": 14,
-              "var_type": "formal"
-            }
+{
+  "class_name": "test001",
+  "superclass": "",
+  "body": {
+    "fields": {},
+    "methods": {
+      "6": {
+        "modifiers": [
+          "public",
+          "static"
+        ],
+        "type": "void",
+        "function_id": "main",
+        "formals": {},
+        "body": [
+          {
+            "var_decl": {
+              "1": {
+                "type": "boolean",
+                "line_num": 6,
+                "col_num": 10,
+                "var_type": "local",
+                "id": "a"
+              },
+              "2": {
+                "type": "boolean",
+                "line_num": 6,
+                "col_num": 10,
+                "var_type": "local",
+                "id": "b"
+              }
+            },
+            "line_num": 6,
+            "col_num": 10
           },
-          "body": [
-            {
-              "if": {
-                "condition": {
-                  "expression": {
+          {
+            "expression": {
+              "set_equal": {
+                "assign": {
+                  "assignee": {
                     "field_access": {
                       "primary": "",
-                      "id": "y"
+                      "id": "a",
+                      "line_num": 6,
+                      "col_num": 12
                     },
-                    "line_num": 3,
-                    "col_num": 9
+                    "line_num": 6,
+                    "col_num": 12
+                  },
+                  "assigned_value": {
+                    "expression": {
+                      "literal": {
+                        "type": "Boolean",
+                        "value": false,
+                        "line_num": 6,
+                        "col_num": 18
+                      }
+                    },
+                    "line_num": 6,
+                    "col_num": 18
                   }
                 },
-                "if_block": [
-                  null
-                ],
-                "else_block": [
-                  null
-                ],
-                "line_num": 8,
-                "col_num": 3
+                "line_num": 6,
+                "col_num": 18
               }
-            }
-          ],
-          "line_num": 9,
-          "col_num": 2
-        }
-      },
-      "constructors": {}
+            },
+            "line_num": 6,
+            "col_num": 18
+          },
+          {
+            "expression": {
+              "set_equal": {
+                "assign": {
+                  "assignee": {
+                    "field_access": {
+                      "primary": "",
+                      "id": "b",
+                      "line_num": 7,
+                      "col_num": 12
+                    },
+                    "line_num": 7,
+                    "col_num": 12
+                  },
+                  "assigned_value": {
+                    "expression": {
+                      "unary_expression": {
+                        "operator": "!",
+                        "operand": {
+                          "expression": {
+                            "field_access": {
+                              "primary": "",
+                              "id": "a",
+                              "line_num": 7,
+                              "col_num": 16
+                            },
+                            "line_num": 7,
+                            "col_num": 16
+                          },
+                          "line_num": 7,
+                          "col_num": 16
+                        },
+                        "line_num": 7,
+                        "col_num": 16
+                      }
+                    },
+                    "line_num": 7,
+                    "col_num": 16
+                  }
+                },
+                "line_num": 7,
+                "col_num": 16
+              }
+            },
+            "line_num": 7,
+            "col_num": 16
+          }
+        ],
+        "line_num": 3,
+        "col_num": 2
+      }
     },
-    "line_num": 10,
-    "col_num": 2,
-    "id_num": 3
-  }
-]
+    "constructors": {}
+  },
+  "line_num": 1,
+  "col_num": 2,
+  "id_num": 3
+}

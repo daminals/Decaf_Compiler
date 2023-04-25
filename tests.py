@@ -9,6 +9,25 @@ import subprocess
 from helpers import Runner
 from helpers import GREEN, RED, UNDERLINE, CLEAR_FORMAT
 
+def generate_tests(num_tests):
+    test_cases = []
+    for i in range(1, num_tests+1):
+        class TestFunc(unittest.TestCase):
+            def test_func(self):
+                filename = f"test{i:03d}"
+                file = f"{self.folder}/{filename}.decaf"
+                stdout, stderr = Runner.run_file(self, file, 0)
+                self.assertIn("YES", stdout.decode("utf-8"))
+
+        test_cases.append(TestFunc)
+
+    suite = unittest.TestSuite()
+    for test_case in test_cases:
+        suite.addTests(unittest.makeSuite(test_case))
+    return suite
+
+generate_tests(num_tests=41)
+
 
 class TestDecafFiles(unittest.TestCase):
     folder = f"rsrc/hw2_testing"
@@ -325,7 +344,7 @@ class TestHW2(unittest.TestCase):
         line_col = [2, 8]  # line 2, column 8
         self.assertIn(Runner.syntax_err_msg(line_col), stderr.decode(
         ), f"{file} did not throw syntax err @ line {line_col[0]}, column {line_col[1]}")
-                      
+                          
     # multi error
 
     def test_multierr1(self):
@@ -346,6 +365,316 @@ class TestHW2(unittest.TestCase):
         self.assertIn(Runner.syntax_err_msg(line_col), stderr.decode(
         ), f"{file} did not throw syntax err @ line {line_col[0]}, column {line_col[1]}")
 
+class TestHW3(unittest.TestCase):
+  folder = "rsrc/hw3_testing/class_tests"
+  # def setUp(self):
+  #     self.generate_tests(41)
 
-if __name__ == '__main__':
-    unittest.main(argv=[''], verbosity=0)
+  # errors
+
+  def test_error1(self):
+    filename = "error01"
+    file = f"{self.folder}/{filename}.decaf"
+    stdout, stderr = Runner.run_file(self, file, 1)
+    self.assertIn("\x1b[91mERROR:\x1b[0m Line:", stderr.decode(
+    ), f"{file} did not throw syntax err")
+  
+  def test_error2(self):
+    filename = "error02"
+    file = f"{self.folder}/{filename}.decaf"
+    stdout, stderr = Runner.run_file(self, file, 1)
+    self.assertIn("\x1b[91mERROR:\x1b[0m Line:", stderr.decode(
+    ), f"{file} did not throw syntax err")
+  
+  def test_error3(self):
+    filename = "error03"
+    file = f"{self.folder}/{filename}.decaf"
+    stdout, stderr = Runner.run_file(self, file, 1)
+    self.assertIn("\x1b[91mERROR:\x1b[0m Line:", stderr.decode(
+    ), f"{file} did not throw syntax err")
+  
+  # passing
+
+  # def test_001_decaf(self):
+  #   filename = "test001"
+  #   file = f"{self.folder}/{filename}.decaf"
+  #   stdout, stderr = Runner.run_file(self, file, 0)
+  #   self.assertIn("YES", stdout.decode("utf-8"))
+
+  # def test_002_decaf(self):
+  #   filename = "test002"
+  #   file = f"{self.folder}/{filename}.decaf"
+  #   stdout, stderr = Runner.run_file(self, file, 0)
+  #   self.assertIn("YES", stdout.decode("utf-8"))
+
+  # def test_003_decaf(self):
+  #   filename = "test003"
+  #   file = f"{self.folder}/{filename}.decaf"
+  #   stdout, stderr = Runner.run_file(self, file, 0)
+  #   self.assertIn("YES", stdout.decode("utf-8"))
+
+  # def test_004_decaf(self):
+  #   filename = "test004"
+  #   file = f"{self.folder}/{filename}.decaf"
+  #   stdout, stderr = Runner.run_file(self, file, 0)
+  #   self.assertIn("YES", stdout.decode("utf-8"))
+  
+  # def test_005_decaf(self):
+  #   filename = "test005"
+  #   file = f"{self.folder}/{filename}.decaf"
+  #   stdout, stderr = Runner.run_file(self, file, 0)
+  #   self.assertIn("YES", stdout.decode("utf-8"))
+  
+  # def test_006_decaf(self):
+  #   filename = "test006"
+  #   file = f"{self.folder}/{filename}.decaf"
+  #   stdout, stderr = Runner.run_file(self, file, 0)
+  #   self.assertIn("YES", stdout.decode("utf-8"))
+  
+  # # repeat until test 42
+  # def generate_tests(self, num_tests):
+  #   for i in range(1, num_tests + 1):
+  #       func_name = f"test_{i:03d}_decaf"
+  #       func_content = f"""
+  #           filename = "test{i:03d}"
+  #           file = f"{{self.folder}}/{{filename}}.decaf"
+  #           stdout, stderr = Runner.run_file(self, file, 0)
+  #           self.assertIn("YES", stdout.decode("utf-8"))
+  #       """
+  #       func_def = f"def {func_name}(self):{func_content}"
+  #       exec(func_def)
+  def test_001_decaf(self):
+    filename = "test001"
+    file = f"{self.folder}/{filename}.decaf"
+    stdout, stderr = Runner.run_file(self, file, 0)
+    self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_002_decaf(self):
+      filename = "test002"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_003_decaf(self):
+      filename = "test003"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_004_decaf(self):
+      filename = "test004"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_005_decaf(self):
+      filename = "test005"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_006_decaf(self):
+      filename = "test006"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_007_decaf(self):
+      filename = "test007"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_008_decaf(self):
+      filename = "test008"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_009_decaf(self):
+      filename = "test009"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_010_decaf(self):
+      filename = "test010"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_011_decaf(self):
+      filename = "test011"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_012_decaf(self):
+      filename = "test012"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_013_decaf(self):
+      filename = "test013"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_014_decaf(self):
+      filename = "test014"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_015_decaf(self):
+      filename = "test015"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_016_decaf(self):
+      filename = "test016"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_017_decaf(self):
+      filename = "test017"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_018_decaf(self):
+      filename = "test018"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_019_decaf(self):
+      filename = "test019"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_020_decaf(self):
+      filename = "test020"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_021_decaf(self):
+      filename = "test021"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_022_decaf(self):
+      filename = "test022"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_023_decaf(self):
+      filename = "test023"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_024_decaf(self):
+      filename = "test024"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_025_decaf(self):
+      filename = "test025"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_026_decaf(self):
+      filename = "test026"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_027_decaf(self):
+      filename = "test027"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_028_decaf(self):
+      filename = "test028"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_029_decaf(self):
+      filename = "test029"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_030_decaf(self):
+      filename = "test030"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_031_decaf(self):
+      filename = "test031"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_032_decaf(self):
+      filename = "test032"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_033_decaf(self):
+      filename = "test033"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_034_decaf(self):
+      filename = "test034"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_035_decaf(self):
+      filename = "test035"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_036_decaf(self):
+      filename = "test036"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_037_decaf(self):
+      filename = "test037"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  def test_038_decaf(self):
+      filename = "test038"
+      file = f"{self.folder}/{filename}.decaf"
+      stdout, stderr = Runner.run_file(self, file, 0)
+      self.assertIn("YES", stdout.decode("utf-8"))
+          
+  # def test_generate_tests(self):
+  #   self.generate_tests(41)
+
+
+
+# if __name__ == '__main__':
+#     unittest.main(argv=[''], verbosity=0)

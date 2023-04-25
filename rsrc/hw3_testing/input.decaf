@@ -11,6 +11,7 @@ class A {
     int i,j;
     i = this.funct();
     i++;
+    Out.print(i);
     return i;
   }
 }

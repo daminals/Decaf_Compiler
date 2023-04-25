@@ -43,10 +43,10 @@ def p_class(p):
     '''class_decl : CLASS ID LCURLY class_body RCURLY
                   | CLASS ID EXTENDS ID LCURLY class_body RCURLY'''
     if p[3] == '{':
-        p[0] = extract_body({'class_name': p[2], 'superclass': "", 'body': p[4], "line_num": p.lexer.lineno, "col_num": find_col2(p)})
+        p[0] = extract_body({'class_name': p[2], 'superclass': "", 'body': p[4], "line_num": p.lineno(2), "col_num": find_col2(p)})
     else:
-        p[0] = extract_body({'class_name': p[2], "superclass": p[4], "body": p[6], "line_num": p.lexer.lineno, "col_num": find_col2(p)})
-    # warn(f"{p.lexer.lineno},  {str(p[0].ast)}\n")
+        p[0] = extract_body({'class_name': p[2], "superclass": p[4], "body": p[6], "line_num": p.lineno(2), "col_num": find_col2(p)})
+    # warn(f"{p.lineno()},  {str(p[0].ast)}\n")
 
     
 def p_class_body(p):
@@ -60,7 +60,7 @@ def p_class_body(p):
       p[0] = [p[1]]
     else:
       p[0] = flatten([p[1], p[2]])
-    # warn(f"{p.lexer.lineno},  {str(p[0])}\n")
+    # warn(f"{p.lineno()},  {str(p[0])}\n")
 
     
 def p_field_decl(p):
@@ -119,15 +119,15 @@ def p_method_decl(p):
                    | VOID ID LPAREN RPAREN block
                    | VOID ID LPAREN formals RPAREN block'''
     if len(p) == 6:
-      p[0] = extract_variables_from_formals("method",{'method': {'modifiers': [], "type": p[1],  "function_id":p[2], "formals":[], "body": p[5], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
+      p[0] = extract_variables_from_formals("method",{'method': {'modifiers': [], "type": p[1],  "function_id":p[2], "formals":[], "body": p[5], "line_num": p.lineno(2), "col_num": find_col2(p)}})
     elif len(p) == 7:
       if p[3] == '(':
-        p[0] = extract_variables_from_formals("method",{'method': {'modifiers': [], "type": p[1], "function_id":p[2], "formals": p[4], "body": p[6], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
+        p[0] = extract_variables_from_formals("method",{'method': {'modifiers': [], "type": p[1], "function_id":p[2], "formals": p[4], "body": p[6], "line_num": p.lineno(2), "col_num": find_col2(p)}})
       else:
-        p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": [], "body": p[6], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
+        p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": [], "body": p[6], "line_num": p.lineno(3), "col_num": find_col2(p)}})
     elif len(p) == 8:
-      p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": p[5], "body": p[7], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
-    # debug(f"{p.lexer.lineno},  {str(p[0])}\n")
+      p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": p[5], "body": p[7], "line_num": p.lineno(3), "col_num": find_col2(p)}})
+    # debug(f"{p.lineno()},  {str(p[0])}\n")
 
 def p_constructor(p):
     '''constructor_decl : modifier ID LPAREN RPAREN block 
@@ -135,9 +135,9 @@ def p_constructor(p):
                         | ID LPAREN RPAREN block 
                         | ID LPAREN formals RPAREN block'''
     if len(p) == 7:
-      p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": p[4], "body": p[6], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
+      p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": p[4], "body": p[6], "line_num": p.lineno(2), "col_num": find_col2(p)}})
     elif len(p) == 5:
-      p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': [], "constructor_id": p[1], "formals": [], "body": p[4], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
+      p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': [], "constructor_id": p[1], "formals": [], "body": p[4], "line_num": p.lineno(2), "col_num": find_col2(p)}})
     else:
       if p[2] == '(':
         p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': [], "constructor_id": p[1], "formals": p[3], "body": p[5], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
@@ -154,7 +154,7 @@ def p_formals(p):
 
 def p_formals_param(p):
     '''formal_param : type variable'''
-    p[0] = {'parameter': {"type": p[1], "id": p[2], "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
+    p[0] = {'parameter': {"type": p[1], "id": p[2], "line_num": p.lineno(2), "col_num": find_col2(p)}}
 
 def p_block(p):
     '''block : LCURLY stmtlist RCURLY
@@ -164,7 +164,7 @@ def p_block(p):
     else:
       p[0] = None
     # debug("block")
-    # debug(f"{p.lexer.lineno},  {str(p[0])}\n")
+    # debug(f"{p.lineno()},  {str(p[0])}\n")
 
 def p_stmtlist(p):
     '''stmtlist : stmt
@@ -173,9 +173,7 @@ def p_stmtlist(p):
       p[0] = [p[1]]
     else:
       p[0] = flatten([p[1], p[2]])
-    # debug(f"{p.lexer.lineno},  {str(p[0])}")
-
-
+    # debug(f"{p.lineno()},  {str(p[0])}")
 
 def p_stmt(p):
     '''stmt : if_stmt
@@ -189,7 +187,7 @@ def p_stmt(p):
             | declare_local_var
             | SEMICOLON'''
     p[0] = p[1]
-    # debug(f"{p.lexer.lineno},  {str(p[0])}")
+    # debug(f"{p.lineno()},  {str(p[0])}")
 
 def p_declare_local_var(p):
   '''declare_local_var : var_decl'''
@@ -213,16 +211,17 @@ def p_return_stmt(p):
     if len(p) == 4:
       p[0] = {'return': p[2]}
     else:
-      p[0] = {'return': {"expression": None, "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
+      p[0] = {'return': {"expression": None, "line_num": p.lineno(2), "col_num": find_col2(p)}}
 
 def p_if_stmt(p):
     '''if_stmt : IF LPAREN expression RPAREN block
+               | IF LPAREN expression RPAREN single_stmt
                | IF LPAREN expression RPAREN block ELSE block
                | IF LPAREN expression RPAREN single_stmt ELSE block
                | IF LPAREN expression RPAREN block ELSE single_stmt
                | IF LPAREN expression RPAREN single_stmt ELSE single_stmt'''
     if len(p) == 6:
-      p[0] = {'if': {'condition': p[3], 'if_block': p[5], "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
+      p[0] = {'if': {'condition': p[3], 'if_block': p[5], 'else_block': [], "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
     else:
       p[0] = {'if': {'condition': p[3], 'if_block': p[5], 'else_block': p[7], "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
 
@@ -240,8 +239,6 @@ def p_single_stmt(p):
       p[0] = [p[1]]
     else:
       p[0] = []
-
-
 
 def p_while_stmt(p):
     '''while_stmt : WHILE LPAREN expression RPAREN block
@@ -350,16 +347,16 @@ def p_arg(p):
 
 def p_lhs(p):
     '''lhs : field_access'''
-    # debug(f"{p.lexer.lineno},  {str(p[1])}")
+    # debug(f"{p.lineno()},  {str(p[1])}")
     p[0] = {'field_access': p[1], "line_num": p.lexer.lineno, "col_num": find_col2(p)}
 
 def p_field(p):
     '''field_access : primary DOT ID
                     | ID'''
     if len(p) == 2:
-      p[0] =  {'primary': "", 'id': p[1]}
+      p[0] =  {'primary': "", 'id': p[1],"line_num": p.lexer.lineno, "col_num": find_col2(p)}
     else:
-      p[0] =  {'primary': p[1], 'id': p[3]}
+      p[0] =  {'primary': p[1], 'id': p[3],"line_num": p.lexer.lineno, "col_num": find_col2(p)}
 
 def p_method_invo(p):
     '''method_invocation : field_access LPAREN arguments RPAREN
@@ -375,12 +372,12 @@ def p_expr(p):
                   | assign
                   | binary_expression
                   | unary_expression'''
-    p[0] = {"expression": p[1]}
+    p[0] = {"expression": p[1], "line_num": p.lexer.lineno, "col_num": find_col2(p)}
 
 def p_arithmetic_expression(p):
     '''binary_expression : expression arith_op expression
                          | expression bool_op expression'''
-    p[0] = {"binary_expression": {"left": p[1], "operator": p[2], "right": p[3], "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
+    p[0] = {"binary_expression": {"left": p[1], "operator": p[2], "right": p[3], "line_num": p.lineno(2), "col_num": find_col2(p)}}
 
 def p_unary_expression(p):
     '''unary_expression : unary_op expression'''
@@ -392,19 +389,19 @@ def p_auto_expression(p):
                      | PLUSPLUS lhs
                      | MINUSMINUS lhs'''
   if p[1] == '++':
-    p[0] = {"auto": {'prefix': 'inc', "operand": p[2]}}
+    p[0] = {"auto": {'prefix': 'inc', "operand": p[2]},"line_num": p.lexer.lineno, "col_num": find_col2(p)}
   elif p[1] == '--':
-    p[0] ={"auto": {'prefix': 'dec', 'operand': p[2]}}
+    p[0] ={"auto": {'prefix': 'dec', 'operand': p[2]},"line_num": p.lexer.lineno, "col_num": find_col2(p)}
   elif p[2] == '++':
-    p[0] = {"auto": {'postfix': 'inc', 'operand': p[1]}}
+    p[0] = {"auto": {'postfix': 'inc', 'operand': p[1]},"line_num": p.lexer.lineno, "col_num": find_col2(p)}
   # elif p[2] == '--':
   else:
-    p[0] = {"auto": {'postfix': 'dec', 'operand': p[1]}}
+    p[0] = {"auto": {'postfix': 'dec', 'operand': p[1]},"line_num": p.lexer.lineno, "col_num": find_col2(p)}
 
 
 def p_assign(p):
     '''assign : lhs SETEQUAL expression '''
-    p[0] = {'set_equal': {'assign': {'assignee': p[1], 'assigned_value': p[3]}, "line_num": p.lexer.lineno, "col_num": find_col2(p)}}
+    p[0] = {'set_equal': {'assign': {'assignee': p[1], 'assigned_value': p[3]}, "line_num": p.lineno(2), "col_num": find_col2(p)}}
 
 def p_arith_op(p):
     '''arith_op : PLUS
@@ -435,7 +432,7 @@ def p_stmt_expr(p):
                        | auto_expression
                        | method_invocation'''
     p[0] = {"expression": p[1], "line_num": p.lexer.lineno, "col_num": find_col2(p)}
-    # debug(f"{p.lexer.lineno},  {str(p[0])}")
+    # debug(f"{p.lineno()},  {str(p[0])}")
 
 
 def p_empty(p):
@@ -447,9 +444,9 @@ CLEAR_FORMAT = '\033[0m'
 
 def p_error(p):
     if p:
-        print(f"{RED}ERROR: Syntax error at line {p.lineno}, column {find_column(p)}, token: {p.value}'{CLEAR_FORMAT}", file=sys.stderr)
+        print(f"{RED}ERROR:{CLEAR_FORMAT} Syntax error at line {p.lineno}, column {find_column(p)}, token: {p.value}'", file=sys.stderr)
     else:
-        print(f"{RED}ERROR: Syntax error: unexpected end of input{CLEAR_FORMAT}",file=sys.stderr)
+        print(f"{RED}ERROR:{CLEAR_FORMAT} Syntax error: unexpected end of input",file=sys.stderr)
     raise SyntaxError();     
 
 def find_column(token):

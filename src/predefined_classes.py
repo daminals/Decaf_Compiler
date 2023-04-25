@@ -1,4 +1,6 @@
 # predefined classes
+# Daniel Kogan dkogan 114439349
+# 04.20.2023
 
 # input
 in_class = {
