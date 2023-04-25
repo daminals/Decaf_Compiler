@@ -1,6 +1,6 @@
 class nrfib{
 	public static void main() {
-		int n, i, fn, fn_prev;
+		int n, i, fn, fn_prev, fn_1;
 
 		n = In.scan_int();
 

@@ -43,16 +43,12 @@ def just_parse(fn=""):
     fh = open(fn, 'r')
     source = fh.read()
     fh.close()
-    try:
-        result = parser.parse(source, lexer = lexer, debug = 0)
-        decaf_ast.writeAST(result)
-    except SyntaxError:
-        sys.exit(1)
-    else:
-        # Parsing Successful
-        #print()
-        print(GREEN+ "YES" + CLEAR_FORMAT)
-        #print()
+    result = parser.parse(source, lexer = lexer, debug = 0)
+    ast = decaf_ast.writeAST(result)
+    # Parsing Successful
+    print(ast)
+    print(GREEN+ "YES" + CLEAR_FORMAT)
+    #print()
 
 def main():
     fn = sys.argv[1] if len(sys.argv) > 1 else ""

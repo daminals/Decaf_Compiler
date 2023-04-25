@@ -2,11 +2,12 @@
 # Daniel Kogan dkogan 114439349
 # 04.17.2023
 
-import json
+import json,sys
 from predefined_classes import in_class, out_class, err_class
 field_count = 1
 method_count = 6
 class_count = 1
+class_overall_count = 3
 var_count = 1
 valid_types = ["int", "boolean", "string", "float", "double", "char"]
 user_defined_types = []
@@ -26,6 +27,12 @@ def warn(string):
   CLEAR_COLOR = '\033[0m'
   print(YELLOW + str(string) + CLEAR_COLOR)
 
+def error(string):
+  RED = '\033[91m'
+  CLEAR_COLOR = '\033[0m'
+  print(f"{RED}ERROR:{CLEAR_COLOR} {string}", file=sys.stderr)
+  # raise SyntaxError()
+  exit(1)
 
 class AST:
 
@@ -34,21 +41,26 @@ class AST:
         self.fields = fields
         self.methods = methods
         self.constructors = constructors
+        writeJSON("ast.json", ast)
+
         # Check class name
         if "class_name" not in ast:
-            raise Exception("Could not find class name")
+            # raise Exception("Could not find class name")
+            error("Could not find class name")
         if ast["class_name"] == "":
-            raise Exception("Class name is empty")
+            error("Class name is empty")
+            # raise Exception("Class name is empty")
         self.class_name = ast["class_name"]
 
         # Check super class
         if "superclass" not in ast:
-            raise Exception("Could not find class name")
+            error("Could not find superclass name")
+            # raise Exception("Could not find class name")
         self.superclass_name = ast["superclass"]
 
         global scope
 
-        self.scope = self.add_to_scope(scope["global"], [], self.class_name, {"type": "class", "children": []})
+        self.scope = self.add_to_scope(scope["global"], [], self.class_name, {"type": "class", "children": [], "id_num": class_count,  "line_num": ast["line_num"], "col_num": ast["col_num"]})
 
         self.printed = self.create_record(self.ast, self.scope[self.class_name])
         scope["global"] = self.scope
@@ -70,19 +82,22 @@ class AST:
 
         # Check fields
         if "fields" not in ast["body"]:
-            raise Exception("Could not find fields")
+            # raise Exception("Could not find fields")
+            error("Could not find fields")
         self.fields = ast["body"]["fields"]
         output += self.create_field_record(scope["children"], scope_array + ["children"])
 
         # check constructors
         if "constructors" not in ast["body"]:
-            raise Exception("Could not find constructors")
+            # raise Exception("Could not find constructors")
+            error("Could not find constructors")
         self.constructors = ast["body"]["constructors"]
         output += self.create_constructor_record(scope["children"], scope_array + ["children"])
 
         # check methods
         if "methods" not in ast["body"]:
-            raise Exception("Could not find methods")
+            # raise Exception("Could not find methods")
+            error("Could not find methods")
         self.methods = ast["body"]["methods"]
         output += self.create_method_record(scope["children"], scope_array + ["children"])
         return output
@@ -105,20 +120,23 @@ class AST:
             # debug(field)
             # name
             if "id" not in field:
-                raise Exception("Could not find field names (id)")
+                # raise Exception("Could not find field names (id)")
+                error(f"Could not find field names (id) at {field['line_num']}:{field['col_num']}")
             field_name = field["id"]
             # type
             if "type" not in field:
-                raise Exception("Could not find field type")
+                error(f"Could not find field type at {field['line_num']}:{field['col_num']}")
+                # raise Exception("Could not find field type")
             field_type = self.create_type_record(field["type"])
             # modifiers
             if "modifiers" not in field:
-                raise Exception("Could not find field modifiers")
+                error(f"Could not find field modifiers at {field['line_num']}:{field['col_num']}")
+                # raise Exception("Could not find field modifiers")
             field_modifiers = self.create_modifiers_list(field["modifiers"])
 
             # add field to scope
-            self.add_to_scope(scope, scope_array, field_name, {"type": f"field_{field_type}", "id_num": field_id, "modifiers": field["modifiers"]})
-            scope_array.append(field_name)
+            self.add_to_scope(scope, scope_array, field_name, {"type": f"{field_type}", "var_type": "field","id_num": field_id, "modifiers": field["modifiers"], "line_num": field["line_num"], "col_num": field["col_num"]})
+            # scope_array.append(field_name)
             # scope = scope[field_name]
 
             # debug(scope)
@@ -143,26 +161,28 @@ class AST:
 
             # modifiers
             if "modifiers" not in constructor:
-                raise Exception("Could not find field modifiers")
+                error(f"Could not find constructor modifiers at {constructor['line_num']}:{constructor['col_num']}")
+                # raise Exception("Could not find field modifiers")
             constructor_modifiers = self.create_modifiers_list_PRIVATE_PUBLIC(
                 constructor["modifiers"])
 
             output += f"CONSTRUCTOR: {constructor_id}, {constructor_modifiers}\n"
             output += "Constructor Parameters:\n"
             
-            local_scope = self.add_to_scope(scope, scope_array, constructor_id, {"type": "constructor", "id_num": constructor_id, "modifiers": constructor["modifiers"] ,"children": []})
+            local_scope = self.add_to_scope(scope, scope_array, constructor_id, {"type": "constructor", "id_num": constructor_id, "modifiers": constructor["modifiers"] ,"children": [], "line_num": constructor["line_num"], "col_num": constructor["col_num"]})
             local_scope = self.traverse_scope_layer(local_scope, [constructor_id, "children"])
             local_scope_array.append(constructor_id)
             local_scope_array.append("children")
 
-            block = self.create_block_record(constructor["body"], local_scope, local_scope_array)
 
             output += "Variable Table:\n"
             for variable_id in constructor["formals"].keys():
                 variable = constructor["formals"][variable_id]
-                self.add_to_scope(local_scope, local_scope_array, variable["id"], {"type": f"{self.create_type_record(variable['type'])}", "id_num": variable_id, "id": variable["id"], "var_type": "formal" })
+                self.add_to_scope(local_scope, local_scope_array, variable["id"], {"type": f"{self.create_type_record(variable['type'])}", "id_num": variable_id, "id": variable["id"], "var_type": "formal", "line_num": variable["line_num"], "col_num": variable["col_num"]})
                 output += self.create_variable_record(variable_id, variable)
-            
+                        
+            block = self.create_block_record(constructor["body"], local_scope, local_scope_array)
+
             output += "Constructor Body:\n"
             output += block
         return output
@@ -183,14 +203,14 @@ class AST:
             output += f"METHOD: {method_id}, {method_name}, {self.class_name}, {method_modifiers}, {method_type}\n"
             output += "Method Parameters:\n"
 
-            local_scope = self.add_to_scope(local_scope, local_scope_array, method_name, {"type": "method", "id_num": method_id, "modifiers": method["modifiers"], "return_type": method["type"], "children": []})
+            local_scope = self.add_to_scope(local_scope, local_scope_array, method_name, {"type": "method", "id_num": method_id, "modifiers": method["modifiers"], "return_type": method["type"], "children": [], "line_num": method["line_num"], "col_num": method["col_num"]})
             local_scope = self.traverse_scope_layer(local_scope, [method_name, "children"])
             local_scope_array.append(method_name)
             local_scope_array.append("children")
 
             for variable_id in method["formals"].keys():
                 variable = method["formals"][variable_id]
-                self.add_to_scope(local_scope, local_scope_array, variable["id"], {"type": f"{self.create_type_record(variable['type'])}", "id_num": variable_id, "id": variable["id"], "var_type": "formal" })
+                self.add_to_scope(local_scope, local_scope_array, variable["id"], {"type": f"{self.create_type_record(variable['type'])}", "id_num": variable_id, "id": variable["id"], "var_type": "formal", "line_num": variable["line_num"], "col_num": variable["col_num"] })
                 output += self.create_variable_record(variable_id, variable)
 
             block = self.create_block_record(method["body"], local_scope, local_scope_array)
@@ -208,16 +228,23 @@ class AST:
         return output
       
     def create_block_record(self, ast_block, scope, scope_array):
-        output = "Block([\n"
+        output = "Block(["
+        statements = "\n"
         for statement in ast_block:
             expr =  "Expr( "
             stmt = self.create_statement_record(statement, scope, scope_array)
             expr += stmt
-            expr += " )\n, "
+            expr += ")\n, "
             if stmt == "":
                 expr = ""
-            output += expr
-        output += "\b\b])\n" # use backspace to remove the last comma
+            statements += expr
+        output += statements
+        # if output ends with newline and comma, remove it
+        if output[-3:] == "\n, ": 
+            output = output[:-2]
+        output += "])\n" # use backspace to remove the last comma
+        if ast_block == []:
+            output = "Skip()"
         return output
 
     def create_type_record(self, ast_type, return_type=0):
@@ -237,7 +264,8 @@ class AST:
             return output
 
         if ast_type not in local_valid_types:
-            raise Exception("Invalid type")
+            # raise Exception("Invalid type")
+            error(f"Invalid type {ast_type} at line:{ast_type['line_num']}:{ast_type['col_num']}")
         output += f"{ast_type}"
         return output
 
@@ -274,6 +302,8 @@ class AST:
 
     def create_statement_record(self, ast_statement, scope, scope_array):
         output = ""
+        if ast_statement == None:
+          return output
         if "set_equal" in ast_statement:
           output += self.create_assignment_record(ast_statement, scope_array)
         elif "auto" in ast_statement:
@@ -292,25 +322,32 @@ class AST:
           output += "Break"
         elif "continue" in ast_statement:
           output += "Continue"
+        elif "method_invocation" in ast_statement:
+          output += self.evaluate_method_invo(ast_statement["method_invocation"], scope, scope_array)
+        elif "expression" in ast_statement:
+          output += self.create_expression_record(ast_statement, scope, scope_array);
         else:
-          raise Exception("Invalid statement")
+          # raise Exception(f"Invalid statement: {ast_statement}")
+          error(f"Invalid statement: {ast_statement} at line:{ast_statement['line_num']}:{ast_statement['col_num']}")
         return output
 
     def create_variable_declaration_record(self, ast_variable_declaration, scope, scope_array):
         output = ""
         if "var_decl" not in ast_variable_declaration:
-            raise Exception("Could not find variable declaration")
+            # raise Exception("Could not find variable declaration")
+            error(f"Could not find variable declaration at line:{ast_variable_declaration['line_num']}:{ast_variable_declaration['col_num']}")
         variable_declaration = ast_variable_declaration["var_decl"]
         for var in variable_declaration.keys():
             if "id" not in variable_declaration[var]:
-                raise Exception("Could not find variable id")
+                # raise Exception("Could not find variable id")
+                error(f"Could not find variable id at line:{variable_declaration['line_num']}:{variable_declaration['col_num']}")
             if "type" not in variable_declaration[var]:
-                raise Exception("Could not find variable type")
+                # raise Exception("Could not find variable type")
+                error(f"Could not find variable type at line:{variable_declaration['line_num']}:{variable_declaration['col_num']}")
             
             var_id = variable_declaration[var]["id"]
             var_type = variable_declaration[var]["type"]
-            # debug(f"adding {var_id} to scope")
-            self.add_to_scope(scope, scope_array, var_id, {"type": f"{self.create_type_record(var_type)}", "id_num": var, "id": var_id, "var_type": "local"})
+            self.add_to_scope(scope, scope_array, var_id, {"type": f"{self.create_type_record(var_type)}", "id_num": var, "id": var_id, "var_type": "local",  "line_num": variable_declaration[var]["line_num"], "col_num": variable_declaration[var]["col_num"]})
             output += self.create_variable_record(var, variable_declaration[var])
 
             # output += f"VariableDeclaration({var_id}, {var_type})\n"
@@ -318,11 +355,13 @@ class AST:
 
     def create_assignment_record(self, ast_assignment, scope_array):
         if "set_equal" not in ast_assignment:
-            raise Exception("Could not find assignment")
+            # raise Exception("Could not find assignment")
+            error(f"Could not find assignment at line:{ast_assignment['line_num']}:{ast_assignment['col_num']}")
         output = ""
         assignment = ast_assignment["set_equal"]
         if "assign" not in assignment:
-            raise Exception("Could not find assignee")
+            # raise Exception("Could not find assignee")
+            error(f"Could not find assignee at line:{ast_assignment['line_num']}:{ast_assignment['col_num']}")
         
         operand = assignment["assign"]
         var_id_num, var_type = self.get_var_from_scope(operand["assignee"]["field_access"]["id"], scope_array)
@@ -337,12 +376,14 @@ class AST:
         
         assigned_value = ""
         if "assigned_value" not in operand:
-          raise Exception("Could not find assigned value")
+          # raise Exception("Could not find assigned value")
+          error(f"Could not find assigned value at line:{operand['assignee']['line_num']}:{operand['assignee']['col_num']}")
         
         if "expression" in operand["assigned_value"]:
           assigned_value = self.create_expression_record(operand["assigned_value"], scope, scope_array)
         else:
-          raise Exception("Could not find assigned value type")
+          # raise Exception("Could not find assigned value type")
+          error(f"Could not find assigned value type at line:{operand['assignee']['line_num']}:{operand['assignee']['col_num']}")
         
         expression = f"{var_scope_type}({assignee}), {assigned_value} "
         if expr_type != "":
@@ -354,16 +395,17 @@ class AST:
 
     def create_expression_record(self, ast_expression, scope, scope_array):
       if "expression" not in ast_expression:
-        raise Exception("Could not find expression")
+        # raise Exception(f"Could not find expression in {ast_expression}")
+        error(f"Could not find expression in {ast_expression} at line:{ast_expression['line_num']}:{ast_expression['col_num']}")
       expression = ast_expression["expression"]
       output = ""
       if "field_access" in expression:
         primary = self.evaluate_primary(expression["field_access"])
-        output += f"Field-access({primary})" if expression["field_access"]["primary"] != "" else f" Variable({self.get_var_from_scope(primary, scope_array)[0]}) "
+        output += f"Field-access({primary})" if expression["field_access"]["primary"] != "" else f"Variable({self.get_var_from_scope(primary, scope_array)[0]})"
       elif "literal" in expression:
         output += self.evaluate_literal(expression["literal"])
       elif "method_invocation" in expression:
-        output += self.evaluate_method_invo(expression["method_invocation"])
+        output += self.evaluate_method_invo(expression["method_invocation"], scope, scope_array)
       elif "binary_expression" in expression:
         output += self.evaluate_binary_expression(expression, scope, scope_array)
       elif "unary_expression" in expression:
@@ -374,19 +416,28 @@ class AST:
         output += self.evaluate_new_object(expression["new"])
       elif "auto" in expression:
         output += self.evaluate_auto(expression, scope, scope_array)
+      elif "set_equal" in expression:
+        output += self.create_assignment_record(expression, scope_array)
+      elif "this" == expression:
+        output += "this"
+      elif "expression" in expression:
+        output+= self.create_expression_record(expression, scope, scope_array)
       else:
-        Exception("Invalid expression statement")
+        debug(expression)
+        # Exception("Invalid expression statement")
+        error(f"Invalid expression statement at line:{expression['line_num']}:{expression['col_num']}")
       return output
     
     def evaluate_auto(self, ast_auto, scope, scope_array):
       if "auto" not in ast_auto:
-        raise Exception("Could not find auto")
+        # raise Exception("Could not find auto")
+        error(f"Could not find auto at line:{ast_auto['line_num']}:{ast_auto['col_num']}")
       output = ""
       assigned_value = ""
       auto = ast_auto["auto"]
-      # debug(auto)
       if "operand" not in auto:
-        raise Exception("Could not find operand")
+        # raise Exception("Could not find operand")
+        error(f"Could not find operand at line:{auto['line_num']}:{auto['col_num']}")
       variable_name = auto["operand"]["field_access"]["id"]
       var_id = self.get_var_from_scope(variable_name, scope_array)[0]
       if "postfix" in auto:
@@ -399,12 +450,15 @@ class AST:
     def evaluate_if_block(self, ast_if, scope, scope_array):
       output = ""
       if "if" not in ast_if:
-        raise Exception("Could not find if")
+        # raise Exception("Could not find if")
+        error(f"Could not find if at line:{ast_if['line_num']}:{ast_if['col_num']}")
       if_block = ast_if["if"]
       if "condition" not in if_block:
-        raise Exception("Could not find condition")
+        # raise Exception("Could not find condition")
+        error(f"Could not find condition at line:{if_block['line_num']}:{if_block['col_num']}")
       if "if_block" not in if_block:
-        raise Exception("Could not find block")
+        # raise Exception("Could not find block")
+        error(f"Could not find block at line:{if_block['line_num']}:{if_block['col_num']}")
       condition = self.create_expression_record(if_block["condition"], scope, scope_array)
       block = self.create_block_record(if_block["if_block"], scope, scope_array)
       output += f"If({condition}, {block}"
@@ -417,33 +471,44 @@ class AST:
     def evaluate_while_block(self, ast_while, scope, scope_array):
       output = ""
       if "while" not in ast_while:
-        raise Exception("Could not find while")
+        # raise Exception("Could not find while")
+        error(f"Could not find while at line:{ast_while['line_num']}:{ast_while['col_num']}")
       while_block = ast_while["while"]
       if "condition" not in while_block:
-        raise Exception("Could not find condition")
+        # raise Exception("Could not find condition")
+        error(f"Could not find condition at line:{while_block['line_num']}:{while_block['col_num']}")
       if "while_block" not in while_block:
-        raise Exception("Could not find block")
+        # raise Exception("Could not find block")
+        error(f"Could not find block at line:{while_block['line_num']}:{while_block['col_num']}")
       condition = self.create_expression_record(while_block["condition"], scope, scope_array)
       block = self.create_block_record(while_block["while_block"], scope, scope_array)
+      # remove newline if block has 
+      if block[-1] == "\n":
+        block = block[:-1]
       output += f"While({condition}, {block})"
       return output
     
     def evaluate_for_block(self, ast_for, scope, scope_array):
       output = ""
       if "for" not in ast_for:
-        raise Exception("Could not find for")
+        # raise Exception("Could not find for")
+        error(f"Could not find for at line:{ast_for['line_num']}:{ast_for['col_num']}")
       for_block = ast_for["for"]
       if "condition" not in for_block:
-        raise Exception("Could not find condition")
+        # raise Exception("Could not find condition")
+        error(f"Could not find condition at line:{for_block['line_num']}:{for_block['col_num']}")
       if "for_block" not in for_block:
-        raise Exception("Could not find block")
+        # raise Exception("Could not find block")
+        error(f"Could not find block at line:{for_block['line_num']}:{for_block['col_num']}")
       if "init" not in for_block:
-        raise Exception("Could not find init")
+        # raise Exception("Could not find init")
+        error(f"Could not find init at line:{for_block['line_num']}:{for_block['col_num']}")
       if "update" not in for_block:
-        raise Exception("Could not find update")
-      init = self.create_expression_record(for_block["init"], scope, scope_array)
-      update = self.create_expression_record(for_block["update"], scope, scope_array)
-      condition = self.create_expression_record(for_block["condition"], scope, scope_array)
+        # raise Exception("Could not find update")
+        error(f"Could not find update at line:{for_block['line_num']}:{for_block['col_num']}")
+      init = self.create_expression_record(for_block["init"], scope, scope_array) if for_block["init"] != None else "Skip()"
+      update = self.create_expression_record(for_block["update"], scope, scope_array) if for_block["update"] != None else "Skip()"
+      condition = self.create_expression_record(for_block["condition"], scope, scope_array) if for_block["condition"] != None else "Skip()"
       block = self.create_block_record(for_block["for_block"], scope, scope_array)
       output += f"For({init}, {condition}, {update}, {block})"
       return output
@@ -451,10 +516,12 @@ class AST:
     def evaluate_unary_expression(self, ast_unary, scope, scope_array):
         output=""
         if "unary_expression" not in ast_unary:
-            raise Exception("Could not find unary expression")
+            # raise Exception("Could not find unary expression")
+            error(f"Could not find unary expression at line:{ast_unary['line_num']}:{ast_unary['col_num']}")
         unary_expression = ast_unary["unary_expression"]
         if "operator" not in unary_expression:
-            raise Exception("Could not find operator")
+            # raise Exception("Could not find operator")
+            error(f"Could not find operator at line:{unary_expression['line_num']}:{unary_expression['col_num']}")
         expression = self.create_expression_record(unary_expression["operand"], scope, scope_array)
         operator_to_string = { 
           "-": "uminus",
@@ -464,22 +531,25 @@ class AST:
 
         if unary_expression["operator"] in operator_to_string:
           operator = operator_to_string[unary_expression["operator"]]
-        output += f"Unary({expression}, {operator} )"
+        output += f"Unary({expression}, {operator})"
         return output
 
     def evaluate_binary_expression(self, ast_binary, scope, scope_array):
         output = ""
         if "binary_expression" not in ast_binary:
-            raise Exception("Could not find binary expression")
-        
+            # raise Exception("Could not find binary expression")
+            error(f"Could not find binary expression at line:{ast_binary['line_num']}:{ast_binary['col_num']}")
+      
         binary_expression = ast_binary["binary_expression"]
         if "left" not in binary_expression:
-            raise Exception("Could not find left operand")
+            # raise Exception("Could not find left operand")
+            error(f"Could not find left operand at line:{binary_expression['line_num']}:{binary_expression['col_num']}")
         if "right" not in binary_expression:
-            raise Exception("Could not find right operand")
+            # raise Exception("Could not find right operand")
+            error(f"Could not find right operand at line:{binary_expression['line_num']}:{binary_expression['col_num']}")
         if "operator" not in binary_expression:
-            raise Exception("Could not find operator")
-        # debug(binary_expression["left"])
+            # raise Exception("Could not find operator")
+            error(f"Could not find operator at line:{binary_expression['line_num']}:{binary_expression['col_num']}")
         left_expression = self.create_expression_record(binary_expression["left"], scope, scope_array)
         right_expression = self.create_expression_record(binary_expression["right"], scope, scope_array)
         operator = binary_expression["operator"]
@@ -501,7 +571,8 @@ class AST:
         }
 
         if operator not in operator_to_string:
-          raise Exception("Invalid operator")
+          # raise Exception("Invalid operator")
+          error(f"Invalid operator at line:{operator['line_num']}:{operator['col_num']}")
 
         operator = operator_to_string[operator]
         output += f"Binary({operator}, {left_expression}, {right_expression})"
@@ -510,35 +581,48 @@ class AST:
     def evaluate_return(self,ast_return, scope, scope_array):
       output = ""
       if "return" not in ast_return:
-        raise Exception("Could not find return")
+        # raise Exception("Could not find return")
+        error(f"Could not find return at line:{ast_return['line_num']}:{ast_return['col_num']}")
       statement_eval = self.create_expression_record(ast_return["return"], scope, scope_array)
       output += f"Return({statement_eval})"
       return output
     
-    def evaluate_method_invo(self,ast_method_invo):
+    def evaluate_method_invo(self,ast_method_invo, scope, scope_array):
       output = ""
       if "field_access" not in ast_method_invo:
-        raise Exception("Could not find method field_access")
+        # raise Exception("Could not find method field_access")
+        error(f"Could not find method field_access at line:{ast_method_invo['line_num']}:{ast_method_invo['col_num']}")
       if "arguments" not in ast_method_invo:
-        raise Exception("Could not find method arguments")
+        # raise Exception("Could not find method arguments")
+        error(f"Could not find method arguments at line:{ast_method_invo['line_num']}:{ast_method_invo['col_num']}")
       method = ast_method_invo["field_access"]
       if "id" not in method:
-        raise Exception("Could not find method id")
+        # raise Exception("Could not find method id")
+        error(f"Could not find method id at line:{method['line_num']}:{method['col_num']}")
       if "primary" not in method:
-        raise Exception("Could not find method primary")
-      output += f"Method-call({self.evaluate_primary(method)}, {ast_method_invo['arguments']}"
+        # raise Exception("Could not find method primary")
+        error(f"Could not find method primary at line:{method['line_num']}:{method['col_num']}")
+
+      arguments = ast_method_invo["arguments"]
+      arg_str = []
+      for arg in arguments:
+        arg_str.append(self.create_expression_record(arg, scope, scope_array))
+      arg_str = ", ".join(arg_str)
+      output += f"Method-call({self.evaluate_primary(method)}, [{arg_str}])"
       return output
     
     def evaluate_literal(self,ast_literal):
       output = ""
       if "type" not in ast_literal:
-        raise Exception("Could not find literal type")
+        # raise Exception("Could not find literal type")
+        error(f"Could not find literal type at line:{ast_literal['line_num']}:{ast_literal['col_num']}")
       if "value" not in ast_literal:
-        raise Exception("Could not find literal value")
+        # raise Exception("Could not find literal value")
+        error(f"Could not find literal value at line:{ast_literal['line_num']}:{ast_literal['col_num']}")
       if ast_literal["type"] == "boolean" or ast_literal["type"] == "Null":
         output += f"Constant({ast_literal['value']})"
       else:
-        output += f" {ast_literal['type']}-Constant({ast_literal['value']})"
+        output += f"{ast_literal['type']}-Constant({ast_literal['value']})"
       return output
     
     def evaluate_new_object(self,ast_new_object):
@@ -550,6 +634,8 @@ class AST:
       output = ast_primary["id"]
       if ast_primary["primary"] != "":
           primary = ast_primary["primary"]
+          if "field_access" in primary:
+              primary = self.evaluate_primary(primary["field_access"])
           if "this" == primary or "super" == primary:
               primary = primary.title()
           output = primary
@@ -567,14 +653,17 @@ class AST:
               new_scope = scope_item[scope_layer]
               found = True
           if not found:
-            raise Exception("Invalid scope layer traversal: Could not find scope layer")
+            # raise Exception("Invalid scope layer traversal: Could not find scope layer")
+            error(f"Could not find scope layer at {scope_layer}")
         elif isinstance(new_scope, dict):
             if scope_layer in new_scope:
                 new_scope = new_scope[scope_layer]
             else:
-              raise Exception("Invalid scope layer traversal: Could not find scope layer")
+              # raise Exception(f"Could not find scope layer: {scope_layer} in {new_scope}")
+              error(f"Could not find scope layer: {scope_layer} in {new_scope}")
         else:
-          raise Exception("Invalid scope layer traversal")
+          # raise Exception("Invalid scope layer traversal")
+          error(f"Invalid scope layer traversal at {new_scope}, {scope_layer}")
       return new_scope
 
     def add_to_scope(self, local_scope, scope_array, variable_id, variable):
@@ -590,28 +679,36 @@ class AST:
           if isinstance(test_scope, list):
             for scope_item in test_scope:
               if variable_id in scope_item:
-                if variable["type"] == scope_item[variable_id]["type"]:
-                  raise Exception("Variable already defined")
+                if variable["type"] == scope_item[variable_id]["type"] and scope_item[variable_id]["var_type"] == variable["var_type"]:
+                  # raise Exception(f"Variable already defined: {variable_id}")
+                  error(f"Variable already defined: {variable_id} at line:{variable['line_num']}:{variable['col_num']}")
                 # if scope[type] is not a class, method, or constructor, and variable is not a class, method, or constructor
                 # then they are both variables with the same name, which is not allowed
+                debug(variable)
+                debug(scope_item)
                 if scope_item[variable_id]["type"] not in legal_types and variable["type"] not in legal_types:
-                    raise Exception("Variable already defined")
+                    # do not raise exception if one is a field var and the other is a formal
+                    if scope_item[variable_id]["var_type"] == variable["var_type"]:
+                    # raise Exception(f"Variable already defined: {variable_id}")
+                      error(f"Variable already defined: {variable_id} at line:{variable['line_num']}:{variable['col_num']}")
           else:
             if variable_id in test_scope:
-                if variable["type"] == test_scope["type"]:
-                    raise Exception("Variable already defined")
+                if variable["type"] == test_scope[variable_id]["type"] and scope_item[variable_id]["var_type"] == variable["var_type"]:
+                    # raise Exception("Variable already defined")
+                    error(f"Variable already defined: {variable_id} at line:{variable['line_num']}:{variable['col_num']}")
                 # if scope[type] is not a class, method, or constructor, and variable is not a class, method, or constructor
                 # then they are both variables with the same name, which is not allowed
-                if test_scope["type"] not in legal_types and variable["type"] not in legal_types:
-                    raise Exception("Variable already defined")
+                if test_scope[variable_id]["type"] not in legal_types and variable["type"] not in legal_types:
+                    if scope_item[variable_id]["var_type"] == variable["var_type"]:
+                    # raise Exception(f"Variable already defined: {variable_id}")
+                      error(f"Variable already defined: {variable_id} at line:{variable['line_num']}:{variable['col_num']}")
+                    # error(f"Variable already defined: {variable_id} at line:{variable['line_num']}:{variable['col_num']}")
           test_scope = self.traverse_scope_layer(test_scope, [scope_layer])
         
         if isinstance(local_scope, list):
           local_scope.append({variable_id: variable})
         else:
           local_scope[variable_id] = variable
-        # debug(f"added {variable_id} to {scope_array} with type {variable['type']}")
-        # debug(f"{local_scope}")
         return local_scope
         
     def get_var_from_scope(self, variable_name, scope_array):
@@ -619,7 +716,6 @@ class AST:
         if scope_array == []:
             scope_array = ["global"]
         test_scope = scope
-        # debug(scope)
         for scope_layer in scope_array:
             test_scope = self.traverse_scope_layer(test_scope, [scope_layer])
             # debug(f"searching for {variable_name} in {scope_array}, in layer {test_scope}")
@@ -629,9 +725,11 @@ class AST:
                     return [scope_item[variable_name]["id_num"], scope_item[variable_name]["type"]]
             else:
               if variable_name in test_scope:
+                # print(test_scope[variable_name])
                 return [test_scope[variable_name]["id_num"], test_scope[variable_name]["type"]]
         # debug(f"{scope_array}, {test_scope}")
-        raise Exception("Variable not found")
+        # raise Exception(f"Variable not found: {variable_name}")
+        error(f"Variable not found: {variable_name}")
 
 # printing functions
 
@@ -648,10 +746,10 @@ def readJSON(filename):
 def writeAST(ast_blocks):
     writeJSON("ast.json", [x.ast for x in ast_blocks if isinstance(x, AST)])
     global scope
-    debug(scope)
-    # print(ast_blocks)
-    output = print_ast_blocks(ast_blocks)
-    print(output)
+    # debug(scope) 
+    # print(ast_blocks
+    return print_ast_blocks(ast_blocks)
+    # print(output)
 
 def print_ast_blocks(ast_blocks):
     output = "-----------------------------------------------\n"
@@ -667,7 +765,9 @@ def print_ast_blocks(ast_blocks):
 def extract_body(ast):
     if "body" not in ast:
         raise Exception("Could not find body")
-    global field_count, method_count, class_count
+    global field_count, method_count, class_count, class_overall_count
+    ast["id_num"] = class_overall_count
+    class_overall_count += 1
     fields = {}
     methods = {}
     constructors = {}
@@ -685,7 +785,8 @@ def extract_body(ast):
             constructors[class_count] = item['constructor']
             class_count += 1
         else:
-            raise Exception("Could not find field, method, or constructor")
+            # raise Exception("Could not find field, method, or constructor")
+            error(f"Could not find field, method, or constructor at line:{['line_num']}:{['col_num']}")
     ast["body"] = {"fields": fields, "methods": methods,
                    "constructors": constructors}
     return AST(ast, fields, methods, constructors)
@@ -720,6 +821,8 @@ def extract_variables_from_field(ast):
         raise Exception("Could not find ids")
     ast['field']['type'] = ast['field']['variables']['type']
     ast['field']['ids'] = ast['field']['variables']['ids']
+    ast['field']['col_num'] = ast['field']['variables']['col_num']
+    ast['field']['line_num'] = ast['field']['variables']['line_num']
     del ast['field']['variables']
     return ast
 

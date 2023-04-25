@@ -3,6 +3,7 @@
 # input
 in_class = {
   "type": "class",
+  "id_num": 1,
   "children": [
     {
       "scan_int": {
@@ -34,6 +35,7 @@ in_class = {
 # output
 out_class = {
   "type": "class",
+  "id_num": 2,
   "children": [
     {
       "print": {
