@@ -1,127 +1,559 @@
-{
-  "class_name": "test001",
-  "superclass": "",
-  "body": {
-    "fields": {},
-    "methods": {
-      "6": {
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "type": "void",
-        "function_id": "main",
-        "formals": {},
-        "body": [
-          {
-            "var_decl": {
-              "1": {
-                "type": "boolean",
-                "line_num": 6,
-                "col_num": 10,
-                "var_type": "local",
-                "id": "a"
-              },
-              "2": {
-                "type": "boolean",
-                "line_num": 6,
-                "col_num": 10,
-                "var_type": "local",
-                "id": "b"
-              }
-            },
-            "line_num": 6,
-            "col_num": 10
+[
+  {
+    "class_name": "In",
+    "superclass": "",
+    "body": {
+      "fields": {},
+      "methods": {
+        "1": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "int",
+          "function_id": "scan_int",
+          "formals": {},
+          "body": [
+            null
+          ],
+          "line_num": 3,
+          "col_num": 9
+        },
+        "2": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "float",
+          "function_id": "scan_float",
+          "formals": {},
+          "body": [
+            null
+          ],
+          "line_num": 5,
+          "col_num": 2
+        }
+      },
+      "constructors": {}
+    },
+    "line_num": 1,
+    "col_num": 6,
+    "id_num": 3
+  },
+  {
+    "class_name": "Out",
+    "superclass": "",
+    "body": {
+      "fields": {},
+      "methods": {
+        "3": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "print",
+          "formals": {
+            "1": {
+              "type": "int",
+              "id": "i",
+              "line_num": 0,
+              "col_num": 36,
+              "var_type": "local"
+            }
           },
-          {
-            "expression": {
-              "set_equal": {
-                "assign": {
-                  "assignee": {
-                    "field_access": {
-                      "primary": "",
-                      "id": "a",
-                      "line_num": 6,
-                      "col_num": 12
-                    },
-                    "line_num": 6,
-                    "col_num": 12
+          "body": [
+            null
+          ],
+          "line_num": 10,
+          "col_num": 11
+        },
+        "4": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "print",
+          "formals": {
+            "2": {
+              "type": "float",
+              "id": "i",
+              "line_num": 0,
+              "col_num": 38,
+              "var_type": "local"
+            }
+          },
+          "body": [
+            null
+          ],
+          "line_num": 12,
+          "col_num": 11
+        },
+        "5": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "print",
+          "formals": {
+            "3": {
+              "type": "string",
+              "id": "i",
+              "line_num": 0,
+              "col_num": 39,
+              "var_type": "local"
+            }
+          },
+          "body": [
+            null
+          ],
+          "line_num": 14,
+          "col_num": 2
+        }
+      },
+      "constructors": {}
+    },
+    "line_num": 8,
+    "col_num": 3,
+    "id_num": 4
+  },
+  {
+    "class_name": "rfib",
+    "superclass": "",
+    "body": {
+      "fields": {},
+      "methods": {
+        "6": {
+          "modifiers": [
+            "static"
+          ],
+          "type": "int",
+          "function_id": "fib",
+          "formals": {
+            "1": {
+              "type": "int",
+              "id": "n",
+              "line_num": 0,
+              "col_num": 26,
+              "var_type": "local"
+            }
+          },
+          "body": [
+            {
+              "if": {
+                "condition": {
+                  "expression": {
+                    "binary_expression": {
+                      "left": {
+                        "expression": {
+                          "field_access": {
+                            "primary": "",
+                            "id": "n",
+                            "line_num": 3,
+                            "col_num": 17
+                          },
+                          "line_num": 3,
+                          "col_num": 17
+                        },
+                        "line_num": 3,
+                        "col_num": 17
+                      },
+                      "operator": "<=",
+                      "right": {
+                        "expression": {
+                          "literal": {
+                            "type": "Integer",
+                            "value": 2,
+                            "line_num": 3,
+                            "col_num": 20
+                          }
+                        },
+                        "line_num": 3,
+                        "col_num": 20
+                      },
+                      "line_num": 3,
+                      "col_num": 20
+                    }
                   },
-                  "assigned_value": {
-                    "expression": {
-                      "literal": {
-                        "type": "Boolean",
-                        "value": false,
-                        "line_num": 6,
-                        "col_num": 18
-                      }
-                    },
-                    "line_num": 6,
-                    "col_num": 18
-                  }
+                  "line_num": 3,
+                  "col_num": 20
                 },
-                "line_num": 6,
-                "col_num": 18
+                "if_block": [
+                  {
+                    "return": {
+                      "expression": {
+                        "literal": {
+                          "type": "Integer",
+                          "value": 1,
+                          "line_num": 4,
+                          "col_num": 22
+                        }
+                      },
+                      "line_num": 4,
+                      "col_num": 22
+                    }
+                  }
+                ],
+                "else_block": [
+                  {
+                    "return": {
+                      "expression": {
+                        "binary_expression": {
+                          "left": {
+                            "expression": {
+                              "method_invocation": {
+                                "field_access": {
+                                  "primary": "",
+                                  "id": "fib",
+                                  "line_num": 6,
+                                  "col_num": 24
+                                },
+                                "arguments": [
+                                  {
+                                    "expression": {
+                                      "binary_expression": {
+                                        "left": {
+                                          "expression": {
+                                            "field_access": {
+                                              "primary": "",
+                                              "id": "n",
+                                              "line_num": 6,
+                                              "col_num": 26
+                                            },
+                                            "line_num": 6,
+                                            "col_num": 26
+                                          },
+                                          "line_num": 6,
+                                          "col_num": 26
+                                        },
+                                        "operator": "-",
+                                        "right": {
+                                          "expression": {
+                                            "literal": {
+                                              "type": "Integer",
+                                              "value": 1,
+                                              "line_num": 6,
+                                              "col_num": 28
+                                            }
+                                          },
+                                          "line_num": 6,
+                                          "col_num": 28
+                                        },
+                                        "line_num": 6,
+                                        "col_num": 28
+                                      }
+                                    },
+                                    "line_num": 6,
+                                    "col_num": 28
+                                  }
+                                ],
+                                "line_num": 6,
+                                "col_num": 30
+                              }
+                            },
+                            "line_num": 6,
+                            "col_num": 30
+                          },
+                          "operator": "+",
+                          "right": {
+                            "expression": {
+                              "method_invocation": {
+                                "field_access": {
+                                  "primary": "",
+                                  "id": "fib",
+                                  "line_num": 6,
+                                  "col_num": 35
+                                },
+                                "arguments": [
+                                  {
+                                    "expression": {
+                                      "binary_expression": {
+                                        "left": {
+                                          "expression": {
+                                            "field_access": {
+                                              "primary": "",
+                                              "id": "n",
+                                              "line_num": 6,
+                                              "col_num": 37
+                                            },
+                                            "line_num": 6,
+                                            "col_num": 37
+                                          },
+                                          "line_num": 6,
+                                          "col_num": 37
+                                        },
+                                        "operator": "-",
+                                        "right": {
+                                          "expression": {
+                                            "literal": {
+                                              "type": "Integer",
+                                              "value": 2,
+                                              "line_num": 6,
+                                              "col_num": 39
+                                            }
+                                          },
+                                          "line_num": 6,
+                                          "col_num": 39
+                                        },
+                                        "line_num": 6,
+                                        "col_num": 39
+                                      }
+                                    },
+                                    "line_num": 6,
+                                    "col_num": 39
+                                  }
+                                ],
+                                "line_num": 6,
+                                "col_num": 40
+                              }
+                            },
+                            "line_num": 6,
+                            "col_num": 40
+                          },
+                          "line_num": 6,
+                          "col_num": 40
+                        }
+                      },
+                      "line_num": 6,
+                      "col_num": 40
+                    }
+                  }
+                ],
+                "line_num": 7,
+                "col_num": 6
               }
+            }
+          ],
+          "line_num": 2,
+          "col_num": 11
+        },
+        "7": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "main",
+          "formals": {},
+          "body": [
+            {
+              "var_decl": {
+                "1": {
+                  "type": "int",
+                  "line_num": 12,
+                  "col_num": 10,
+                  "var_type": "local",
+                  "id": "n"
+                }
+              },
+              "line_num": 12,
+              "col_num": 10
             },
-            "line_num": 6,
-            "col_num": 18
-          },
-          {
-            "expression": {
-              "set_equal": {
-                "assign": {
-                  "assignee": {
-                    "field_access": {
-                      "primary": "",
-                      "id": "b",
-                      "line_num": 7,
+            {
+              "expression": {
+                "set_equal": {
+                  "assign": {
+                    "assignee": {
+                      "field_access": {
+                        "primary": "",
+                        "id": "n",
+                        "line_num": 12,
+                        "col_num": 12
+                      },
+                      "line_num": 12,
                       "col_num": 12
                     },
-                    "line_num": 7,
-                    "col_num": 12
-                  },
-                  "assigned_value": {
-                    "expression": {
-                      "unary_expression": {
-                        "operator": "!",
-                        "operand": {
-                          "expression": {
-                            "field_access": {
-                              "primary": "",
-                              "id": "a",
-                              "line_num": 7,
+                    "assigned_value": {
+                      "expression": {
+                        "method_invocation": {
+                          "field_access": {
+                            "primary": {
+                              "field_access": {
+                                "primary": "",
+                                "id": "In",
+                                "line_num": 12,
+                                "col_num": 16
+                              },
+                              "line_num": 12,
                               "col_num": 16
                             },
-                            "line_num": 7,
-                            "col_num": 16
+                            "id": "scan_int",
+                            "line_num": 12,
+                            "col_num": 25
                           },
-                          "line_num": 7,
-                          "col_num": 16
-                        },
-                        "line_num": 7,
-                        "col_num": 16
-                      }
-                    },
-                    "line_num": 7,
-                    "col_num": 16
-                  }
-                },
-                "line_num": 7,
-                "col_num": 16
-              }
+                          "arguments": [],
+                          "line_num": 12,
+                          "col_num": 27
+                        }
+                      },
+                      "line_num": 12,
+                      "col_num": 27
+                    }
+                  },
+                  "line_num": 12,
+                  "col_num": 27
+                }
+              },
+              "line_num": 12,
+              "col_num": 27
             },
-            "line_num": 7,
-            "col_num": 16
-          }
-        ],
-        "line_num": 3,
-        "col_num": 2
-      }
+            {
+              "expression": {
+                "method_invocation": {
+                  "field_access": {
+                    "primary": {
+                      "field_access": {
+                        "primary": "",
+                        "id": "Out",
+                        "line_num": 14,
+                        "col_num": 13
+                      },
+                      "line_num": 14,
+                      "col_num": 13
+                    },
+                    "id": "print",
+                    "line_num": 14,
+                    "col_num": 19
+                  },
+                  "arguments": [
+                    {
+                      "expression": {
+                        "literal": {
+                          "type": "String",
+                          "value": "Fib = ",
+                          "line_num": 14,
+                          "col_num": 28
+                        }
+                      },
+                      "line_num": 14,
+                      "col_num": 28
+                    }
+                  ],
+                  "line_num": 14,
+                  "col_num": 29
+                }
+              },
+              "line_num": 14,
+              "col_num": 29
+            },
+            {
+              "expression": {
+                "method_invocation": {
+                  "field_access": {
+                    "primary": {
+                      "field_access": {
+                        "primary": "",
+                        "id": "Out",
+                        "line_num": 15,
+                        "col_num": 13
+                      },
+                      "line_num": 15,
+                      "col_num": 13
+                    },
+                    "id": "print",
+                    "line_num": 15,
+                    "col_num": 19
+                  },
+                  "arguments": [
+                    {
+                      "expression": {
+                        "method_invocation": {
+                          "field_access": {
+                            "primary": {
+                              "field_access": {
+                                "primary": "",
+                                "id": "rfib",
+                                "line_num": 15,
+                                "col_num": 24
+                              },
+                              "line_num": 15,
+                              "col_num": 24
+                            },
+                            "id": "fib",
+                            "line_num": 15,
+                            "col_num": 28
+                          },
+                          "arguments": [
+                            {
+                              "expression": {
+                                "field_access": {
+                                  "primary": "",
+                                  "id": "n",
+                                  "line_num": 15,
+                                  "col_num": 30
+                                },
+                                "line_num": 15,
+                                "col_num": 30
+                              },
+                              "line_num": 15,
+                              "col_num": 30
+                            }
+                          ],
+                          "line_num": 15,
+                          "col_num": 31
+                        }
+                      },
+                      "line_num": 15,
+                      "col_num": 31
+                    }
+                  ],
+                  "line_num": 15,
+                  "col_num": 32
+                }
+              },
+              "line_num": 15,
+              "col_num": 32
+            },
+            {
+              "expression": {
+                "method_invocation": {
+                  "field_access": {
+                    "primary": {
+                      "field_access": {
+                        "primary": "",
+                        "id": "Out",
+                        "line_num": 16,
+                        "col_num": 13
+                      },
+                      "line_num": 16,
+                      "col_num": 13
+                    },
+                    "id": "print",
+                    "line_num": 16,
+                    "col_num": 19
+                  },
+                  "arguments": [
+                    {
+                      "expression": {
+                        "literal": {
+                          "type": "String",
+                          "value": "\\n",
+                          "line_num": 16,
+                          "col_num": 24
+                        }
+                      },
+                      "line_num": 16,
+                      "col_num": 24
+                    }
+                  ],
+                  "line_num": 16,
+                  "col_num": 25
+                }
+              },
+              "line_num": 16,
+              "col_num": 25
+            }
+          ],
+          "line_num": 9,
+          "col_num": 2
+        }
+      },
+      "constructors": {}
     },
-    "constructors": {}
-  },
-  "line_num": 1,
-  "col_num": 2,
-  "id_num": 3
-}
+    "line_num": 1,
+    "col_num": 2,
+    "id_num": 3
+  }
+]

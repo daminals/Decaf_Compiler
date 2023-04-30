@@ -3,8 +3,29 @@ class A {
   A() {
     this.x = 0;
   }
+  A(int x) {
+    this.x = x;
+  }
+
+
+  void a(int x, int y, int z) {
+    x = x * z - y;
+  }
+
+  // void sus() {
+  //   if (true) {
+
+  //   }else {
+
+  //   }
+  // }
+
   int funct() {
     return this.x;
+  }
+
+  public static int hi() {
+    return 1;
   }
 
   public int g() {
@@ -21,10 +42,10 @@ class B extends A {
   B(){
     this.y = 2;
     if (this.y == 2) {
-      this.y = 3;
+      this.y = A.hi();
     }
     else {
-      this.y = 4;
+      this.y = super.x;
     }
     this.avar = new A();
   }

@@ -2,138 +2,123 @@
 # Daniel Kogan dkogan 114439349
 # 04.20.2023
 
-# input
 in_class = {
-  "type": "class",
-  "id_num": 1,
-  "children": [
-    {
-      "scan_int": {
-        "type": "method",
-        "id_num": 1,
-        "return_type": "int",
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "children": {}
-      }
+    "class_name": "In",
+    "superclass": "",
+    "body": {
+      "fields": {},
+      "methods": {
+        "1": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "int",
+          "function_id": "scan_int",
+          "formals": {},
+          "body": [
+            None
+          ],
+          "line_num": 3,
+          "col_num": 9
+        },
+        "2": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "float",
+          "function_id": "scan_float",
+          "formals": {},
+          "body": [
+            None
+          ],
+          "line_num": 5,
+          "col_num": 2
+        }
+      },
+      "constructors": {}
     },
-    {
-      "scan_float": {
-        "type": "method",
-        "id_num": 2,
-        "return_type": "float",
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "children": {}
-      }
-    }
-  ]
-}
-
-# output
+    "line_num": 1,
+    "col_num": 6,
+    "id_num": 3
+  }
 out_class = {
-  "type": "class",
-  "id_num": 2,
-  "children": [
-    {
-      "print": {
-        "type": "method",
-        "id_num": 3,
-        "return_type": "void",
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "children": [
-          {
-            "i": {
+    "class_name": "Out",
+    "superclass": "",
+    "body": {
+      "fields": {},
+      "methods": {
+        "3": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "print",
+          "formals": {
+            "1": {
               "type": "int",
-              "var_type": "field",
-              "id_num": 2,
-              "return_type": "string",
-              "children": {}
+              "id": "i",
+              "line_num": 0,
+              "col_num": 36,
+              "var_type": "local"
             }
-          }
-        ]
-      }
-    },
-    {
-      "print": {
-        "type": "method",
-        "id_num": 4,
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "return_type": "void",
-        "children": [
-          {
-            "i": {
+          },
+          "body": [
+            None
+          ],
+          "line_num": 10,
+          "col_num": 11
+        },
+        "4": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "print",
+          "formals": {
+            "2": {
               "type": "float",
-              "id_num": 1,
               "id": "i",
-              "var_type": "formal"
+              "line_num": 0,
+              "col_num": 38,
+              "var_type": "local"
             }
-          }
-        ]
-      }
-    },
-    {
-      "print": {
-        "type": "method",
-        "id_num": 5,
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "return_type": "void",
-        "children": [
-          {
-            "i": {
+          },
+          "body": [
+            None
+          ],
+          "line_num": 12,
+          "col_num": 11
+        },
+        "5": {
+          "modifiers": [
+            "public",
+            "static"
+          ],
+          "type": "void",
+          "function_id": "print",
+          "formals": {
+            "3": {
               "type": "string",
-              "id_num": 1,
               "id": "i",
-              "var_type": "formal"
+              "line_num": 0,
+              "col_num": 39,
+              "var_type": "local"
             }
-          }
-        ]
-      }
+          },
+          "body": [
+            None
+          ],
+          "line_num": 14,
+          "col_num": 2
+        }
+      },
+      "constructors": {}
     },
-    {
-      "print": {
-        "type": "method",
-        "id_num": 6,
-        "modifiers": [
-          "public",
-          "static"
-        ],
-        "return_type": "void",
-        "children": [
-          {
-            "i": {
-              "type": "boolean",
-              "id_num": 1,
-              "id": "i",
-              "var_type": "formal"
-            }
-          }
-        ]
-      }
-    }
-  ]
-}
-
-class err_class(Exception):
-  def __init__(self, msg):
-      self.msg = msg
-      RED = '\033[91m'
-      CLEAR_FORMAT = '\033[0m'
-      self.err_msg = f"{RED}ERROR: {CLEAR_FORMAT}{msg}"
-      raise Exception(self.err_msg)
-
-  def __str__(self):
-      return self.msg
+    "line_num": 8,
+    "col_num": 3,
+    "id_num": 4
+  }

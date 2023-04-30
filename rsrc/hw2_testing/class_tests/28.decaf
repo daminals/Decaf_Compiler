@@ -1,6 +1,17 @@
 class IntList{
 	int value;
 	IntList next;
+
+  public Intlist() {
+    this.value = 0;
+    this.next = null;
+  }
+
+  public Intlist(int v) {
+    this.value = v;
+    this.next = null;
+  }
+
 	public static IntList create_list(int v) {
 		IntList new_element;
 		new_element = new IntList();
@@ -28,7 +39,7 @@ class IntList{
 			}
 		else
 			/* search rest of the list */
-			return next.search(v);
+			return this.next.search(v);
 	}
 	public boolean search2(int v) {
 		IntList x;
@@ -37,7 +48,8 @@ class IntList{
 		int y;
 		float g;
 		g = 1000.0;
-		return x;
+		// return x;
+    return true;
 	}
 	public int length() {
 		if (next == null)  return 1;

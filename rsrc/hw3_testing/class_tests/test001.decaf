@@ -1,7 +1,9 @@
 class test001
 {
+    int a;
     public static void main()
     {   
+        this.a = 5;
         boolean a, b;
         a = true;
         b = !a;

@@ -1,3 +1,72 @@
+Decaf Compiler - A04
+
+By: 
+  - Daniel Kogan dkogan 114439349
+
+Python Version: 3.9.6
+Ply Version: 3.11
+
+Fixes:
+  - Precedence
+    - Binary expressions are now evaluated with the correct precedence
+    - Assignment of variable ID - all variables now have unique identifiers per method and constructor
+
+Installation
+  - Install Python 3.9.6
+  - Install PLY 3.11
+    - Run the following command in the terminal:
+      pip3 install ply
+
+How to Run:
+  - Run the following command in the terminal:
+    python3 decaf_parser_.py <input_file>
+
+  - The program will output the following:
+    - On success, the program will exit with the following:
+      - Abstract Syntax Tree (AST) printed to stdout
+      - "YES" in green text to stdout
+      - Return code: 0
+    - On failure, the program will exit with the following:
+      - "ERROR: {error_message}" in highlighted red text to stderr
+      - Return code: 1
+
+  - The program will also output the following files:
+    - parser.out
+    - parsetab.py
+
+Contents of Submitted Files:
+
+1. decaf_parser.py
+  - Applied fixes to precedence and variable ids
+
+2. decaf_ast.py
+  - Reformatted outputs of AST class functions to return array: [string_output, type]
+  - Improved name resolution by returning found object in primary
+  - Implemented type signatures for constructors and methods
+  - Implemented Class-Reference-Expression
+
+3. decaf_typechecker.py
+  - Added type checking for binary expressions
+  - Added functions for detecting subtypes
+  - Added functions to create and compare type signatures
+  - Added functions for detecting type compatibility
+
+4. decaf_lexer.py
+  - No change
+
+5. predefined_classes.py
+  - No change
+
+6. decaf_checker.py
+  - No change
+
+7. debug.py 
+  - Debug features to highlight control flow in the code
+
+========================================================
+================ A03 SUBMISSION README =================
+========================================================
+
 Decaf Compiler - A03
 By: 
   - Daniel Kogan dkogan 114439349
@@ -92,6 +161,7 @@ Contents of Submitted Files:
 4. decaf_lexer.py
   - Correction implemented as stated in #fixes section 
 5. decaf_checker.py
+  - Added predefined classes
   - Turned off debug mode
 
 

@@ -12,6 +12,7 @@ CLEAR_FORMAT = '\033[0m'
 import decaf_lexer
 import decaf_parser
 import decaf_ast
+import predefined_classes as predef
 
 
 def just_scan(fn=""):
@@ -43,7 +44,10 @@ def just_parse(fn=""):
     fh = open(fn, 'r')
     source = fh.read()
     fh.close()
-    result = parser.parse(source, lexer = lexer, debug = 0)
+    result = []
+    result.insert(0, decaf_ast.AST(predef.out_class, predef.out_class["body"]["fields"], predef.out_class["body"]["methods"], predef.out_class["body"]["constructors"]))
+    result.insert(0, decaf_ast.AST(predef.in_class, predef.in_class["body"]["fields"], predef.in_class["body"]["methods"], predef.in_class["body"]["constructors"]))
+    result += parser.parse(source, lexer = lexer, debug = 0)
     ast = decaf_ast.writeAST(result)
     # Parsing Successful
     print(ast)

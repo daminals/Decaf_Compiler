@@ -2,7 +2,8 @@
 
 class Cat {
   string breed;
-  string color; 
+  string color;
+  string name; 
   int age;
   
   public Cat() {

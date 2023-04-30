@@ -5,20 +5,10 @@
 import ply.yacc as yacc
 import sys
 from decaf_lexer import tokens
-from decaf_ast import extract_body, extract_variables_from_formals, extract_variables_from_field, var_count
-from decaf_ast import debug, warn
+from decaf_ast import extract_body, extract_variables_from_formals, extract_variables_from_field, extract_var_type, set_var_count
+from debug import debug, warn
 
-x = [0]
-
-def flatten(lst):
-    result = []
-    for item in lst:
-        if isinstance(item, list):
-            result.extend(flatten(item))
-        else:
-            result.append(item)
-    return result
-
+# x = [0]
 
 precedence = (
     ('right', 'SETEQUAL'),
@@ -30,6 +20,18 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE'),
     ('right', 'NOT'),
 )
+
+
+def flatten(lst):
+    result = []
+    for item in lst:
+        if isinstance(item, list):
+            result.extend(flatten(item))
+        else:
+            result.append(item)
+    return result
+
+
 def p_start(p):
     '''start : class_decl
              | class_decl start
@@ -127,6 +129,8 @@ def p_method_decl(p):
         p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": [], "body": p[6], "line_num": p.lineno(3), "col_num": find_col2(p)}})
     elif len(p) == 8:
       p[0] = extract_variables_from_formals("method",{'method': {'modifiers': p[1], "type": p[2], "function_id":p[3], "formals": p[5], "body": p[7], "line_num": p.lineno(3), "col_num": find_col2(p)}})
+    # reset var count after method is complete
+    set_var_count(1)
     # debug(f"{p.lineno()},  {str(p[0])}\n")
 
 def p_constructor(p):
@@ -143,6 +147,7 @@ def p_constructor(p):
         p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': [], "constructor_id": p[1], "formals": p[3], "body": p[5], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
       else:
         p[0] = extract_variables_from_formals("constructor",{'constructor': {'modifiers': p[1], "constructor_id": p[2], "formals": [], "body": p[5], "line_num": p.lexer.lineno, "col_num": find_col2(p)}})
+    set_var_count(1)
 
 def p_formals(p):
     '''formals : formal_param
@@ -191,17 +196,6 @@ def p_stmt(p):
 
 def p_declare_local_var(p):
   '''declare_local_var : var_decl'''
-  def extract_var_type(var):
-    var['var_type'] = "local"
-    global var_count
-    variable_declarations = {}
-    for id_name in var['ids']:
-      variable_declarations[var_count] = var.copy()
-      variable_declarations[var_count]['id'] = id_name
-      del variable_declarations[var_count]['ids']
-      var_count += 1
-    var = variable_declarations
-    return var
   p[0] = {'var_decl': extract_var_type(p[1]),"line_num": p.lexer.lineno, "col_num": find_col2(p)}
 
 
@@ -374,10 +368,25 @@ def p_expr(p):
                   | unary_expression'''
     p[0] = {"expression": p[1], "line_num": p.lexer.lineno, "col_num": find_col2(p)}
 
-def p_arithmetic_expression(p):
-    '''binary_expression : expression arith_op expression
-                         | expression bool_op expression'''
-    p[0] = {"binary_expression": {"left": p[1], "operator": p[2], "right": p[3], "line_num": p.lineno(2), "col_num": find_col2(p)}}
+# def p_binary_expression(p):
+#     '''binary_expression : expression bool_op expression
+#                          | expression arith_op expression'''
+#     p[0] = {"binary_expression": {"left": p[1], "operator": p[2], "right": p[3], "line_num": p.lineno(2), "col_num": find_col2(p)}}
+
+def p_binary_expression(p):
+  '''binary_expression : expression OR expression
+                       | expression AND expression
+                       | expression NOTEQUAL expression
+                       | expression EQUAL expression
+                       | expression LESS expression
+                       | expression GREATEREQ expression
+                       | expression LESSEQ expression
+                       | expression GREATER expression
+                       | expression PLUS expression
+                       | expression MINUS expression
+                       | expression TIMES expression
+                       | expression DIVIDE expression'''
+  p[0] = {"binary_expression": {"left": p[1], "operator": p[2], "right": p[3], "line_num": p.lineno(2), "col_num": find_col2(p)}}
 
 def p_unary_expression(p):
     '''unary_expression : unary_op expression'''
@@ -420,6 +429,7 @@ def p_bool_op(p):
                | AND
                | OR'''
     p[0] = p[1]
+
 
 def p_unary_op(p):
     '''unary_op : PLUS
