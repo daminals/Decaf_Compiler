@@ -1,0 +1,60 @@
+// class Person {
+//   int age;
+//   int wallet;
+
+//   public Person(int age, int wallet) {
+//     this.age = age;
+//     this.wallet = wallet;
+//   }
+
+// }
+
+class balloon_animal {
+  int hex_color;
+  int size;
+
+  public balloon_animal(int hex_color, int size) {
+    this.hex_color = hex_color;
+    this.size = size;
+  }
+}
+
+class Clown {
+  int age;
+  int wallet;
+  int exp;
+  
+  public Clown(int yoe, int age0, int wallet0) {
+    this.age = age0;
+    this.wallet = wallet0;
+    this.exp = yoe;
+  }
+
+  public void do_a_little_dance() {
+    this.exp++;
+  }
+
+  public boolean is_old() {
+    if (this.age > 50) return true;
+    else return false;
+  }
+
+  public boolean is_rich() {
+    if (this.wallet > 100) return true;
+    else return false;
+  }
+
+  public balloon_animal make_balloon(int hex_color, int size) {
+    this.exp++;
+    return new balloon_animal(hex_color, size);
+  }
+
+  public int go_to_work() {
+    while (this.is_old() == false && this.is_rich() == false) {
+      this.do_a_little_dance();
+    }
+  }
+
+
+
+}
