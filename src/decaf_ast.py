@@ -5,6 +5,7 @@
 import json,sys
 import predefined_classes as predef
 import decaf_typecheck as dtype
+import decaf_codegen as dcodegen
 from debug import *
 field_count = 1
 method_count = 6
@@ -13,9 +14,20 @@ class_overall_count = 3
 var_count = 1
 valid_types = ["int", "boolean", "string", "float", "double", "char", "void", "error", "null"]
 user_defined_types = []
-# scope = {"global": {"In": in_class, "Out": out_class}}
 scope = {"global": {}}
-
+for_count = 0
+if_count = 0
+while_count = 0
+bin_count = 0
+L_count = 0
+# add objects as they are defined
+type_table = {
+  # size of diff types in bytes
+  "int": "4",
+  "float": "4",
+  "boolean": "1"
+}
+static_count = 0
 
 class AST:
 
@@ -24,6 +36,14 @@ class AST:
         self.fields = fields
         self.methods = methods
         self.constructors = constructors
+        self.size = 0
+        self.asm = ""
+        self.asm_data = {}
+        self.asm_registers = ["t0","t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
+                          "t10", "t11", "t12", "t13", "t14", "t15", "t16", "t17", "t18",
+                          "t19", "t20", "t21", "t22", "t23", "t24", "t25", "t26", "t27",
+                          "t28", "t29"]
+        self.asm_stack = []
 
         # Check class name
         if "class_name" not in ast:
@@ -33,6 +53,8 @@ class AST:
             error("Class name is empty")
             # raise Exception("Class name is empty")
         self.class_name = ast["class_name"]
+        self.asm_data["class_name"] = self.class_name
+        self.asm += dcodegen.generate_label(self.class_name)
 
         # Check super class
         if "superclass" not in ast:
@@ -40,7 +62,7 @@ class AST:
             # raise Exception("Could not find class name")
         self.superclass_name = ast["superclass"]
 
-        global scope
+        global scope, type_table
         # Check if class name is already defined
         if self.class_name in scope["global"]:
             error(f"Line:{ast['line_num']}:{ast['col_num']}: Class name already defined")
@@ -63,9 +85,24 @@ class AST:
 
         self.printed = self.create_record(self.ast, self.scope[self.class_name])
         scope["global"] = self.scope
+        type_table[self.class_name] = str(self.size)
 
     def print_ast(self):
-        return self.printed
+        asm = ""
+        if debug_mode:
+            # ignore in and out
+            if self.class_name != "In" and self.class_name != "Out":
+              # dcodegen.write_asm(f"{self.class_name}.asm",self.asm)
+              asm = self.asm
+        else:
+            # dcodegen.write_asm(f"{self.class_name}.asm",self.asm)
+            asm = self.asm
+        return self.printed, asm
+      
+    def get_size(self, _type):
+      if (_type in type_table):
+        return type_table[_type]
+      error(f"ERROR: TYPE {_type} NOT IN TYPE TABLE")
 
     def create_record(self, ast, scope):
         output = ""
@@ -133,7 +170,6 @@ class AST:
                 error(f"Line:{field['line_num']}:{field['col_num']}: Could not find field modifiers")
                 # raise Exception("Could not find field modifiers")
             field_modifiers = self.create_modifiers_list(field["modifiers"])
-
             # add field to scope
             # for prev_field in blacklist:
             #   if compare_var(prev_field, {"var_type": "field", "type": f"{field_type}", "id": field_name}):
@@ -146,6 +182,11 @@ class AST:
 
             # debug(scope)
             output += f"FIELD {field_id}, {field_name}, {self.class_name}, {field_modifiers}, {field_type}\n"
+            field_size = self.get_size(field_type)
+            self.size += int(field_size)
+            # debug(self.asm_registers)
+            asm_output, self.asm_registers, self.asm_data = dcodegen.generate_field({"name": field_name,"field_id": field_id, 'line_num': field['line_num'], 'col_num': field['col_num']}, field_size, self.asm_data, self.asm_registers)
+            self.asm += asm_output
         return output
 
     def create_constructor_record(self, scope, scope_array):
@@ -180,15 +221,25 @@ class AST:
             local_scope_array.append(constructor_id)
             local_scope_array.append("children")
 
+            self.asm += dcodegen.generate_commented_label(f"C_{constructor_id}", f"CONSTRUCTOR: {constructor_id}")
+            self.asm_data[f"C_{constructor_id}"] = {}
 
             output += "Variable Table:\n"
             formal_types = []
+            num_params = 0
+            local_stack = []
             for variable_id in constructor["formals"].keys():
                 variable = constructor["formals"][variable_id]
                 formal_types.append(variable["type"])
                 self.add_to_scope(local_scope, local_scope_array, variable["id"], {"super": False, "type": f"{self.create_type_record(variable['type'])}", "id_num": variable_id, "id": variable["id"], "formal": True, "var_type": "local", "line_num": variable["line_num"], "col_num": variable["col_num"]})
                 output += self.create_variable_record(variable_id, variable)
-
+                self.asm += dcodegen.generate_comment(f"a{num_params}: {variable['id']}")
+                self.asm_data[f"PARAMETER_{variable_id}"] = "a" + str(num_params)
+                local_stack.insert(0, f"a{num_params}")
+                num_params+=1
+            local_stack.reverse()
+            for register in local_stack:
+              self.asm_registers.insert(0, register)
             # add formals to constructor signature in scope
             formal_scope["signature"] = dtype.create_type_signature(self.class_name, formal_types, id=constructor_id)
 
@@ -196,6 +247,8 @@ class AST:
 
             output += "Constructor Body:\n"
             output += block
+            self.asm += dcodegen.generate_return("a0")
+            self.asm += dcodegen.generate_comment(f"END CONSTRUCTOR: C_{constructor_id}")
         return output
 
     def create_method_record(self, scope, scope_array):
@@ -208,8 +261,13 @@ class AST:
             method_name = method["function_id"]
             # modifiers
             method_modifiers = self.create_modifiers_list(method["modifiers"])
+
             # type
             method_type = self.create_type_record(method["type"], 1)
+            # asm_output = dcodegen.generate_method(method, method_id, self.asm_data)
+            # self.asm += dcodegen.generate_comment(f"METHOD: {method_name}")
+            self.asm += dcodegen.generate_commented_label(f"M_{method_name}_{method_id}", f"METHOD: {method_name}")
+            self.asm_data[f"M_{method_name}_{method_id}"] = {}
 
             output += f"METHOD: {method_id}, {method_name}, {self.class_name}, {method_modifiers}, {method_type}\n"
             output += "Method Parameters:\n"
@@ -221,11 +279,15 @@ class AST:
             local_scope_array.append("children")
 
             formal_types = []
+            num_params = 0
             for variable_id in method["formals"].keys():
                 variable = method["formals"][variable_id]
                 formal_types.append(variable["type"])
                 self.add_to_scope(local_scope, local_scope_array, variable["id"], {"super": False, "type": f"{self.create_type_record(variable['type'])}", "id_num": variable_id, "id": variable["id"], "var_type": "local", "formal": True,"line_num": variable["line_num"], "col_num": variable["col_num"] })
                 output += self.create_variable_record(variable_id, variable)
+                self.asm += dcodegen.generate_comment(f"a{num_params}: {variable['id']}")
+                self.asm_data[f"PARAMETER_{variable_id}"] = "a" + str(num_params)
+                num_params += 1
 
             # add signature
             formal_scope["signature"] = dtype.create_type_signature(method_name, formal_types)
@@ -243,9 +305,14 @@ class AST:
 
             output += "Method Body:\n"
             output += block
+            self.asm += dcodegen.generate_comment("if method does not return, return void. if it does return, this was never reached ;-)")
+            self.asm += dcodegen.generate_return("a0")
+            self.asm += dcodegen.generate_comment(f"END METHOD: {method_name}")
+            if len(self.asm_stack) > 0:
+              self.asm_stack.pop(0)
         return output
       
-    def create_block_record(self, ast_block, scope, scope_array, return_type='void', skip_stmt=False):
+    def create_block_record(self, ast_block, scope, scope_array, return_type='void', skip_stmt=False, labels=[None, None]):
         output = "Block(["
         statements = "\n"
         type_correct = True
@@ -253,7 +320,7 @@ class AST:
             expr =  "Expr( "
             # debug(statement)
             # debug(scope)
-            stmt_output, stmt_type_correct = self.create_statement_record(statement, scope, scope_array, return_type)
+            stmt_output, stmt_type_correct = self.create_statement_record(statement, scope, scope_array, return_type, labels)
             stmt = stmt_output
             expr += stmt
             if stmt == "":
@@ -307,6 +374,9 @@ class AST:
     # String of modifiers list, including instance or static
     def create_modifiers_list(self, ast_modifiers):
         output = "private"
+        if "static" in ast_modifiers:
+              global static_count
+              static_count += 1
         if ast_modifiers == []:
             output = "private, instance"
         elif ast_modifiers == ["public"]:
@@ -322,6 +392,9 @@ class AST:
     # String of modifiers list, only including public or private
     def create_modifiers_list_PRIVATE_PUBLIC(self, ast_modifiers):
         output = ""
+        if "static" in ast_modifiers:
+              global static_count
+              static_count += 1
         if ast_modifiers == []:
             output = "private"
         elif "private" in ast_modifiers:
@@ -330,7 +403,7 @@ class AST:
             output = "public"
         return output
 
-    def create_statement_record(self, ast_statement, scope, scope_array, expected_return_type=None):
+    def create_statement_record(self, ast_statement, scope, scope_array, expected_return_type=None, labels=[None, None]):
         output = ""
         type_correct = True
         if ast_statement == None:
@@ -372,8 +445,11 @@ class AST:
           type_correct &= for_type
         elif "break" in ast_statement:
           output += "Break"
+          self.asm += dcodegen.generate_jump(label[1]) # end label
         elif "continue" in ast_statement:
           output += "Continue"
+          # i dont know the label to jump to
+          self.asm += dcodegen.generate_jump(label[0]) # start label
         elif "method_invocation" in ast_statement:
           method_invo_out, method_invo_type = self.evaluate_method_invo(ast_statement["method_invocation"], scope, scope_array)
           output += method_invo_out
@@ -408,14 +484,19 @@ class AST:
             var_id = variable_declaration[var]["id"]
             var_type = variable_declaration[var]["type"]
             stmt_type = var_type
+            
             self.add_to_scope(scope, scope_array, var_id, {"super": False, "type": f"{self.create_type_record(var_type)}", "id_num": var, "id": var_id, "var_type": "local", "formal": False, "line_num": variable_declaration[var]["line_num"], "col_num": variable_declaration[var]["col_num"]})
             output += self.create_variable_record(var, variable_declaration[var])
-
+            self.asm_data[f"VARIABLE_{var}"] = self.asm_registers.pop(0)
+            warn(f"variable {var} is stored in {self.asm_data[f'VARIABLE_{var}']}")
+            self.asm_stack.insert(0, self.asm_data[f"VARIABLE_{var}"])
+            warn(f"stack is now {self.asm_stack}")
             # output += f"VariableDeclaration({var_id}, {var_type})\n"
         return ["", stmt_type]
 
     def create_assignment_record(self, ast_assignment, scope_array, local_scope):
         # debug(local_scope)
+        debug(f"before assignment record: {self.asm_stack}")
         if "set_equal" not in ast_assignment:
           # raise Exception("Could not find assignment")
           error(f"Line:{ast_variable_declaration['line_num']}:{ast_assignment['col_num']}: Could not find assignment")
@@ -455,9 +536,10 @@ class AST:
         if "assigned_value" not in operand:
           # raise Exception("Could not find assigned value")
           error(f"Line:{operand['assignee']['line_num']}:{operand['assignee']['col_num']}: Could not find assigned value")
-        
         if "expression" in operand["assigned_value"]:
+          # debug(operand["assigned_value"])
           assigned_value, assigned_value_type = self.create_expression_record(operand["assigned_value"], local_scope, scope_array)
+          # debug(f"STACK: {self.asm_stack}")
         else:
           # raise Exception("Could not find assigned value type")
           error(f"Line:{operand['assignee']['line_num']}:{operand['assignee']['col_num']}: Could not find assigned value type")
@@ -473,7 +555,23 @@ class AST:
           output += f"{expr_type}({expression})"
         else:
           output += expression
-
+          
+        # create asm for assignment
+        # move value of assigned_value to assignee
+        assigned_reg = self.asm_stack.pop(0)
+        if "field" != is_field_var:
+          assignee_reg = self.asm_stack.pop(0)
+          self.asm += dcodegen.generate_move(assignee_reg, assigned_reg)
+        else:
+          assignee_reg = self.asm_data[f"FIELD_{var_id_num}"]
+          self.asm += dcodegen.generate_hstore(assigned_reg, assignee_reg)
+        
+        # free assigned_reg
+        self.asm_registers.insert(0, assigned_reg)
+        
+        # push assignee_reg to stack
+        self.asm_stack.insert(0, assignee_reg)
+    
         return [output, stmt_type]
 
     def create_expression_record(self, ast_expression, scope, scope_array, expected_return_type="void"):
@@ -491,10 +589,33 @@ class AST:
           var = self.get_var_from_scope(var_id, self.get_primary_scope(primary_array, expression["field_access"], scope, scope_array))
         else:
           var = self.get_var_from_scope(var_id, scope_array)
+        # debug(f"var: {var}")
+        warn(f"asm stack (expr): {self.asm_stack}")
         if var[2] == "field":
           output += f"Field-access({primary}, {var[0]})"
+          # get register from var_id
+          register = self.asm_data[f"FIELD_{var[0]}"] 
+          # need to load the value from the register since it is field
+          reg_out, reg_value = dcodegen.generate_get_field_value(register, self.asm_registers)
+          self.asm += reg_out
+          self.asm_stack.insert(0,reg_value)
+          # debug(f"stack: {self.asm_stack}")
         else:
+          # debug(f"var: {var}")
+          # debug(self.asm_data)
           output+= f"Variable({var[0]})"
+          # check if parameter
+          if var[3]['formal']:
+            # get register from var_id
+            register = self.asm_data[f"PARAMETER_{var[0]}"] 
+            # need to load the value from the register since it is parameter
+            # debug(f"register: {register}")
+            self.asm_stack.insert(0, register)
+          else:
+            # warn(f"var: {var}, {self.asm_stack}")
+            # debug(self.asm_data)
+            self.asm_stack.insert(0, self.asm_data[f"VARIABLE_{var[0]}"] )
+            # warn(f"stack: {self.asm_stack}")
         statement_type = var[1]
       elif "literal" in expression:
         literal_out, literal_type = self.evaluate_literal(expression["literal"])
@@ -568,6 +689,29 @@ class AST:
       elif "prefix" in auto:
         assigned_value = f"Variable({var_id}), {auto['prefix']}, pre"
       output += f"Auto({assigned_value}, {stmt_type})"
+      
+      # if auto on field type, need to call hload and hstore on the field var
+      if var_info['var_type'] == 'field':
+        # get the register from the field
+        field_register = self.asm_data[f"FIELD_{var_id}"]
+        # hload value
+        reg_out, register = dcodegen.generate_get_field_value(field_register, self.asm_registers)
+        self.asm += reg_out
+        # self.asm_stack.append(reg_value)
+        asm_output, register = dcodegen.generate_auto(ast_auto, register, stmt_type, self.asm_registers)
+        self.asm += asm_output
+        # call hstore on the field register
+        self.asm += dcodegen.generate_hstore(register, field_register)
+        # free register
+        self.asm_registers.insert(0,register)
+        self.asm_stack.append(field_register)
+      else:
+        register = self.asm_stack.pop(0)
+        asm_output, register = dcodegen.generate_auto(ast_auto, register, stmt_type, self.asm_registers)
+        self.asm += asm_output
+        self.asm_stack.append(register)
+  
+      
       return [output, stmt_type]
 
     def evaluate_if_block(self, ast_if, scope, scope_array, return_type='void'):
@@ -592,20 +736,35 @@ class AST:
       if condition_type != "boolean":
         type_correct = False
 
+      # evaluate condition first
+      # create expression record will also assign a register to the expression
+      register = self.asm_stack.pop(0)
+      global if_count
+      if_header = dcodegen.generate_if_header(ast_if['if'], register, if_count)
+      self.asm += if_header
 
       # create block record
-      block, is_if_block_type_correct = self.create_block_record(if_block["if_block"], scope, scope_array, return_type=return_type, skip_stmt=True)
+      block, is_if_block_type_correct = self.create_block_record(if_block["if_block"], scope, scope_array, return_type=return_type, skip_stmt=True, labels=[f"if_{if_count}",f"endif_{if_count}"])
       # type correct if block is type correct
       type_correct &= is_if_block_type_correct
+
+      # add else asm
+      else_header = dcodegen.generate_else_header(ast_if['if'], if_count)
+      self.asm += else_header
 
       output += f"If({condition}, {block}"
       if "else_block" in if_block:
         output+= ", "
-        block_out, is_else_block_type_correct = self.create_block_record(if_block["else_block"], scope, scope_array, skip_stmt=True, return_type=return_type)
+        block_out, is_else_block_type_correct = self.create_block_record(if_block["else_block"], scope, scope_array, skip_stmt=True, return_type=return_type, labels=[f"else_{if_count}",f"endif_{if_count}"])
         output += block_out
         type_correct = type_correct and is_else_block_type_correct
       else:
         output+= ", Skip()"
+        
+      # add end label
+      # self.asm += dcodegen.generate_label(f"end_{if_count}")
+      self.asm += dcodegen.generate_if_footer(if_count)
+      if_count += 1
       # include type correct param
       if not type_correct:
         output += ", Not Type Correct"
@@ -632,15 +791,25 @@ class AST:
       # implement type resolution for condition (should be boolean)
       # if condition_type != "boolean":
       #   type_correct = False
+      
+      global while_count
+      
+      self.asm += dcodegen.generate_while_header(ast_while['while'], while_count)
 
       condition, condition_type = self.create_expression_record(while_block["condition"], scope, scope_array, return_type)
       if condition_type != "boolean":
         type_correct = False
+        
+      # get register to evaluae condition
+      register = self.asm_stack.pop(0)
+      self.asm+= dcodegen.generate_while_condition(register, while_count)
 
-      block, is_block_type_correct = self.create_block_record(while_block["while_block"], scope, scope_array, return_type=return_type, skip_stmt=True)
+      block, is_block_type_correct = self.create_block_record(while_block["while_block"], scope, scope_array, return_type=return_type, skip_stmt=True, labels=[f"while_{while_count}",f"endwhile_{while_count}"])
       # type correct if block is type correct
       type_correct = type_correct and is_block_type_correct
-
+      
+      self.asm += dcodegen.generate_while_footer(while_count)
+      while_count += 1
       # remove newline if block has 
       if block[-1] == "\n":
         block = block[:-1]
@@ -679,14 +848,10 @@ class AST:
         if init_type == "error":
           init_type_correct = False
       
-      update = "Skip()"
-      update_type_correct = True
-      if for_block["update"] != None:
-        update_out, update_type = self.create_expression_record(for_block["update"], scope, scope_array, return_type)
-        update = update_out
-        if update_type == "error":
-          update_type_correct = False
-
+      init_register = self.asm_stack.pop(0)
+      global for_count
+      self.asm += dcodegen.generate_for_header(ast_for['for'], for_count)
+      
       condition = "Skip()"
       condition_type_correct = True
       if for_block["condition"] != None:
@@ -696,17 +861,44 @@ class AST:
         # # implement type resolution for condition (should be boolean)
         if condition_type != "boolean":
           condition_type_correct = False
+      
+      condition_register = self.asm_stack.pop(0)
+      self.asm += dcodegen.generate_for_condition(ast_for['for'], for_count, condition_register)
+      
+      self.asm_stack.insert(0,init_register)
+      
+      update = "Skip()"
+      update_type_correct = True
+      if for_block["update"] != None:
+        update_out, update_type = self.create_expression_record(for_block["update"], scope, scope_array, return_type)
+        update = update_out
+        if update_type == "error":
+          update_type_correct = False
+          
+      update_register = self.asm_stack.pop(0)
+      if update_register != init_register:
+        # move update to init
+        self.asm += dcodegen.generate_move(init_register, update_register)
+        self.asm_stack.insert(0, update_register)
+      
 
-       # type correct if block,update,init are type correct   
+      # type correct if block,update,init are type correct   
       type_correct &= init_type_correct and update_type_correct and condition_type_correct
 
-      block, is_block_type_correct = self.create_block_record(for_block["for_block"], scope, scope_array, return_type=return_type, skip_stmt=True)
+      block, is_block_type_correct = self.create_block_record(for_block["for_block"], scope, scope_array, return_type=return_type, skip_stmt=True, labels=[f"for_{for_count}",f"endfor_{for_count}"])
+
+      # end for block
+      # create jump to start of for
+      self.asm += dcodegen.generate_jump(f"for_{for_count}")
+      # for footer
+      self.asm += dcodegen.generate_for_footer(for_count)
+      for_count += 1
+
 
       # type correct if block is type correct
       type_correct = type_correct and is_block_type_correct
 
       # type correct if block,update,init are type correct
-
       output += f"For({init}, {condition}, {update}, {block})"
       return [output, type_correct]
 
@@ -733,7 +925,6 @@ class AST:
 
           var_id_num, var_type, is_field_var, var_info = self.get_var_from_scope(operand["field_access"]["id"], primary_scope)
           expr_type = var_type
-          # debug(f"var_id_num: {var_id_num}, var_type: {var_type}, is_field_var: {is_field_var}")
 
         operator_to_string = { 
           "-": "uminus",
@@ -750,26 +941,33 @@ class AST:
         else:
           error(f"Line:{unary_expression['line_num']}:{unary_expression['col_num']}: Unrecognized unary operator: {unary_expression['operator']}")
         
+        register = self.asm_stack.pop(0)
         if dtype.is_number_type(expr_type, scope):
           if operator != "uminus" and operator != "skip":
             expr_type = "error"
+          self.asm += dcodegen.generate_negative(register, registers)
+          self.asm_stack.insert(0, register)
         if dtype.is_boolean_type(expr_type, scope):
           if operator != "neg":
             expr_type = "error"
+          global L_count
+          dcodegen.generate_bit_flip(register, registers, L_count)
+          self.asm_stack.insert(0, register)
+          L_count += 1
         
         if skip_flag:
-          # debug(expr_type)
           return [expression, expr_type]
 
         output += f"Unary({expression}, {operator}, {expr_type})"
         return [output, expr_type]
+
 
     def evaluate_binary_expression(self, ast_binary, scope, scope_array):
         output = ""
         expr_type = ""
         if "binary_expression" not in ast_binary:
             # raise Exception("Could not find binary expression")
-            error(f"Line{binary_expression['line_num']}:{binary_expression['col_num']}: Could not find binary expression")
+            error(f"Line{ast_binary['line_num']}:{ast_binary['col_num']}: Could not find binary expression")
       
         binary_expression = ast_binary["binary_expression"]
         if "left" not in binary_expression:
@@ -781,9 +979,16 @@ class AST:
         if "operator" not in binary_expression:
             # raise Exception("Could not find operator")
             error(f"Line{binary_expression['line_num']}:{binary_expression['col_num']}: Could not find operator")
-        left_expression, left_type = self.create_expression_record(binary_expression["left"], scope, scope_array)
+        left_expression, left_type = self.create_expression_record(binary_expression["left"], scope, scope_array)        
         right_expression, right_type = self.create_expression_record(binary_expression["right"], scope, scope_array)
-        operator = binary_expression["operator"]
+        operator = binary_expression["operator"] 
+        
+        register_right = self.asm_stack.pop(0)
+        register_left = self.asm_stack.pop(0)
+        
+        # rl_out, register_left = dcodegen.generate_expression(left_expression, self.asm_registers)
+        # rr_out, register_right = dcodegen.generate_expression(right_expression, self.asm_registers)        
+        # self.asm+=rl_out + rr_out
 
         operator_to_string = {
           "+": "add",
@@ -848,6 +1053,14 @@ class AST:
           expr_type = "error"
 
         output += f"Binary({operator}, {left_expression}, {right_expression}, {expr_type})"
+        global L_count
+        asm_output, self.asm_registers, register_out = dcodegen.generate_binary_expression(ast_binary, L_count, self.asm_data, register_left, register_right, self.asm_registers, expr_type)
+        L_count += 1
+        self.asm_stack.insert(0, register_out)
+        global bin_count
+        self.asm_data[f"BINARY_EXPRESSION_{bin_count}"] = register_out
+        self.asm += asm_output
+        debug(f"Binary expression: {self.asm_stack}")
         return [output, expr_type]
 
     def evaluate_return(self, ast_return, scope, scope_array, return_type="void"):
@@ -857,11 +1070,13 @@ class AST:
         error(f"{ast_return['line_num']}:{ast_return['col_num']}: Could not find return")
       statement_eval, statement_type = self.create_expression_record(ast_return["return"], scope, scope_array)
       if not dtype.is_subtype(scope, statement_type, return_type):
-        debug(f"statement_type: {statement_type}, return_type: {return_type}")
+        # debug(f"statement_type: {statement_type}, return_type: {return_type}")
         statement_type = "error"
 
       # return type will be equal to expression type
       output += f"Return({statement_eval}, {statement_type})"
+      register_out = self.asm_stack.pop()
+      self.asm += dcodegen.generate_return(register_out)
       return [output, statement_type]
     
     def evaluate_method_invo(self, ast_method_invo, local_scope, scope_array):
@@ -896,6 +1111,11 @@ class AST:
           prim_arr[0] = f"user({prim_arr[0]})"
       primary = ", ".join(prim_arr)
       output += f"Method-call({primary}, [{arg_str}], {method_info['id']}, {return_type})"
+      # get the method label
+      # debug(method_info)
+      method_label = f"M_{method_info['signature']['name']}_{method_info['id_num']}"
+      self.asm += dcodegen.generate_method_call(method_label)
+      self.asm_stack.insert(0,"a0") # return value is in a0
       return [output, return_type]
     
     def evaluate_literal(self,ast_literal):
@@ -907,11 +1127,30 @@ class AST:
       if "value" not in ast_literal:
         # raise Exception("Could not find literal value")
         error(f"Line:{ast_literal['line_num']}:{ast_literal['col_num']}: Could not find literal value")
-      if ast_literal["type"] == "boolean" or ast_literal["type"] == "Null":
+      if ast_literal["type"] == "Boolean" or ast_literal["type"] == "Null":
         output += f"Constant({ast_literal['value']})"
       else:
         output += f"{ast_literal['type']}-Constant({ast_literal['value']})"
       literal_type = ast_literal["type"]
+      
+      value = -1
+      is_float = False
+      # debug(ast_literal)
+      # determine literal value
+      if ast_literal["type"] == "Integer":
+        value = ast_literal['value']
+      elif ast_literal["type"] == "Float":
+        is_float = True
+        value = ast_literal['value']
+      elif ast_literal["type"] == "Boolean":
+        if ast_literal['value'] == "true":
+          value = 1
+        else:
+          value = 0
+      
+      asm_out, register_out = dcodegen.generate_literal(value, self.asm_registers, is_float)
+      self.asm_stack.insert(0,register_out)
+      self.asm += asm_out
       return [output, literal_type]
     
     def evaluate_new_object(self,ast_new_object, local_scope, scope_array):
@@ -952,6 +1191,19 @@ class AST:
         type_name = "error"
 
       output += f"New-object(Class-Reference({ast_new_object['type']}), [{arg_str}], {matching_constructor_id}, user({ast_new_object['type']}))"
+      
+      # move all arguments to a registers
+      important_regs = []
+      global type_table
+      debug(new_object_signature)
+      size = type_table[new_object_signature['name']]
+      
+      for i in range(len(arg_types)-1,-1,-1):
+        reg = f"a{i}"
+        self.asm += dcodegen.generate_move(reg, self.asm_stack.pop(0))
+        important_regs.append(reg)
+      
+      self.asm += dcodegen.generate_initializer(important_regs, matching_constructor_id, self.asm_registers, size)
       return [output, type_name]
     
     def create_primary_array(self,ast_primary, local_scope, scope_array):
@@ -1489,19 +1741,25 @@ def readJSON(filename):
     return data
 
 def writeAST(ast_blocks):
-    writeJSON("ast.json", [x.ast for x in ast_blocks if isinstance(x, AST)])
-    global scope
+    # writeJSON("ast.json", [x.ast for x in ast_blocks if isinstance(x, AST)])
+    # global scope
     # debug(scope) 
     return print_ast_blocks(ast_blocks)
 
 def print_ast_blocks(ast_blocks):
+    big_asm = ""
     output = "-----------------------------------------------\n"
     for ast in ast_blocks:
         if ast == None:
             continue
-        output += ast.print_ast()
+        out, asm = ast.print_ast()
+        output += out
+        big_asm += asm
         output += "-----------------------------------------------\n"
-    return output
+    # dabsmc.write_asm("output.asm", big_asm)
+    global static_count
+    big_asm = f".static_data {static_count}\n{big_asm}"
+    return output, big_asm
 
 # extraction functions
 

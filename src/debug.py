@@ -1,5 +1,5 @@
 import json,sys
-debug_mode = False
+debug_mode = True
 
 CLEAR_FORMAT = '\033[0m'
 BOLD_FORMAT = '\033[1m'

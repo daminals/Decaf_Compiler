@@ -3,3 +3,5 @@ __pycache__
 .coverage
 src/parser.out
 src/old_decaf_parser.py
+src/in.json
+src/out.json
