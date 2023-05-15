@@ -1,7 +1,8 @@
 ![github repo badge: Language](https://img.shields.io/badge/Language-Python-181717?color=blue) ![github repo badge: Compiling](https://img.shields.io/badge/Compiling-Decaf-181717?color=orange) [![Unit Tests](https://github.com/TyuiX/CSE307HW2/actions/workflows/action.yaml/badge.svg)](https://github.com/TyuiX/CSE307HW2/actions/workflows/action.yaml)
 # Decaf Compiler
 
-This is a simple implementation of a Decaf Compiler using PLY (Python Lex-Yacc) tool for parsing and lexical analysis in Python.
+This is an implementation of a Decaf Compiler using PLY (Python Lex-Yacc) tool for parsing and lexical analysis in Python.
+The compiler will print an Abstract Syntax Tree and output an assembly file after the input is successfully parsed. It will return an error should the input contain errors.
 
 ## Prerequisites
 
@@ -30,14 +31,13 @@ The input file should contain the Decaf code that you want to compile.
 - Supports integer and boolean literals
 - Supports variable declaration and assignment
 - Supports function declaration and calling
-- Supports arrays and array indexing
 - Supports error handling for invalid input
 - Supports the Decaf syntax and semantics
 
 ## Implementation
 
-The Decaf compiler is implemented in Python using the PLY tool. PLY provides a lexer and parser generator that can be used to build compilers and interpreters. The lexer and parser are defined in separate files (decaf_lexer.py and decaf_parser.py) and are then imported into the main script (decaf_compiler.py). The lexer reads the input code and converts it into tokens, which are then passed to the parser. The parser uses the tokens to build an abstract syntax tree (AST) that represents the input code. The AST is then used to generate the output code.
+The Decaf compiler is implemented in Python using the PLY tool. PLY provides a lexer and parser generator that can be used to build compilers and interpreters. The lexer and parser are defined in separate files (decaf_lexer.py and decaf_parser.py) and are then imported into the main script (decaf_compiler.py). The lexer reads the input code and converts it into tokens, which are then passed to the parser. The parser uses the tokens to build an abstract syntax tree (AST) that represents the input code. The AST is then used to generate the output code in assembly.
 
 ## Credits
 
-This project was created by Daniel Kogan and Jason Zheng as a part of CSE 304 - Compiler Design at Stony Brook University.
+This project was created by Daniel Kogan as a part of CSE 304 - Compiler Design at Stony Brook University.
